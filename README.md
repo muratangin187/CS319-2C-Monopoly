@@ -39,7 +39,31 @@ We are planning to use;
 
 ## Additional features
 
-....
+Some additional features in addition to what game offers are thought to be implemented. These features are as follows:
+
+- We will add a new game mode called Creative Mode, in which the users can configure the game board.
+
+- We will add different structures; 
+  - bank
+  - customs station
+  - etc.
+  
+- A quest system which offers rewards will be implemented. Some of these quests are:
+  - Players need to buy some certain locations in order to complete the quests.
+  - If a player visits a location by rolling dice for specific numbers, they will have chance to complete quests.
+  - etc.
+  
+- A special quest system which can lead a player to win the game.
+
+- Before the game starts players select different characters which will have different abilities.
+
+- Some secret cards can be obtained from chance and community chest cards which can be used whenever the player wants. 
+
+- In jail, players need to play some mini games in order to get a chance to evacuation.
+
+- We will implement a trade system.
+
+- Users can select different options whenever they pass the starting point.
 
 ## References
 
