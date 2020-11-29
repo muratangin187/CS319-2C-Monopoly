@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>TEST</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
+</head>
+<body>
+
+<script src="City.js"></script>
+<script src="CityCard.js"></script>
+<script src="Chance.js"></script>
+<script src="ChanceCard.js"></script>
+<script>
+    let app;
+    let chance;
+    let treasure;
+    function flip_t(){
+        treasure();
+    }
+    function flip_c(){
+        chance();
+    }
+    function init(callback){
+        PIXI.settings.RESOLUTION = 2;
+        app = new PIXI.Application({resizeTo: window});
+        app.view.style.width = "100%";
+        app.view.style.height = "100%";
+        document.body.appendChild(app.view);
+        const loader = PIXI.loader.add("chance_background", "chance.png").add("monopoly_man","monopoly_man.png").add("treasure_background", "treasure.png").load(callback);
+    }
+    init((loader, resource)=>{
+        let city1 = new City("Nisantasi", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x00A5FF");
+        let city2 = new City("Etiler", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x00FFA5");
+        let chance1 = new Chance("Nisantasina git, baslangictan gecersen $200 al.");
+        let city1Card = new CityCard(city1);
+        let city2Card = new CityCard(city2);
+        let chance1Card = new ChanceCard(chance1, resource.monopoly_man.texture, resource.chance_background.texture);
+        let chance2Card = new ChanceCard(chance1, resource.monopoly_man.texture, resource.treasure_background.texture);
+        city1Card.draw();
+        city2Card.draw();
+        chance1Card.draw();
+        chance2Card.draw();
+        chance = chance1Card.flip.bind(chance1Card);
+        treasure = chance2Card.flip.bind(chance2Card);
+        app.stage.addChild(city1Card.shape);
+        app.stage.addChild(city2Card.shape);
+        app.stage.addChild(chance1Card.shape);
+        app.stage.addChild(chance2Card.shape);
+    });
+</script>
+</body>
+</html>
