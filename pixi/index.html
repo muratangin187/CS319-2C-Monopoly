@@ -28,7 +28,7 @@
         const loader = PIXI.loader.add("chance_background", "chance.png").add("monopoly_man","monopoly_man.png").add("treasure_background", "treasure.png").load(callback);
     }
     init((loader, resource)=>{
-        let city1 = new City("Nisantasi", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x00A5FF");
+        let city1 = new City("Ankara", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x00A5FF");
         let city2 = new City("Etiler", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x00FFA5");
         let chance1 = new Chance("Nisantasina git, baslangictan gecersen $200 al.");
         let city1Card = new CityCard(city1);
