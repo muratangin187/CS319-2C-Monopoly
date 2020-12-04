@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="578a394b-60a4-4f15-9d7e-e8a62b1d32d0" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1kqEVd9nXK16WIM3yzsQaKidbC5" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path" value="node" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\umity\Desktop\Bilkent 20-21 Fall\CS319\project\react\project_app\src\pages\common" />
+      <recent name="C:\Users\umity\Desktop\Bilkent 20-21 Fall\CS319\project\react\project_app\src\pages" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\umity\Desktop\Bilkent 20-21 Fall\CS319\project\react\project_app\src\pages\create_room_page\components" />
+      <recent name="C:\Users\umity\Desktop\Bilkent 20-21 Fall\CS319\project\react\project_app\src\pages\option_page\components" />
+      <recent name="C:\Users\umity\Desktop\Bilkent 20-21 Fall\CS319\project\react\project_app\src\images" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.npm start">
+    <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000">
+      <method v="2" />
+    </configuration>
+    <configuration name="npm start" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="578a394b-60a4-4f15-9d7e-e8a62b1d32d0" name="Default Changelist" comment="" />
+      <created>1606419747114</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1606419747114</updated>
+      <workItem from="1606419748233" duration="5848000" />
+      <workItem from="1606463601897" duration="7635000" />
+      <workItem from="1606554930448" duration="628000" />
+      <workItem from="1606818100189" duration="610000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="330" y="350" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1606420050459">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="330" y="350" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1606420050459" />
+    <state x="1220" y="283" key="FileChooserDialogImpl" timestamp="1606479915735">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="1220" y="283" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1606479915735" />
+    <state x="143" y="233" width="672" height="678" key="search.everywhere.popup" timestamp="1606463773097">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="143" y="233" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1606463773097" />
+  </component>
+</project>
