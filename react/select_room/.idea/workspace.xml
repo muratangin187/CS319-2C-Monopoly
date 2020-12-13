@@ -23,7 +23,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../project_app" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -66,6 +66,8 @@
       <workItem from="1606479919556" duration="1213000" />
       <workItem from="1606554767780" duration="759000" />
       <workItem from="1606818036021" duration="658000" />
+      <workItem from="1606832877055" duration="341000" />
+      <workItem from="1607765979242" duration="17000" />
     </task>
     <servers />
   </component>
