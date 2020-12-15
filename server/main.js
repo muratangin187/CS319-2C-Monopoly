@@ -10,15 +10,21 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/selam', (req, res) => {
+    res.send("asd");
+});
+
+
 io.on('connection', (socket) => {
     console.log('a user connected');
     socket.emit("test", "MERHABALAR");
     setTimeout(()=>{
 
         socket.emit("test", "SELAM AQ");
-    },2000)
+    },2000);
 });
 
 http.listen(3000, () => {
     console.log('listening on *:3000');
 });
+
