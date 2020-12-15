@@ -10,6 +10,12 @@ class CityCard{
         this.shape = this.createShape();
     }
 
+    update(newCity){
+        if(this.city != newCity){
+            this.city.rent = newCity.rent;
+        }
+    }
+
     createShape(){
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",
@@ -28,7 +34,7 @@ class CityCard{
         titleBackground.lineStyle(5, 0x333333);
         titleBackground.drawRect(10, 10, 230, 50);
 
-        let titleText = new PIXI.Text(this.city.name, style);
+        titleText =new PIXI.Text(this.city.name, style);
         titleText.anchor.x =0.5;
         titleText.anchor.y =0.5;
         titleText.x = titleBackground.getBounds().x + titleBackground.getBounds().width / 2;
