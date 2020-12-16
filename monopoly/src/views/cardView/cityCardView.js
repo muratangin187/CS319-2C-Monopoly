@@ -1,26 +1,11 @@
 import CardView from "./cardView";
 import * as PIXI from 'pixi.js';
 
-class City{
-    constructor(name, rent, price, mortgage, houseCost, hotelCost, color, id) {
-        this.name = name;
-        this.rent = rent;
-        this.price = price;
-        this.mortgage = mortgage;
-        this.houseCost = houseCost;
-        this.hotelCost = hotelCost;
-        this.color = color;
-        this.id = id;
-    }
-}
 
 class CityCardView extends CardView{
     constructor(city) {
         super();
-        this.city = city;
-        if(!this.city){
-            this.city = new City("Ankara", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x00A5FF", 0);
-        }
+        this.city = city
         this.content = new PIXI.Container();
         this.content.name = "content";
         this.title = new PIXI.Container();
@@ -35,7 +20,7 @@ class CityCardView extends CardView{
 
         let titleBackground = new PIXI.Graphics();
         titleBackground.name = "titleBackground";
-        titleBackground.beginFill(this.city.color);
+        titleBackground.beginFill(this.city.cityGroup.color);
         titleBackground.lineStyle(5, 0x333333);
         titleBackground.drawRect(10, 10, 230, 50);
         this.title.addChild(titleBackground);
@@ -51,13 +36,13 @@ class CityCardView extends CardView{
         titleText.y = titleBackground.getBounds().y + titleBackground.getBounds().height / 2;
         this.title.addChild(titleText);
 
-        let rentText = new PIXI.Text("Rent " + this.city.rent, {...style, align: "center", fontSize: 18});
-        let propText = new PIXI.Text(`With 1 House ....................... ${this.city.price[0]}
-With 2 House ....................... ${this.city.price[1]}
-With 3 House ....................... ${this.city.price[2]}
-With 4 House ....................... ${this.city.price[3]}
-With Hotel ........................... ${this.city.price[4]}`,{...style, fontSize: 16});
-        let costText = new PIXI.Text(`Mortgage Value ${this.city.mortgage}
+        let rentText = new PIXI.Text("Rent " + this.city.rentPrice[0], {...style, align: "center", fontSize: 18});
+        let propText = new PIXI.Text(`With 1 House ....................... ${this.city.rentPrice[1]}
+With 2 House ....................... ${this.city.rentPrice[2]}
+With 3 House ....................... ${this.city.rentPrice[3]}
+With 4 House ....................... ${this.city.rentPrice[4]}
+With Hotel ........................... ${this.city.rentPrice[5]}`,{...style, fontSize: 16});
+        let costText = new PIXI.Text(`Mortgage Value ${this.city.mortgagePrice}
 Houses cost ${this.city.houseCost}. each
 Hotels, ${this.city.hotelCost}. plus 4 houses`,{...style, align: "center", fontSize: 16});
         let infoText = new PIXI.Text(`If a player owns ALL the Lots of any

@@ -1,24 +1,11 @@
 import CardView from "./cardView";
 import * as PIXI from 'pixi.js';
-import Globals from "../../globals";
 
-class Station{
-    constructor(name, rent, price, mortgage, houseCost, hotelCost, color) {
-        this.name = name;
-        this.rent = rent;
-        this.price = price;
-        this.mortgage = mortgage;
-        this.color = color;
-    }
-}
 
 class StationCardView extends CardView{
     constructor(station) {
         super();
         this.station = station;
-        if(!this.station){
-            this.station = new Station("ATG", "$50", ["$200", "$600", "$1400"], "$200", "0xA500FF");
-        }
         this.content = new PIXI.Container();
         this.content.name = "content";
         this.title = new PIXI.Container();
@@ -31,7 +18,7 @@ class StationCardView extends CardView{
     initializeDrawings() {
         super.initializeDrawings();
 
-        let icon = new PIXI.Sprite(Globals.resources.railroad.texture);
+        let icon = new PIXI.Sprite(this.station.image);
         icon.width = 70;
         icon.height = 70;
         icon.x = this.border.width / 2 - 35;
@@ -49,11 +36,11 @@ class StationCardView extends CardView{
         this.titleText.y = 10 + 25 + 70;
         this.title.addChild(this.titleText);
 
-        let propText = new PIXI.Text(`Rent ................................. ${this.station.rent}
-If 1 owned ....................... ${this.station.price[0]}
-If 2 owned ....................... ${this.station.price[1]}
-If 3 owned ....................... ${this.station.price[2]}`,{...style, fontSize: 16});
-        let costText = new PIXI.Text(`Mortgage Value ${this.station.mortgage}`,{...style, align: "center", fontSize: 16});
+        let propText = new PIXI.Text(`Rent ................................. ${this.station.rentPrice[0]}
+If 1 owned ....................... ${this.station.rentPrice[1]}
+If 2 owned ....................... ${this.station.rentPrice[2]}
+If 3 owned ....................... ${this.station.rentPrice[3]}`,{...style, fontSize: 16});
+        let costText = new PIXI.Text(`Mortgage Value ${this.station.mortgagePrice}`,{...style, align: "center", fontSize: 16});
 
         propText.anchor.x =0.5;
         propText.anchor.y =0.5;

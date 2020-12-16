@@ -1,22 +1,11 @@
 import CardView from "./cardView";
 import * as PIXI from 'pixi.js';
-import Globals from "../../globals";
 
-class Utility{
-    constructor(name, mortgage, icon) {
-        this.name = name;
-        this.mortgage = mortgage;
-        this.icon = icon;
-    }
-}
 
 class UtilityCardView extends CardView{
     constructor(utility) {
         super();
         this.utility = utility;
-        if(!this.utility){
-            this.utility = new Utility("Electric Company", "$200", Globals.resources.electric.texture);
-        }
         this.content = new PIXI.Container();
         this.content.name = "content";
         this.title = new PIXI.Container();
@@ -29,7 +18,7 @@ class UtilityCardView extends CardView{
     initializeDrawings() {
         super.initializeDrawings();
 
-        let icon = new PIXI.Sprite(this.utility.icon);
+        let icon = new PIXI.Sprite(this.utility.image);
         icon.width = 70;
         icon.height = 70;
         icon.x = this.border.width / 2 - 35;
@@ -54,7 +43,7 @@ rolled, but if BOTH
 Utilities are owned, rent
 is 10x the amount shown
 on the dice`,{...style, fontSize: 16, align: "center"});
-        let costText = new PIXI.Text(`Mortgage Value ${this.utility.mortgage}`,{...style, align: "center", fontSize: 16});
+        let costText = new PIXI.Text(`Mortgage Value ${this.utility.mortgagePrice}`,{...style, align: "center", fontSize: 16});
 
         propText.anchor.x =0.5;
         propText.anchor.y =0.5;

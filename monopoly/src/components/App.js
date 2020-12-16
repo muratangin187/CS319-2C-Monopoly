@@ -22,6 +22,9 @@ import tileView from "../views/tileView/tileView";
 import cardView from "../views/cardView/cardView";
 import cityTileView from "../views/tileView/cityTileView";
 import otherPropertyTileView from "../views/tileView/otherPropertyTileView";
+import stationCardView from "../views/cardView/stationCardView";
+import stationModel from "../models/stationModel";
+import utilityCardView from "../views/cardView/utilityCardView";
 
 function initPixi(){
   PIXI.settings.RESOLUTION = 2;
@@ -40,18 +43,20 @@ function initPixi(){
     let city5 = new CityModel(5, "Karaman",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 39,5, "$100", "$100", [], cityGroup2);
     let utility1 = new UtilityModel(6, "Electric service",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 38, 5, false, Globals.resources.electric.texture);
     let utility2 = new UtilityModel(7, "Water pump",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 17, 5, false, Globals.resources.water.texture);
+    let station1 = new stationModel(5, "Railroad",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 17, 5, false, Globals.resources.railroad.texture);
     cityGroup.cities.push(city1);
     cityGroup.cities.push(city2);
     cityGroup.cities.push(city3);
     cityGroup2.cities.push(city4);
     cityGroup2.cities.push(city5);
-    //let test = new CityCardView();
+    let test = new utilityCardView(utility1);
+    test.card.x = 100;
     //let test2 = new SpecialCardView({title: "Quest Card #2", type: 0, info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultrices, elit semper auctor luctus, neque quam tempor lacus, faucibus egestas metus nunc nec elit. Donec ut est erat. Nunc tincidunt magna eget mi vehicula, nec aliquam justo ultrices. In ac bibendum libero."});
     //test2.card.x = 260;
-    //let test3 = new StationCardView();
-    //test3.card.x = 390;
-    //let test4 = new UtilityCardView();
-    //test4.card.x = 520;
+    let test3 = new CityCardView(city1);
+    test3.card.x = 390;
+    let test4 = new stationCardView(station1);
+    test4.card.x = 720;
     let testBoard1 = new cityTileView(city1);
     testBoard1.initializeDrawings();
     let testBoard2 = new cityTileView(city2);
