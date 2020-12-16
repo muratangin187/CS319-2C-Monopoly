@@ -13,6 +13,7 @@ import StationCardView from "../views/cardView/stationCardView";
 import UtilityCardView from "../views/cardView/utilityCardView";
 import tileView from "../views/tileView/tileView";
 import cardView from "../views/cardView/cardView";
+import cityTileView from "../views/tileView/cityTileView";
 
 function initPixi(){
   PIXI.settings.RESOLUTION = 2;
@@ -30,7 +31,7 @@ function initPixi(){
     let test4 = new UtilityCardView();
     test4.card.x = 520;
     for(let i = 0; i < 40; i++){
-      let testBoard = new tileView(i);
+      let testBoard = new cityTileView(null,i);
       testBoard.initializeDrawings();
     }
 

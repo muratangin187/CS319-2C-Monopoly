@@ -2,7 +2,7 @@ import CardView from "./cardView";
 import * as PIXI from 'pixi.js';
 
 class City{
-    constructor(name, rent, price, mortgage, houseCost, hotelCost, color) {
+    constructor(name, rent, price, mortgage, houseCost, hotelCost, color, id) {
         this.name = name;
         this.rent = rent;
         this.price = price;
@@ -10,6 +10,7 @@ class City{
         this.houseCost = houseCost;
         this.hotelCost = hotelCost;
         this.color = color;
+        this.id = id;
     }
 }
 
@@ -18,7 +19,7 @@ class CityCardView extends CardView{
         super();
         this.city = city;
         if(!this.city){
-            this.city = new City("Ankara", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x00A5FF");
+            this.city = new City("Ankara", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x00A5FF", 0);
         }
         this.content = new PIXI.Container();
         this.content.name = "content";
