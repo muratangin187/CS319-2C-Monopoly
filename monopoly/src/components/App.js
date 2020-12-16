@@ -11,6 +11,8 @@ import electric from "../views/assets/electric.png";
 import water from "../views/assets/water.png";
 import StationCardView from "../views/cardView/stationCardView";
 import UtilityCardView from "../views/cardView/utilityCardView";
+import tileView from "../views/tileView/tileView";
+import cardView from "../views/cardView/cardView";
 
 function initPixi(){
   PIXI.settings.RESOLUTION = 2;
@@ -27,6 +29,12 @@ function initPixi(){
     test3.card.x = 390;
     let test4 = new UtilityCardView();
     test4.card.x = 520;
+    for(let i = 0; i < 40; i++){
+      let testBoard = new tileView(i);
+      testBoard.initializeDrawings();
+    }
+
+
   });
 }
 
