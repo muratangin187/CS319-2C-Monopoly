@@ -1,3 +1,5 @@
+// Include to a proper class
+
 class questsModel{
     /**
      * Should we write the check conditions in here or in Game Manager class.

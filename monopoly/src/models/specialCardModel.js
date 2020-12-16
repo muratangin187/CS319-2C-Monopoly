@@ -1,4 +1,4 @@
-class specialCardModel{
+class SpecialCardModel{
 
     /**
      * Special Cards:

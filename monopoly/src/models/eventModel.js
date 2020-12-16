@@ -1,3 +1,4 @@
+import StateModel from "./stateModel"
 class eventModel{
     /**
      * eventModel is based on eventProps Class in Design Report 2

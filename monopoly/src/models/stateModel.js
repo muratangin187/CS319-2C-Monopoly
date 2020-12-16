@@ -1,4 +1,10 @@
-class stateModel{
+import PlayerModel from "./playerModel";
+import CityModel from "./cityModel";
+import UtilityModel from "./utilityModel";
+import StationModel from "./stationModel";
+import SpecialCardModel from "./specialCardModel";
+
+class StateModel{
     /**
      * Reviewed Later
      * @param players: PlayerModel[]

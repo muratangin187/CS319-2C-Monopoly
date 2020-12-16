@@ -68,19 +68,20 @@ class PlayerModel{
     /**
      *
      * @param newProperty: PropertyModel Add to the player's properties
-     *
+     * @param cost: number => Cost of the property
      * In the addProperty function, the owner of the newProperty is also updated
      */
     addProperty(newProperty, cost){
+        newProperty.setOwner(this.id);
+
         this.properties.push(newProperty);
 
         this.money -= cost;
 
-        //newProperty.setOwner(this.id);
         //newProperty.sellOwner(newOwner) => ?
-
-
     }
+
+    //SELL PROPERTY EKLENECEK
 
     /**
      *
@@ -102,9 +103,11 @@ class PlayerModel{
         const index = this.cards.indexOf(card);
         if(index !== -1){
             this.cards.splice(index, 1);
+            return true;
         }
         else{
             console.log("No Card found");
+            return false;
         }
     }
 
