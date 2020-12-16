@@ -31,7 +31,7 @@ function MainPage(props) {
                         <img src={monopoly_logo} className={classes.mainPageLogo} alt="monopoly_logo"/>
                     </Grid>
                     <Grid item style={{width: "inherit"}}>
-                        <Button fullWidth variant='contained' onClick={() => props.setPage("createRoomPage")}>Start Game</Button>
+                        <Button fullWidth variant='contained' onClick={() => props.setPage("roomOptionPage")}>Start Game</Button>
                     </Grid>
                     <Grid item style={{width: "inherit"}}>
                         <Button fullWidth variant='contained' onClick={() => props.setPage("optionPage")}>Options</Button>

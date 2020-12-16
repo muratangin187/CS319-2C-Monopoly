@@ -5,7 +5,7 @@ import OptionBody from "./components/OptionBody";
 function OptionPage(props) {
     return (
         <div className="optionPage">
-            <Header setPage={props.setPage} prevPageName="mainPage" prevPageTitle="Main Menu"/>
+            <Header setPage={props.setPage} prevPageName="roomOptionPage" prevPageTitle="Room Option Page"/>
             <OptionBody />
         </div>
     );

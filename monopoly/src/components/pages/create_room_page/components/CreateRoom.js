@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CreateRoom() {
+export default function CreateRoom(props) {
     const formik = useFormik({
         initialValues: {
             room_name: "",
@@ -40,6 +40,11 @@ export default function CreateRoom() {
             //send roomModel object to gameManager
             console.log(JSON.stringify(roomModel))
             ipcRenderer.send('create_room', roomModel);
+            ipcRenderer.once("create_room_reply", (event, args) => {
+                props.setRooms(args);
+                console.log("Reply");
+                console.log(args);
+            });
         }
     });
 

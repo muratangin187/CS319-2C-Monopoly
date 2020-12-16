@@ -11,7 +11,10 @@ class GameManager{
         ipcMain.on('create_room', (event, arg) => {
             //listen create_room
             console.log("GameManager: " + JSON.stringify(arg));
-            networkManager.createRoom(arg)
+            networkManager.createRoom(arg);
+            console.log("GetRooms:")
+            console.log(networkManager.getRooms());
+            event.returnValue = networkManager.getRooms();
         });
     }
 }
