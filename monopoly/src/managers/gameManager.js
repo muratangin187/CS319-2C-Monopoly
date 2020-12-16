@@ -8,14 +8,17 @@ class GameManager{
     }
 
     createListeners(){
-        ipcMain.on('create_room', (event, arg) => {
-            //listen create_room
-            console.log("GameManager: " + JSON.stringify(arg));
-            networkManager.createRoom(arg);
-            console.log("GetRooms:")
-            console.log(networkManager.getRooms());
-            event.returnValue = networkManager.getRooms();
+
+        ipcMain.on("get_rooms_fb", async (event, args) => {
+            let rooms = await networkManager.getRooms();
+            console.log("game manager - from network manager");
+            console.log(rooms);
+            event.reply("get_rooms_bf", rooms);
         });
+
+        ipcMain.on("create_room_fb", (event, args) => {
+            networkManager.createRoom(args);
+        })
     }
 }
 

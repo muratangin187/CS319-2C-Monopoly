@@ -1,35 +1,31 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import RoomList from "./components/RoomList";
 import Header from "../common/Header";
-
-const rows = [
-    {
-        name: "Room - 1",
-        passRequired: "No",
-        boardTemplate: "Template - 1",
-    },
-    {
-        name: "Room - 2",
-        passRequired: "Yes",
-        boardTemplate: "Template - 2",
-    },
-    {
-        name: "Room - 3",
-        passRequired: "No",
-        boardTemplate: "Template - 2",
-    },
-    {
-        name: "Room - 4",
-        passRequired: "No",
-        boardTemplate: "Template - 1",
-    }
-];
+const {ipcRenderer} = require('electron');
 
 function SelectRoomPage(props){
+    const [rooms, setRooms] = useState([]);
+
+    useEffect( () => {
+        function get_room_listener(event, args){
+            setRooms(args);
+        };
+
+        //component mount
+        ipcRenderer.on("get_rooms_bf", get_room_listener);
+
+        ipcRenderer.send("get_rooms_fb");
+
+        //component unmount
+        return () => {
+            ipcRenderer.removeListener("get_room_bf", get_room_listener);
+        }
+    }, [rooms]);
+
     return(
         <div className="selectRoomPage">
             <Header setPage={props.setPage} prevPageName="roomOptionPage" prevPageTitle="Room Option Page" />
-            <RoomList rows = {props.rooms} />
+            <RoomList rows = {rooms} />
         </div>
     );
 }
