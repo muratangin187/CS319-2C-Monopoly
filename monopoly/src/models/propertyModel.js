@@ -1,7 +1,5 @@
-
-
-class PropertyModel {
-    constructor(id, name, rentPrice, mortgagePrice, price, tile, card, isMortgaged) {
+export default class PropertyModel {
+    constructor(id, name, rentPrice, mortgagePrice, price, tile, card) {
         this.id = id;
         this.name = name;
         this.rentPrice = rentPrice;
@@ -13,26 +11,35 @@ class PropertyModel {
         this.isMortgaged = false;
     }
 
-    sell(newOwner) {
+    setOwner(newOwner) {
         this.ownerId = newOwner;
-        return true;
     }
 
     mortgage() {
         this.isMortgaged = true;
+        return this.mortgagePrice;
     }
 
+    /**
+     * Lifts the mortgage and returns the amount a user needs to pay
+     * @returns {number}
+     */
     liftMortgage() {
         this.isMortgaged = false;
         //amount of money that player needs to pay
         let amount = this.mortgagePrice * 1.1;
+        return amount;
     }
 
+    //
     getRentPrice() {
+        if (this.isMortgaged) {
+            return 0;
+        }
         return this.rentPrice[0];
     }
 
     isOwned() {
-        return this.ownerId != null;
+        return this.ownerId !== null;
     }
 }
