@@ -13,7 +13,8 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('a user connected ' + rooms.length);
+    socket.emit("get_rooms_sb", rooms);
 
     socket.on("get_rooms_bs", () => {
         console.log("server - get_rooms_bs");
@@ -22,6 +23,7 @@ io.on('connection', (socket) => {
 
     socket.on("create_room_bs", (...args) => {
         rooms.push(args[0]);
+        io.emit("get_rooms_sb", rooms);
     });
 });
 

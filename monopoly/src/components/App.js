@@ -8,21 +8,18 @@ const {ipcRenderer} = require('electron');
 
 function App() {
   const [page, setPage] = useState("mainPage");
-  // const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
-    // useEffect(() => {
-    //     function listener(event, args){
-    //         setRooms(args);
-    //         console.log("Reply");
-    //         console.log(args);
-    //     }
-    //     ipcRenderer.on("create_room_reply", listener);
-    //     ipcRenderer.send("get_rooms");
-    //     return function cleanup()
-    //     {
-    //         ipcRenderer.removeListener("create_room_reply", listener);
-    //     };
-    // });
+  useEffect(() => {
+      function get_room_listener(event, args){
+          setRooms(args);
+      };
+      ipcRenderer.on("get_rooms_bf", get_room_listener);
+      return function cleanup()
+      {
+          ipcRenderer.removeListener("get_room_bf", get_room_listener);
+      };
+  }, []);
 
   switch (page){
     case "mainPage":
@@ -56,7 +53,7 @@ function App() {
     case "selectRoomPage":
         return(
             <div className="App">
-                <SelectRoomPage setPage={setPage}/>
+                <SelectRoomPage setPage={setPage} rooms={rooms}/>
             </div>
         );
 
