@@ -12,11 +12,10 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('a user connected');
-    socket.emit("test", "MERHABALAR");
-    setTimeout(()=>{
-
-        socket.emit("test", "SELAM AQ");
-    },2000)
+    socket.on("create_room_emit", (arg) => {
+        console.log("Server: " + JSON.stringify(arg));
+        io.sockets.emit("create_room_on", arg.room_name);
+    })
 });
 
 http.listen(3000, () => {

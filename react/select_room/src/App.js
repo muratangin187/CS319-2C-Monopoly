@@ -29,7 +29,7 @@ const rows = [
   }
 ];
 
-function App() {
+function AppDemo() {
   return (
     <div className="App" style={{display: "flex", height: "100vh", width: "100vw"}}>
       <RoomList rows = {rows} />

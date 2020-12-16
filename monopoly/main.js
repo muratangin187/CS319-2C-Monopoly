@@ -49,6 +49,8 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
 
+    require("./src/managers/gameManager");
+
     if (dev) {
       const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
 
