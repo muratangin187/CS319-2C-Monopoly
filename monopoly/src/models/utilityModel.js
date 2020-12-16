@@ -6,8 +6,11 @@ export default class UtilityModel extends PropertyModel{
     }
 
 
-    getRent(){
+    getRentPrice(diceRoll, ownedUtilityNumber){
+        if(ownedUtilityNumber === 1)
+            return diceRoll * 4;
 
-
+        return diceRoll * 10;
     }
+
 }
