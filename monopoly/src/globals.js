@@ -8,7 +8,7 @@ class Globals{
                 QUEST: 2
             }
         };
-        this.sizeOfBoard = 1000;
+        this.sizeOfBoard = 900;
     }
 }
 export default (new Globals())

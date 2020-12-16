@@ -12,7 +12,7 @@ class CardView{
     }
 
     initializeDrawings(){
-        this.border.beginFill(0xFFFFFF);
+        this.border.beginFill(0xCEE5D1);
         this.border.lineStyle(5, 0x333333);
         this.border.drawRect(0, 0, 250, 350);
     }

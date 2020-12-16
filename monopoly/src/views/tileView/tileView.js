@@ -32,6 +32,7 @@ class tileView{
         }
         this.border.beginFill(0xCEE5D1);
         this.border.lineStyle(1, 0x333333);
+        //this.border.lineStyle(4, 0x000000);
         this.border.drawRect(this.x, this.y, this.size, this.size);
     }
 
