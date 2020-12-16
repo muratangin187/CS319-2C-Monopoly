@@ -1,8 +1,9 @@
 import cityModel from "./cityModel";
 
-class CityGroupModel {
-    constructor(cities) {
+export default class CityGroupModel {
+    constructor(cities, color) {
         this.cities = cities;
+        this.color = color;
     }
 
     getCityCount() {

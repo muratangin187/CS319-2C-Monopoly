@@ -1,26 +1,10 @@
 import * as PIXI from 'pixi.js'
 import tileView from "./tileView";
 
-class City{
-    constructor(name, rent, price, mortgage, houseCost, hotelCost, color, id) {
-        this.name = name;
-        this.rent = rent;
-        this.price = price;
-        this.mortgage = mortgage;
-        this.houseCost = houseCost;
-        this.hotelCost = hotelCost;
-        this.color = color;
-        this.id = id;
-    }
-}
-
 class cityTileView extends tileView{
-    constructor(city, id) {
-        super(id);
+    constructor(city) {
+        super(city.tile);
         this.city = city;
-        if(!this.city){
-            this.city = new City("Ankara", "50$", ["$200", "$600", "$1400", "$1700", "$2000"], "$200", "$200", "$200", "0x0271BC", 0);
-        }
         this.content = new PIXI.Container();
         this.content.name = "content";
         this.title = new PIXI.Container();
@@ -34,7 +18,7 @@ class cityTileView extends tileView{
 
         let titleBackground = new PIXI.Graphics();
         titleBackground.name = "titleBackground";
-        titleBackground.beginFill(this.city.color);
+        titleBackground.beginFill(this.city.cityGroup.color);
         titleBackground.lineStyle(1, 0x333333);
         titleBackground.drawRect(this.x, this.y, this.size, this.size/4);
         this.title.addChild(titleBackground);
@@ -50,7 +34,7 @@ class cityTileView extends tileView{
         titleText.y = titleBackground.getBounds().y + titleBackground.getBounds().height + 10;
         this.title.addChild(titleText);
 
-        let rentText = new PIXI.Text("Rent " + this.city.rent, {...style, align: "center", fontSize: 10});
+        let rentText = new PIXI.Text("Price " + this.city.price, {...style, align: "center", fontSize: 10});
 
         rentText.anchor.x =0.5;
         rentText.anchor.y =0.5;
