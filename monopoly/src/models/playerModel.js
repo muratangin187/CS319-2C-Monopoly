@@ -71,10 +71,15 @@ class PlayerModel{
      *
      * In the addProperty function, the owner of the newProperty is also updated
      */
-    addProperty(newProperty){
+    addProperty(newProperty, cost){
         this.properties.push(newProperty);
+
+        this.money -= cost;
+
         //newProperty.setOwner(this.id);
         //newProperty.sellOwner(newOwner) => ?
+
+
     }
 
     /**
