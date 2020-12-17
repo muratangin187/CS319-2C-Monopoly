@@ -37,5 +37,5 @@ class GameManager{
 
 }
 
-module.exports = new GameManager;
+module.exports = new GameManager();
 

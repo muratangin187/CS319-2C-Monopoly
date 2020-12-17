@@ -28,4 +28,4 @@ class StateManager{
 
 }
 
-module.exports = new StateManager;
+module.exports = new StateManager();

@@ -43,4 +43,4 @@ class NetworkManager {
     }
 }
 
-module.exports = new NetworkManager;
+module.exports = new NetworkManager();
