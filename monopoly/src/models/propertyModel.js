@@ -1,4 +1,4 @@
-export default class PropertyModel {
+class PropertyModel {
     constructor(id, name, rentPrice, mortgagePrice, price, tile, card) {
         this.id = id;
         this.name = name;
@@ -43,3 +43,5 @@ export default class PropertyModel {
         return this.ownerId !== null;
     }
 }
+
+module.exports = PropertyModel;

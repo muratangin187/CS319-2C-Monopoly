@@ -32,13 +32,13 @@ class PlayerModel{
      * because initially all the players are at the Start => 0
      * and no one owns anything
      */
-    construct(id, username, avatar, state, character, money){
+    constructor(id, username, avatar, state, character){
         this.id = id;
         this.username = username;
         this.avatar = avatar;
         this.state = state;
         this.character = character;
-        this.money = money;
+        this.money = 200;
 
         this.cards = [];
         this.properties = [];
@@ -65,21 +65,6 @@ class PlayerModel{
     removeCard = card: Card
     changeState = newState: State
     */
-    /**
-     *
-     * @param newProperty: PropertyModel Add to the player's properties
-     * @param cost: number => Cost of the property
-     * In the addProperty function, the owner of the newProperty is also updated
-     */
-    addProperty(newProperty, cost){
-        newProperty.setOwner(this.id);
-
-        this.properties.push(newProperty);
-
-        this.money -= cost;
-
-        //newProperty.sellOwner(newOwner) => ?
-    }
 
     //SELL PROPERTY EKLENECEK
 
@@ -117,3 +102,5 @@ class PlayerModel{
 
 
 }
+
+module.exports = PlayerModel;
