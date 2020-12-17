@@ -1,14 +1,16 @@
+const SpecialCardModel = require("../models/specialCardModel");
+
 class CardManager {
    constructor() {
       this.cards = [];
-      /*
+
       this.chanceCards = [];
       this.chestCards = [];
       this.createChanceCards();
       this.createChestCards();
       this.chanceCards = this.shuffle(this.chanceCards);
       this.chestCards = this.shuffle(this.chestCards);
-      */
+
    }
 
    setCards(newCards){
@@ -30,7 +32,7 @@ class CardManager {
       const descriptions = fs.split(/\\r?\\n/);
 
       descriptions.forEach(desc => {
-         this.chanceCards.append(new Chance(desc));
+         this.chanceCards.append(new SpecialCardModel(desc));
       });
 
       console.log("Total number of Chance Cards is: ",this.chanceCards.length);
