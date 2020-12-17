@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import Header from "../common/Header";
 import PlayerList from "./components/PlayerList"
 import Chat from "./components/Chat"
+import CharacterList from "./components/CharacterList";
 const {ipcRenderer} = require('electron');
 
 
@@ -27,7 +28,7 @@ function RoomLobbyPage(props) {
                 <div style={{width: "50vw"}}><Chat/></div>
                 <div style={{width:"50vw", display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <PlayerList users={roomUsers}/>
-                    <PlayerList />
+                    <CharacterList />
                 </div>
             </div>
         </div>
