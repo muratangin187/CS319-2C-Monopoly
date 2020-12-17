@@ -1,16 +1,18 @@
+const SpecialCardModel = require("../models/specialCardModel");
+
 const chanceDesc = require("../Descriptions/chanceCards");
 const chestDesc = require("../Descriptions/chestCards");
 class CardManager {
    constructor() {
       this.cards = [];
-      /*
+
       this.chanceCards = [];
       this.chestCards = [];
       this.createChanceCards();
       this.createChestCards();
       this.chanceCards = this.shuffle(this.chanceCards);
       this.chestCards = this.shuffle(this.chestCards);
-      */
+
    }
 
    setCards(newCards){
