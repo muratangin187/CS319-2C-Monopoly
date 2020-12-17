@@ -73,7 +73,6 @@ function initPixi(){
         let imageType = tiles[i]["image"];
         // let tile = tiles[i]["tile"];
         // if (a === "start_tile") {
-        console.log("Image type: " + imageType);
         image = Globals.resources[imageType].texture;
         // else if (tile === 10) {
         //   image = Globals.resources.visit_jail.texture;
@@ -97,7 +96,7 @@ function initPixi(){
         // let tile = tiles[i]["tile"];
         let imageType = tiles[i]["image"];
         image = Globals.resources[imageType].texture;
-        let station = new StationModel(id, name,  rentPrice, mortgagePrice, price, tile, tile, null, false, image);
+        let station = new StationModel(id, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
         let stationTile = new otherPropertyTileView(station);
         stationTile.initializeDrawings();
       }
