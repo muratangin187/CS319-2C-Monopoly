@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import tileView from "./tileView";
+import CityCardView from "../cardView/cityCardView";
 
 class cityTileView extends tileView{
     constructor(city) {
@@ -11,6 +12,7 @@ class cityTileView extends tileView{
         this.title.name = "title";
         this.tile.addChild(this.title);
         this.tile.addChild(this.content);
+
         this.initializeDrawings()
     }
     initializeDrawings() {
@@ -43,10 +45,10 @@ class cityTileView extends tileView{
         rentText.x = this.border.getBounds().x + this.border.getBounds().width / 2;
 
         rentText.y =this.y + this.size/(1.3);
+        this.title.addChild(rentText);
 
-
-        this.content.addChild(rentText);
 
     }
+
 }
 export default cityTileView;

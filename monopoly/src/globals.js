@@ -9,7 +9,9 @@ class Globals{
                 QUEST: 2
             }
         };
-        this.sizeOfBoard = 900;
+        this.tileNumber = 12;
+        this.sizeOfBoard = this.tileNumber*80;
+
         this.tiles = [
             {
                 "type": "CornerTile",
@@ -26,7 +28,7 @@ class Globals{
                 "tile": 1,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x382B1C
+                "cityColor": "0x382B1C"
             },
             {
                 "type": "SpecialTile",
@@ -44,7 +46,7 @@ class Globals{
                 "tile": 3,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x382B1C
+                "cityColor": "0x382B1C"
             },
             {
                 "type": "SpecialTile",
@@ -72,7 +74,7 @@ class Globals{
                 "tile": 6,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x3CB8DE
+                "cityColor": "0x3CB8DE"
             },
             {
                 "type": "SpecialTile",
@@ -90,7 +92,7 @@ class Globals{
                 "tile": 8,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x3CB8DE
+                "cityColor":  "0x3CB8DE"
             },
             {
                 "type": "CityTile",
@@ -102,7 +104,7 @@ class Globals{
                 "tile": 9,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x3CB8DE
+                "cityColor":  "0x3CB8DE"
             },
             {
                 "type": "CornerTile",
@@ -119,7 +121,7 @@ class Globals{
                 "tile": 11,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xDE3CD3
+                "cityColor": "0xDE3CD3"
             },
             {
                 "type": "UtilityTile",
@@ -141,7 +143,7 @@ class Globals{
                 "tile": 13,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xDE3CD3
+                "cityColor":"0xDE3CD3"
             },
             {
                 "type": "CityTile",
@@ -153,7 +155,7 @@ class Globals{
                 "tile": 14,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xDE3CD3
+                "cityColor": "0xDE3CD3"
             },
             {
                 "type": "StationTile",
@@ -175,7 +177,7 @@ class Globals{
                 "tile": 16,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xDE883C
+                "cityColor": "0xDE883C"
             },
             {
                 "type": "SpecialTile",
@@ -193,7 +195,7 @@ class Globals{
                 "tile": 18,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xDE883C
+                "cityColor": "0xDE883C"
             },
             {
                 "type": "CityTile",
@@ -205,7 +207,7 @@ class Globals{
                 "tile": 19,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xDE883C
+                "cityColor": "0xDE883C"
             },
             {
                 "type": "CornerTile",
@@ -222,7 +224,7 @@ class Globals{
                 "tile": 21,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": 0xD40B0A,
+                "cityColor": "0xD40B0A",
             },
             {
                 "type": "SpecialTile",
@@ -239,7 +241,7 @@ class Globals{
                 "price": 220,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": 0xD40B0A,
+                "cityColor": "0xD40B0A",
                 "tile": 23
             },
             {
@@ -251,7 +253,7 @@ class Globals{
                 "price": 240,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": 0xD40B0A,
+                "cityColor": "0xD40B0A",
                 "tile": 24
             },
             {
@@ -274,7 +276,7 @@ class Globals{
                 "price": 260,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": 0xFFC90F,
+                "cityColor": "0xFFC90F",
                 "tile": 26
             },
             {
@@ -286,7 +288,7 @@ class Globals{
                 "price": 260,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": 0xFFC90F,
+                "cityColor": "0xFFC90F",
                 "tile": 27
             },
             {
@@ -308,7 +310,7 @@ class Globals{
                 "price": 280,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": 0xFFC90F,
+                "cityColor": "0xFFC90F",
                 "tile": 29
             },
             {
@@ -325,7 +327,7 @@ class Globals{
                 "price": 300,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": 0x24733B,
+                "cityColor": "0x24733B",
                 "tile": 31
             },
             {
@@ -337,7 +339,7 @@ class Globals{
                 "price": 300,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": 0x24733B,
+                "cityColor": "0x24733B",
                 "tile": 32
             },
             {
@@ -355,7 +357,7 @@ class Globals{
                 "price": 320,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": 0x24733B,
+                "cityColor": "0x24733B",
                 "tile": 34
             },
             {
@@ -384,7 +386,7 @@ class Globals{
                 "price": 350,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": 0x0541CA,
+                "cityColor": "0x0541CA",
                 "tile": 37
             },
             {
@@ -402,7 +404,7 @@ class Globals{
                 "price": 400,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": 0x0541CA,
+                "cityColor": "0x0541CA",
                 "tile": 39
             },
         ];

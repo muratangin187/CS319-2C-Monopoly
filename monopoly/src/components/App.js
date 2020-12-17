@@ -40,6 +40,9 @@ import otherPropertyTileView from "../views/tileView/otherPropertyTileView";
 import CornerTileView from "../views/tileView/cornerTileView";
 import SpecialTileView from "../views/tileView/specialTileView";
 import StationModel from "../models/stationModel";
+import Character from "../views/tileView/Character";
+import {util} from "webpack";
+import globals from "../globals";
 
 function initPixi(){
   PIXI.settings.RESOLUTION = 2;
@@ -47,26 +50,27 @@ function initPixi(){
   Globals.app.view.style.width = "100%";
   Globals.app.view.style.height = "100%";
   document.getElementById("canvas").appendChild(Globals.app.view);
-  const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("railroad", railroad).load((loader, resources)=>{
+  const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("railroad", railroad).load(async (loader, resources)=>{
     Globals.resources = resources;
 
-    let browns = new CityGroupModel([], 0x382B1C);
-    let lightBlues = new CityGroupModel([], 0x3CB8DE);
-    let pinks = new CityGroupModel([], 0xDE3CD3);
-    let oranges = new CityGroupModel([], 0xDE883C);
-    let reds = new CityGroupModel([], 0xD40B0A);
-    let yellows = new CityGroupModel([], 0xFFC90F);
-    let greens = new CityGroupModel([], 0x24733B);
-    let blues = new CityGroupModel([], 0x0541CA);
+
+    let browns = new CityGroupModel([], "0x382B1C");
+    let lightBlues = new CityGroupModel([], "0x3CB8DE");
+    let pinks = new CityGroupModel([], "0xDE3CD3");
+    let oranges = new CityGroupModel([], "0xDE883C");
+    let reds = new CityGroupModel([], "0xD40B0A");
+    let yellows = new CityGroupModel([], "0xFFC90F");
+    let greens = new CityGroupModel([], "0x24733B");
+    let blues = new CityGroupModel([], "0x0541CA");
 
 
     let tiles = Globals.tiles;
     let image = Globals.resources["board_center"].texture;
     let board_center = new PIXI.Sprite(image);
-    board_center.x = Globals.sizeOfBoard / 11;
-    board_center.y = Globals.sizeOfBoard / 11;
-    board_center.width = Globals.sizeOfBoard / 11 * 9;
-    board_center.height = Globals.sizeOfBoard / 11 * 9;
+    board_center.x = Globals.sizeOfBoard / Globals.tileNumber;
+    board_center.y = Globals.sizeOfBoard / Globals.tileNumber;
+    board_center.width = Globals.sizeOfBoard / Globals.tileNumber * (Globals.tileNumber-2);
+    board_center.height = Globals.sizeOfBoard / Globals.tileNumber * (Globals.tileNumber-2);
     Globals.app.stage.addChild(board_center);
     for(let i = 0; i < 40; i++){
       let type = tiles[i]["type"];
@@ -189,6 +193,22 @@ function initPixi(){
     }
 
 
+    let char1 = new Character(Globals.resources.electric.texture, 0, 0);
+    let char2 = new Character(Globals.resources.electric.texture, 22,1) ;
+    let char3 = new Character(Globals.resources.electric.texture, 13,2);
+    let char4 = new Character(Globals.resources.electric.texture, 6,3);
+    //char1.move(39);
+
+    for(let i = 0; i < 10; i++){
+      await char1.move(Math.abs(i-39) % 40);
+      await char2.move(Math.abs(i-39) % 40);
+      await char3.move(Math.abs(i-39) % 40);
+      await char4.move(Math.abs(i-39) % 40);
+    }
+
+
+    //(char1.x = 50;
+    console.log(char1.x) ;
   });
 }
 
