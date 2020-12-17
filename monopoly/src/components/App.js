@@ -187,22 +187,10 @@ function initPixi(){
   });
 }
 
-function testSocketIO(){
-  const socket = socketIOClient(endPoint);
-  socket.on("test", data2 => {
-    console.log(data2);
-    setData(data2);
-  });
-}
-
 function App() {
-  const [endPoint, setEndPoint] = React.useState("http://localhost:3000");
-  const [data, setData] = React.useState("");
-
   React.useEffect(() => {
     initPixi();
   }, []);
-
 
     return (
         <div>
