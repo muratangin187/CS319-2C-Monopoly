@@ -26,7 +26,7 @@ class cityTileView extends tileView{
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",
         });
-        let titleText =new PIXI.Text(this.city.name, {...style, align: "center", fontSize: 13});
+        let titleText =new PIXI.Text(this.city.name, {...style, align: "center", fontSize: 9});
         titleText.name = "titleText";
         titleText.anchor.x =0.5;
         titleText.anchor.y =0.5;
@@ -34,7 +34,7 @@ class cityTileView extends tileView{
         titleText.y = titleBackground.getBounds().y + titleBackground.getBounds().height + 10;
         this.title.addChild(titleText);
 
-        let rentText = new PIXI.Text("Price " + this.city.price, {...style, align: "center", fontSize: 10});
+        let rentText = new PIXI.Text("Price " + this.city.price, {...style, align: "center", fontSize: 8});
 
         rentText.anchor.x =0.5;
         rentText.anchor.y =0.5;

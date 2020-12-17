@@ -21,7 +21,7 @@ class SpecialTileView extends tileView{
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",
         });
-        let titleText =new PIXI.Text(this.titleText, {...style, align: "center", fontSize: 13});
+        let titleText =new PIXI.Text(this.titleText, {...style, align: "center", fontSize: 9});
         titleText.name = "titleText";
         titleText.anchor.x =0.5;
         titleText.anchor.y =0.5;

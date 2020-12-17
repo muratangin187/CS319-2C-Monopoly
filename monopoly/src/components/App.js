@@ -34,6 +34,7 @@ import otherPropertyTileView from "../views/tileView/otherPropertyTileView";
 import CornerTileView from "../views/tileView/cornerTileView";
 import SpecialTileView from "../views/tileView/specialTileView";
 import StationModel from "../models/stationModel";
+import {util} from "webpack";
 
 function initPixi(){
   PIXI.settings.RESOLUTION = 2;
@@ -43,76 +44,170 @@ function initPixi(){
   document.getElementById("canvas").appendChild(Globals.app.view);
   const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("railroad", railroad).load((loader, resources)=>{
     Globals.resources = resources;
-    let cityGroup = new CityGroupModel([], "0x0271BC");
-    let cityGroup2 = new CityGroupModel([], "0xF29626");
-    let city1 = new CityModel(1, "Ankara",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 16,1, "$100", "$100", [], cityGroup);
-    let city2 = new CityModel(2, "Istanbul",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 18,2, "$100", "$100", [], cityGroup);
-    let city3 = new CityModel(3, "Izmir",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 19,3, "$100", "$100", [], cityGroup);
-    let city4 = new CityModel(4, "Van",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 37,4, "$100", "$100", [], cityGroup2);
-    let city5 = new CityModel(5, "Karaman",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 39,5, "$100", "$100", [], cityGroup2);
-    let utility1 = new UtilityModel(6, "Electric service",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 12, 5, false, Globals.resources.electric.texture);
-    let utility2 = new UtilityModel(7, "Water pump",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 28, 5, false, Globals.resources.water.texture);
-    let station1 = new StationModel(5, "Railroad",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 17, 5, false, Globals.resources.railroad.texture);
-    cityGroup.cities.push(city1);
-    cityGroup.cities.push(city2);
-    cityGroup.cities.push(city3);
-    cityGroup2.cities.push(city4);
-    cityGroup2.cities.push(city5);
-    let testBoard1 = new cityTileView(city1);
-    testBoard1.initializeDrawings();
-    let testBoard2 = new cityTileView(city2);
-    testBoard2.initializeDrawings();
-    let testBoard3 = new cityTileView(city3);
-    testBoard3.initializeDrawings();
-    let testBoard4 = new cityTileView(city4);
-    testBoard4.initializeDrawings();
-    let testBoard5 = new cityTileView(city5);
-    testBoard5.initializeDrawings();
-    let testBoard6 = new otherPropertyTileView(utility1);
-    testBoard6.initializeDrawings();
-    let testBoard7 = new otherPropertyTileView(utility2);
-    testBoard7.initializeDrawings();
-    let testBoard8 = new CornerTileView(Globals.resources.start_tile.texture, 0);
-    testBoard8.initializeDrawings();
-    let testBoard9 = new CornerTileView(Globals.resources.visit_jail.texture, 10);
-    testBoard9.initializeDrawings();
-    let testBoard10 = new CornerTileView(Globals.resources.free_parking.texture, 20);
-    testBoard10.initializeDrawings();
-    let testBoard11 = new CornerTileView(Globals.resources.goto_jail.texture, 30);
-    testBoard11.initializeDrawings();
-    let testBoard12 = new SpecialTileView("Luxury Tax",Globals.resources.luxury.texture, 38);
-    testBoard12.initializeDrawings();
-    let testBoard13 = new SpecialTileView("Income Tax",Globals.resources.income_tax.texture, 4);
-    testBoard13.initializeDrawings();
-    let testBoard14 = new SpecialTileView("Chance",Globals.resources.chance.texture, 7);
-    testBoard14.initializeDrawings();
-    let testBoard15 = new SpecialTileView("Community",Globals.resources.community.texture, 2);
-    testBoard15.initializeDrawings();
-    let testBoard16 = new SpecialTileView("Community",Globals.resources.community.texture, 17);
-    testBoard16.initializeDrawings();
-    let testBoard17 = new SpecialTileView("Chance",Globals.resources.chance.texture, 22);
-    testBoard17.initializeDrawings();
-    let testBoard18 = new SpecialTileView("Community",Globals.resources.community.texture, 33);
-    testBoard18.initializeDrawings();
-    let testBoard19 = new SpecialTileView("Chance",Globals.resources.chance.texture, 36);
-    testBoard19.initializeDrawings();
-    let boardCenter = new PIXI.Sprite(Globals.resources.board_center.texture);
-    boardCenter.x = Globals.sizeOfBoard / 11;
-    boardCenter.y = Globals.sizeOfBoard / 11;
-    boardCenter.width = Globals.sizeOfBoard / 11 * 9;
-    boardCenter.height = Globals.sizeOfBoard / 11 * 9;
-    Globals.app.stage.addChild(boardCenter);
-    let test = new CityCardView(city4);
-    let test2 = new SpecialCardView({title: "Quest Card #2", type: 0, info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultrices, elit semper auctor luctus, neque quam tempor lacus, faucibus egestas metus nunc nec elit. Donec ut est erat. Nunc tincidunt magna eget mi vehicula, nec aliquam justo ultrices. In ac bibendum libero."});
-    test2.card.x = 260;
-    let test3 = new StationCardView(station1);
-    test3.card.x = 520;
-    let test4 = new UtilityCardView(utility1);
-    test4.card.x = 780;
-    //for(let i = 6; i < 40; i++){
-    //  let testBoard = new cityTileView(city6);
-    //  testBoard.initializeDrawings();
-    //}
+    // let cityGroup = new CityGroupModel([], "0x0271BC");
+    // let cityGroup2 = new CityGroupModel([], "0xF29626");
+    // let city1 = new CityModel(1, "Ankara",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 16,1, "$100", "$100", [], cityGroup);
+    // let city2 = new CityModel(2, "Istanbul",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 18,2, "$100", "$100", [], cityGroup);
+    // let city3 = new CityModel(3, "Izmir",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 19,3, "$100", "$100", [], cityGroup);
+    // let city4 = new CityModel(4, "Van",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 37,4, "$100", "$100", [], cityGroup2);
+    // let city5 = new CityModel(5, "Karaman",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 39,5, "$100", "$100", [], cityGroup2);
+    // let utility1 = new UtilityModel(6, "Electric service",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 12, 5, false, Globals.resources.electric.texture);
+    // let utility2 = new UtilityModel(7, "Water pump",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 28, 5, false, Globals.resources.water.texture);
+    // let station1 = new StationModel(5, "Railroad",  ["$50" , "$200", "$600", "$1400", "$1700", "$2000"], "$200", "$400", 17, 5, false, Globals.resources.railroad.texture);
+    // cityGroup.cities.push(city1);
+    // cityGroup.cities.push(city2);
+    // cityGroup.cities.push(city3);
+    // cityGroup2.cities.push(city4);
+    // cityGroup2.cities.push(city5);
+    // let testBoard1 = new cityTileView(city1);
+    // testBoard1.initializeDrawings();
+    // let testBoard2 = new cityTileView(city2);
+    // testBoard2.initializeDrawings();
+    // let testBoard3 = new cityTileView(city3);
+    // testBoard3.initializeDrawings();
+    // let testBoard4 = new cityTileView(city4);
+    // testBoard4.initializeDrawings();
+    // let testBoard5 = new cityTileView(city5);
+    // testBoard5.initializeDrawings();
+    // let testBoard6 = new otherPropertyTileView(utility1);
+    // testBoard6.initializeDrawings();
+    // let testBoard7 = new otherPropertyTileView(utility2);
+    // testBoard7.initializeDrawings();
+    // let testBoard8 = new CornerTileView(Globals.resources.start_tile.texture, 0);
+    // testBoard8.initializeDrawings();
+    // let testBoard9 = new CornerTileView(Globals.resources.visit_jail.texture, 10);
+    // testBoard9.initializeDrawings();
+    // let testBoard10 = new CornerTileView(Globals.resources.free_parking.texture, 20);
+    // testBoard10.initializeDrawings();
+    // let testBoard11 = new CornerTileView(Globals.resources.goto_jail.texture, 30);
+    // testBoard11.initializeDrawings();
+    // let testBoard12 = new SpecialTileView("Luxury Tax",Globals.resources.luxury.texture, 38);
+    // testBoard12.initializeDrawings();
+    // let testBoard13 = new SpecialTileView("Income Tax",Globals.resources.income_tax.texture, 4);
+    // testBoard13.initializeDrawings();
+    // let testBoard14 = new SpecialTileView("Chance",Globals.resources.chance.texture, 7);
+    // testBoard14.initializeDrawings();
+    // let testBoard15 = new SpecialTileView("Community",Globals.resources.community.texture, 2);
+    // testBoard15.initializeDrawings();
+    // let testBoard16 = new SpecialTileView("Community",Globals.resources.community.texture, 17);
+    // testBoard16.initializeDrawings();
+    // let testBoard17 = new SpecialTileView("Chance",Globals.resources.chance.texture, 22);
+    // testBoard17.initializeDrawings();
+    // let testBoard18 = new SpecialTileView("Community",Globals.resources.community.texture, 33);
+    // testBoard18.initializeDrawings();
+    // let testBoard19 = new SpecialTileView("Chance",Globals.resources.chance.texture, 36);
+    // testBoard19.initializeDrawings();
+    // let boardCenter = new PIXI.Sprite(Globals.resources.board_center.texture);
+    // boardCenter.x = Globals.sizeOfBoard / 11;
+    // boardCenter.y = Globals.sizeOfBoard / 11;
+    // boardCenter.width = Globals.sizeOfBoard / 11 * 9;
+    // boardCenter.height = Globals.sizeOfBoard / 11 * 9;
+    // Globals.app.stage.addChild(boardCenter);
+    // let test = new CityCardView(city4);
+    // let test2 = new SpecialCardView({title: "Quest Card #2", type: 0, info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultrices, elit semper auctor luctus, neque quam tempor lacus, faucibus egestas metus nunc nec elit. Donec ut est erat. Nunc tincidunt magna eget mi vehicula, nec aliquam justo ultrices. In ac bibendum libero."});
+    // test2.card.x = 260;
+    // let test3 = new StationCardView(station1);
+    // test3.card.x = 520;
+    // let test4 = new UtilityCardView(utility1);
+    // test4.card.x = 780;
+
+    let browns = new CityGroupModel([], "0x382b1c");
+    let lightBlues = new CityGroupModel([], "0x3cb8de");
+    let pinks = new CityGroupModel([], "0xde3cd3");
+    let oranges = new CityGroupModel([], "0xde883c");
+    let reds = new CityGroupModel([], "0xD40B0A");
+    let yellows = new CityGroupModel([], "0xFFC90F");
+    let greens = new CityGroupModel([], "0x24733B");
+    let blues = new CityGroupModel([], "0x0541CA");
+
+
+    let tiles = Globals.tiles;
+    let image = Globals.resources.start_tile.texture
+    for(let i = 0; i < 40; i++){
+      let type = tiles[i]["type"];
+      // console.log("type" + type);
+      if (type === "CornerTile") {
+        let image = tiles[i]["image"];
+        let tile = tiles[i]["tile"];
+        let cornerTile = new CornerTileView(image, tile);
+        cornerTile.initializeDrawings();
+      }
+      else if (type === "StationTile") {
+        let name = tiles[i]["name"];
+        let rentPrice = tiles[i]["rentPrice"];
+        let mortgagePrice = tiles[i]["mortgagePrice"];
+        let price = tiles[i]["price"];
+        let tile = tiles[i]["tile"];
+        let image = tiles[i]["image"];
+        let station = new StationModel(5, name,  rentPrice, mortgagePrice, price, tile, tile, null, false, image);
+        let stationTile = new otherPropertyTileView(station);
+        stationTile.initializeDrawings();
+      }
+      else if (type === "CityTile") {
+        let id = tiles[i]["id"]
+        let name = tiles[i]["name"];
+        let rentPrice = tiles[i]["rentPrice"];
+        let mortgagePrice = tiles[i]["mortgagePrice"];
+        let price = tiles[i]["price"];
+        let tile = tiles[i]["tile"];
+        let houseCost = tiles[i]["houseCost"];
+        let hotelCost = tiles[i]["hotelCost"];
+        let color = tiles[i]["cityColor"];
+        let cityGroup = new CityGroupModel([], 0xFFFFFF);
+        if (color === browns.color) {
+          cityGroup = browns;
+        }
+        if (color === lightBlues.color) {
+          cityGroup = lightBlues;
+        }
+        if (color === pinks.color) {
+          cityGroup = pinks;
+        }
+        if (color === oranges.color) {
+          cityGroup = oranges;
+        }
+        if (color === reds.color) {
+          cityGroup = reds;
+        }
+        if (color === yellows.color) {
+          cityGroup = yellows;
+        }
+        if (color === greens.color) {
+          cityGroup = greens;
+        }
+        if (color === blues.color) {
+          cityGroup = blues;
+        }
+        let city = new CityModel(id, name,  rentPrice, mortgagePrice, price, tile, null, houseCost, hotelCost, null, cityGroup);
+        cityGroup.cities.push(city);
+        let cityTile = new cityTileView(city);
+        cityTile.initializeDrawings();
+      }
+      else if (type === "SpecialTile") {
+        let name = tiles[i]["name"];
+        let tile = tiles[i]["tile"];
+        let image = tiles[i]["image"];
+        let specialTile = new SpecialTileView(name ,image, tile);
+        specialTile.initializeDrawings();
+      }
+      else if (type === "CornerTile") {
+        let tile = tiles[i]["tile"];
+        let image = tiles[i]["image"];
+        let cornerTile = new CornerTileView(image, tile);
+        cornerTile.initializeDrawings();
+      }
+      else if (type === "UtilityTile") {
+        let name = tiles[i]["name"];
+        let rentPrice = tiles[i]["rentPrice"];
+        let mortgagePrice = tiles[i]["mortgagePrice"];
+        let price = tiles[i]["price"];
+        let tile = tiles[i]["tile"];
+        let image = tiles[i]["image"];
+        let utility = new UtilityModel(tile, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
+        let utilityTile = new otherPropertyTileView(utility);
+        utilityTile.initializeDrawings();
+      }
+    }
 
 
   });
