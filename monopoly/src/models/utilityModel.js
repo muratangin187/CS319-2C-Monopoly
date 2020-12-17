@@ -15,4 +15,4 @@ class UtilityModel extends PropertyModel{
     }
 }
 
-module.exports = new UtilityModel;
+module.exports = UtilityModel;

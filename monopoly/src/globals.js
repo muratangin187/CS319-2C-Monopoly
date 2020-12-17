@@ -9,7 +9,7 @@ class Globals{
                 QUEST: 2
             }
         };
-        this.tileNumber = 12;
+        this.tileNumber = 11;
         this.sizeOfBoard = this.tileNumber*80;
 
         this.tiles = [

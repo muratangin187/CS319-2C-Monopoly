@@ -213,7 +213,7 @@ function initPixi(){
 }
 
 function App() {
-  const [page, setPage] = useState("mainPage");
+  const [page, setPage] = useState("mainPagee");
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState({});
 
@@ -228,7 +228,7 @@ function App() {
       };
       ipcRenderer.on("get_rooms_bf", get_room_listener);
       ipcRenderer.on("change_page_bf", change_page_listener);
-      //initPixi();
+      initPixi();
       return function cleanup()
       {
           ipcRenderer.removeListener("get_room_bf", get_room_listener);
