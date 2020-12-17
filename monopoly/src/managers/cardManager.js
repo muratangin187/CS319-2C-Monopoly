@@ -1,3 +1,5 @@
+const chanceDesc = require("../Descriptions/chanceCards");
+const chestDesc = require("../Descriptions/chestCards");
 class CardManager {
    constructor() {
       this.cards = [];
@@ -25,11 +27,7 @@ class CardManager {
    createChanceCards(){
       const fs = require('fs');
 
-      fs.readFileSync('../Descriptions/chanceCards.txt', 'utf8');
-
-      const descriptions = fs.split(/\\r?\\n/);
-
-      descriptions.forEach(desc => {
+      chanceDesc.forEach(desc => {
          this.chanceCards.append(new Chance(desc));
       });
 
@@ -42,11 +40,7 @@ class CardManager {
    createChestCards(){
       const fs = require('fs');
 
-      fs.readdirSync('../Descriptions/chestCards.txt', 'utf8');
-
-      const descriptions = fs.split(/\\r?\\n/);
-
-      descriptions.forEach(desc => {
+      chestDesc.forEach(desc => {
          this.chestCards.append(new Chance(desc));
       });
 
