@@ -34,7 +34,7 @@ class PlayerManager{
      * In the addProperty function, the owner of the newProperty is also updated
      */
     addProperty(playerId, newProperty){
-        if(this.setMoney(playerId, newProperty.price)){
+        if(this.setMoney(playerId, -newProperty.price)){
             console.log("addProperty removed money");
             newProperty.setOwner(playerId);
             this.players[playerId].properties.push(newProperty);

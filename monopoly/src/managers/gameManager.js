@@ -30,6 +30,8 @@ class GameManager{
             let property = cardManager.getCardById(args);
             playerManager.addProperty(user.id, property);
         });
+
+        //ipcMain.on();
     }
 
 }
