@@ -2,6 +2,20 @@ import PropertyModel from "./propertyModel";
 
 export default class CityModel extends PropertyModel {
 
+    /**
+     * Creates a city data model
+     * @param id
+     * @param name
+     * @param rentPrice
+     * @param mortgagePrice
+     * @param price
+     * @param tile
+     * @param card
+     * @param houseCost
+     * @param hotelCost
+     * @param buildings
+     * @param cityGroup
+     */
     constructor(id, name, rentPrice, mortgagePrice, price, tile, card, houseCost, hotelCost, buildings, cityGroup) {
         super(id, name, rentPrice, mortgagePrice, price, tile, card);
         this.houseCost = houseCost;
