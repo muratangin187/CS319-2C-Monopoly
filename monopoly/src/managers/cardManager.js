@@ -1,5 +1,4 @@
 const SpecialCardModel = require("../models/specialCardModel");
-
 const chanceDesc = require("../Descriptions/chanceCards");
 const chestDesc = require("../Descriptions/chestCards");
 class CardManager {
@@ -30,7 +29,7 @@ class CardManager {
       const fs = require('fs');
 
       chanceDesc.forEach(desc => {
-         this.chanceCards.append(new Chance(desc));
+         this.chanceCards.push(new SpecialCardModel(desc));
       });
 
       console.log("Total number of Chance Cards is: ",this.chanceCards.length);
@@ -43,7 +42,7 @@ class CardManager {
       const fs = require('fs');
 
       chestDesc.forEach(desc => {
-         this.chestCards.append(new Chance(desc));
+         this.chestCards.push(new SpecialCardModel(desc));
       });
 
       console.log("Total number of Chest Cards is: ",this.chestCards.length);
