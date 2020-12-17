@@ -1,4 +1,5 @@
 class Globals{
+
     constructor(){
         this.app = null;
         this.CONSTS = {
@@ -12,7 +13,7 @@ class Globals{
         this.tiles = [
             {
                 "type": "CornerTile",
-                //"image": Globals.resources.start_tile.texture, //Globals.resources.start_tile.texture
+                "image": "start_tile",
                 "tile": 0
             },
             {
@@ -25,13 +26,13 @@ class Globals{
                 "tile": 1,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x382b1c
+                "cityColor": 0x382B1C
             },
             {
                 "type": "SpecialTile",
                 "name": "COMMUNITY CHEST",
                 "tile": 2,
-                //"image": Globals.resources.community.texture, //Globals.resources.community.texture
+                "image": "community", //Globals.resources.community.texture
             },
             {
                 "type": "CityTile",
@@ -43,13 +44,13 @@ class Globals{
                 "tile": 3,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x382b1c
+                "cityColor": 0x382B1C
             },
             {
                 "type": "SpecialTile",
                 "name": "INCOME TAX",
                 "tile": 4,
-                //"image": Globals.resources.income_tax.texture //Globals.resources.income_tax.texture
+                "image": "income_tax" //Globals.resources.income_tax.texture
             },
             {
                 "type": "StationTile",
@@ -59,7 +60,7 @@ class Globals{
                 "mortgagePrice": 100,
                 "price": 200,
                 "tile": 5,
-                //"image": Globals.resources.railroad.texture //Globals.resources.railroad.texture
+                "image": "railroad" //Globals.resources.railroad.texture
             },
             {
                 "type": "CityTile",
@@ -71,13 +72,13 @@ class Globals{
                 "tile": 6,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x3cb8de
+                "cityColor": 0x3CB8DE
             },
             {
                 "type": "SpecialTile",
                 "name": "CHANCE",
                 "tile": 7,
-                //"image": Globals.resources.chance.texture //Globals.resources.chance.texture
+                "image": "chance" //Globals.resources.chance.texture
             },
             {
                 "type": "CityTile",
@@ -89,7 +90,7 @@ class Globals{
                 "tile": 8,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x3cb8de
+                "cityColor": 0x3CB8DE
             },
             {
                 "type": "CityTile",
@@ -101,11 +102,11 @@ class Globals{
                 "tile": 9,
                 "houseCost": 50,
                 "hotelCost": 50,
-                "cityColor": 0x3cb8de
+                "cityColor": 0x3CB8DE
             },
             {
                 "type": "CornerTile",
-                //"image": Globals.resources.visit_jail.texture, //Globals.resources.visit_jail.texture
+                "image": "visits_jail", //Globals.resources.visit_jail.texture
                 "tile": 10
             },
             {
@@ -118,7 +119,7 @@ class Globals{
                 "tile": 11,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xde3cd3
+                "cityColor": 0xDE3CD3
             },
             {
                 "type": "UtilityTile",
@@ -128,7 +129,7 @@ class Globals{
                 "mortgagePrice": 75,
                 "price": 200,
                 "tile": 12,
-                //"image": Globals.resources.electric.texture
+                "image": "electric"
             },
             {
                 "type": "CityTile",
@@ -140,7 +141,7 @@ class Globals{
                 "tile": 13,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xde3cd3
+                "cityColor": 0xDE3CD3
             },
             {
                 "type": "CityTile",
@@ -152,7 +153,7 @@ class Globals{
                 "tile": 14,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xde3cd3
+                "cityColor": 0xDE3CD3
             },
             {
                 "type": "StationTile",
@@ -162,7 +163,7 @@ class Globals{
                 "mortgagePrice": 100,
                 "price": 200,
                 "tile": 15,
-                //"image": Globals.resources.railroad.texture //Globals.resources.railroad.texture
+                "image": "railroad" //Globals.resources.railroad.texture
             },
             {
                 "type": "CityTile",
@@ -174,13 +175,13 @@ class Globals{
                 "tile": 16,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xde883c
+                "cityColor": 0xDE883C
             },
             {
                 "type": "SpecialTile",
                 "name": "COMMUNITY CHEST",
                 "tile": 17,
-                //"image": Globals.resources.community.texture, //Globals.resources.community.texture
+                "image": "community" //Globals.resources.community.texture
             },
             {
                 "type": "CityTile",
@@ -192,7 +193,7 @@ class Globals{
                 "tile": 18,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xde883c
+                "cityColor": 0xDE883C
             },
             {
                 "type": "CityTile",
@@ -204,11 +205,11 @@ class Globals{
                 "tile": 19,
                 "houseCost": 100,
                 "hotelCost": 100,
-                "cityColor": 0xde883c
+                "cityColor": 0xDE883C
             },
             {
                 "type": "CornerTile",
-                //"image": Globals.resources.free_parking.texture, //Globals.resources.start_tile.texture
+                "image": "free_parking", //Globals.resources.start_tile.texture
                 "tile": 20
             },
             {
@@ -221,13 +222,13 @@ class Globals{
                 "tile": 21,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": "0xD40B0A",
+                "cityColor": 0xD40B0A,
             },
             {
                 "type": "SpecialTile",
                 "name": "CHANCE",
                 "tile": 22,
-                //"image": Globals.resources.chance.texture, //Globals.resources.community.texture
+                "image": "chance", //Globals.resources.community.texture
             },
             {
                 "type": "CityTile",
@@ -238,7 +239,7 @@ class Globals{
                 "price": 220,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": "0xD40B0A",
+                "cityColor": 0xD40B0A,
                 "tile": 23
             },
             {
@@ -250,7 +251,7 @@ class Globals{
                 "price": 240,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": "0xD40B0A",
+                "cityColor": 0xD40B0A,
                 "tile": 24
             },
             {
@@ -261,7 +262,7 @@ class Globals{
                 "mortgagePrice": 100,
                 "price": 200,
                 "tile": 25,
-                //"image": Globals.resources.railroad.texture, //Globals.resources.community.texture
+                "image": "railroad", //Globals.resources.community.texture
 
             },
             {
@@ -273,7 +274,7 @@ class Globals{
                 "price": 260,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": "0xFFC90F",
+                "cityColor": 0xFFC90F,
                 "tile": 26
             },
             {
@@ -285,7 +286,7 @@ class Globals{
                 "price": 260,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": "0xFFC90F",
+                "cityColor": 0xFFC90F,
                 "tile": 27
             },
             {
@@ -296,7 +297,7 @@ class Globals{
                 "mortgagePrice": 75,
                 "price": 200,
                 "tile": 28,
-                //"image": Globals.resources.water.texture
+                "image": "water"
             },
             {
                 "type": "CityTile",
@@ -307,12 +308,12 @@ class Globals{
                 "price": 280,
                 "houseCost": 150,
                 "hotelCost": 150,
-                "cityColor": "0xFFC90F",
+                "cityColor": 0xFFC90F,
                 "tile": 29
             },
             {
                 "type": "CornerTile",
-                //"image": Globals.resources.goto_jail.texture, //Globals.resources.start_tile.texture
+                "image": "goto_jail", //Globals.resources.start_tile.texture
                 "tile": 30
             },
             {
@@ -324,7 +325,7 @@ class Globals{
                 "price": 300,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": "0x24733B",
+                "cityColor": 0x24733B,
                 "tile": 31
             },
             {
@@ -336,14 +337,14 @@ class Globals{
                 "price": 300,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": "0x24733B",
+                "cityColor": 0x24733B,
                 "tile": 32
             },
             {
                 "type": "SpecialTile",
                 "name": "COMMUNITY CHEST",
                 "tile": 33,
-                //"image": Globals.resources.luxury.texture, //Globals.resources.community.texture
+                "image": "luxury", //Globals.resources.community.texture
             },
             {
                 "type": "CityTile",
@@ -354,7 +355,7 @@ class Globals{
                 "price": 320,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": "0x24733B",
+                "cityColor": 0x24733B,
                 "tile": 34
             },
             {
@@ -365,14 +366,14 @@ class Globals{
                 "mortgagePrice": 100,
                 "price": 200,
                 "tile": 35,
-                //"image": Globals.resources.railroad.texture, //Globals.resources.community.texture
+                "image": "railroad", //Globals.resources.community.texture
 
             },
             {
                 "type": "SpecialTile",
                 "name": "CHANCE",
                 "tile": 36,
-                //"image": Globals.resources.chance.texture, //Globals.resources.community.texture
+                "image": "chance", //Globals.resources.community.texture
             },
             {
                 "type": "CityTile",
@@ -383,14 +384,14 @@ class Globals{
                 "price": 350,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": "0x0541CA",
+                "cityColor": 0x0541CA,
                 "tile": 37
             },
             {
                 "type": "SpecialTile",
                 "name": "LUXURY TAX",
                 "tile": 38,
-                //"image": Globals.resources.luxury.texture, //Globals.resources.community.texture
+                "image": "luxury", //Globals.resources.community.texture
             },
             {
                 "type": "CityTile",
@@ -401,7 +402,7 @@ class Globals{
                 "price": 400,
                 "houseCost": 200,
                 "hotelCost": 200,
-                "cityColor": "0x0541CA",
+                "cityColor": 0x0541CA,
                 "tile": 39
             },
         ];

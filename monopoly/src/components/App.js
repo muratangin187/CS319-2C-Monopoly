@@ -45,45 +45,64 @@ function initPixi(){
   const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("railroad", railroad).load((loader, resources)=>{
     Globals.resources = resources;
 
-    let browns = new CityGroupModel([], "0x382b1c");
-    let lightBlues = new CityGroupModel([], "0x3cb8de");
-    let pinks = new CityGroupModel([], "0xde3cd3");
-    let oranges = new CityGroupModel([], "0xde883c");
-    let reds = new CityGroupModel([], "0xD40B0A");
-    let yellows = new CityGroupModel([], "0xFFC90F");
-    let greens = new CityGroupModel([], "0x24733B");
-    let blues = new CityGroupModel([], "0x0541CA");
+    let browns = new CityGroupModel([], 0x382B1C);
+    let lightBlues = new CityGroupModel([], 0x3CB8DE);
+    let pinks = new CityGroupModel([], 0xDE3CD3);
+    let oranges = new CityGroupModel([], 0xDE883C);
+    let reds = new CityGroupModel([], 0xD40B0A);
+    let yellows = new CityGroupModel([], 0xFFC90F);
+    let greens = new CityGroupModel([], 0x24733B);
+    let blues = new CityGroupModel([], 0x0541CA);
 
 
     let tiles = Globals.tiles;
-    let image = Globals.resources.start_tile.texture
+    let image = Globals.resources.start_tile.texture;
     for(let i = 0; i < 40; i++){
       let type = tiles[i]["type"];
+      let name = tiles[i]["name"];
+      let tile = tiles[i]["tile"];
+      // console.log("Type at the beginning: " + type);
       // console.log("type" + type);
       if (type === "CornerTile") {
-        let image = tiles[i]["image"];
-        let tile = tiles[i]["tile"];
+        let imageType = tiles[i]["image"];
+        // let tile = tiles[i]["tile"];
+        // if (a === "start_tile") {
+        console.log("Image type: " + imageType);
+        image = Globals.resources[imageType].texture;
+        // else if (tile === 10) {
+        //   image = Globals.resources.visit_jail.texture;
+        // }
+        // else if (tile === 20) {
+        //   image = Globals.resources.free_parking.texture;
+        // }
+        // else if (tile === 30) {
+        //   image = Globals.resources.goto_jail.texture;
+        // }
         let cornerTile = new CornerTileView(image, tile);
         cornerTile.initializeDrawings();
       }
       else if (type === "StationTile") {
-        let name = tiles[i]["name"];
+        // console.log("Station tile: " + tiles[i]["tile"] );
+        // let name = tiles[i]["name"];
         let rentPrice = tiles[i]["rentPrice"];
+        let id = tiles[i]["id"];
         let mortgagePrice = tiles[i]["mortgagePrice"];
         let price = tiles[i]["price"];
-        let tile = tiles[i]["tile"];
-        let image = tiles[i]["image"];
-        let station = new StationModel(5, name,  rentPrice, mortgagePrice, price, tile, tile, null, false, image);
+        // let tile = tiles[i]["tile"];
+        let imageType = tiles[i]["image"];
+        image = Globals.resources[imageType].texture;
+        let station = new StationModel(id, name,  rentPrice, mortgagePrice, price, tile, tile, null, false, image);
         let stationTile = new otherPropertyTileView(station);
         stationTile.initializeDrawings();
       }
       else if (type === "CityTile") {
+        // console.log("City tile: " + tiles[i]["tile"] );
         let id = tiles[i]["id"]
-        let name = tiles[i]["name"];
+        // let name = tiles[i]["name"];
         let rentPrice = tiles[i]["rentPrice"];
         let mortgagePrice = tiles[i]["mortgagePrice"];
         let price = tiles[i]["price"];
-        let tile = tiles[i]["tile"];
+        // let tile = tiles[i]["tile"];
         let houseCost = tiles[i]["houseCost"];
         let hotelCost = tiles[i]["hotelCost"];
         let color = tiles[i]["cityColor"];
@@ -118,25 +137,41 @@ function initPixi(){
         cityTile.initializeDrawings();
       }
       else if (type === "SpecialTile") {
-        let name = tiles[i]["name"];
-        let tile = tiles[i]["tile"];
-        let image = tiles[i]["image"];
+        // console.log("Special tile: " + tiles[i]["tile"] );
+        // let name = tiles[i]["name"];
+        // if (name === "INCOME TAX") {
+        //   image = Globals.resources.income_tax.texture;
+        // }
+        // else if (name === "CHANCE") {
+        //   image = Globals.resources.chance.texture;
+        // }
+        // else if (name === "COMMUNITY CHEST") {
+        //   image = Globals.resources.community.texture;
+        // }
+        // else if (name === "LUXURY TAX") {
+        //   image = Globals.resources.luxury.texture;
+        // }
+        // let tile = tiles[i]["tile"];
+        let imageType = tiles[i]["image"];
+        image = Globals.resources[imageType].texture;
         let specialTile = new SpecialTileView(name ,image, tile);
         specialTile.initializeDrawings();
       }
-      else if (type === "CornerTile") {
-        let tile = tiles[i]["tile"];
-        let image = tiles[i]["image"];
-        let cornerTile = new CornerTileView(image, tile);
-        cornerTile.initializeDrawings();
-      }
       else if (type === "UtilityTile") {
-        let name = tiles[i]["name"];
+        // console.log("Utility tile: " + tiles[i]["tile"] );
+        // let name = tiles[i]["name"];
         let rentPrice = tiles[i]["rentPrice"];
         let mortgagePrice = tiles[i]["mortgagePrice"];
         let price = tiles[i]["price"];
-        let tile = tiles[i]["tile"];
-        let image = tiles[i]["image"];
+        // let tile = tiles[i]["tile"];
+        // if (name === "WATER WORKS") {
+        //   image = Globals.resources.water.texture;
+        // }
+        // else if (name === "ELECTRIC COMPANY") {
+        //   image = Globals.resources.electric.texture;
+        // }
+        let imageType = tiles[i]["image"];
+        image = Globals.resources[imageType].texture;
         let utility = new UtilityModel(tile, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
         let utilityTile = new otherPropertyTileView(utility);
         utilityTile.initializeDrawings();
