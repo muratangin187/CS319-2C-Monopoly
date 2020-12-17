@@ -38,4 +38,4 @@ class EventManager{
     }
 }
 
-module.exports = new EventManager;
+module.exports = new EventManager();

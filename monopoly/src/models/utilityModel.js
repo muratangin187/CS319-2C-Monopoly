@@ -1,6 +1,6 @@
-import PropertyModel from "./propertyModel";
+const PropertyModel = require("./propertyModel");
 
-export default class UtilityModel extends PropertyModel{
+class UtilityModel extends PropertyModel{
     constructor(id, name, rentPrice, mortgagePrice, price, tile, card, isMortgaged, image) {
         super(id, name, rentPrice, mortgagePrice, price, tile, card, isMortgaged);
         this.image = image;
@@ -13,5 +13,6 @@ export default class UtilityModel extends PropertyModel{
 
         return diceRoll * 10;
     }
-
 }
+
+module.exports = new UtilityModel;

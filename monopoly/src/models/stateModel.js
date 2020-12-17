@@ -1,27 +1,27 @@
-import PlayerModel from "./playerModel";
-import CityModel from "./cityModel";
-import UtilityModel from "./utilityModel";
-import StationModel from "./stationModel";
-import SpecialCardModel from "./specialCardModel";
+const PlayerModel = require("./playerModel");
+const CityModel = require("./cityModel");
+const UtilityModel = require("./utilityModel");
+const StationModel = require("./stationModel");
+const SpecialCardModel = require("./specialCardModel");
 
 class StateModel{
     /**
      * Reviewed Later
-     * @param players: PlayerModel[]
-     * @param properties: PropertyModel[]
-     * @param cities: CityModel[]
-     * @param utilities: utilityModel[]
+     * @param {PlayerModel[]}players
+     * @param {PropertyModel[]}properties
+     * @param {CityModel[]}cities
+     * @param {utilityModel[]}utilities
      * @param usableCards: specialCards[]
      * @param stations: stationModel[]
      */
-    constructor(players, properties, cities, utilities, usableCards, stations ){
+    constructor(players, properties, cities, utilities, usableCards, stations){
         this.players = players;
         this.properties = properties;
         this.cities = cities;
         this.utilities = utilities;
-        this.usableCaards = usableCards;
+        this.usableCards = usableCards;
         this.stations = stations;
     }
 }
 
-module.exports = new StateModel();
+module.exports = StateModel;

@@ -1,4 +1,3 @@
-import StateModel from "./stateModel"
 class EventModel{
     /**
      * eventModel is based on eventProps Class in Design Report 2
@@ -16,3 +15,4 @@ class EventModel{
         this.effect = effect;
     }
 }
+module.exports = EventModel;

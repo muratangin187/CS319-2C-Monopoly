@@ -1,6 +1,6 @@
-import PropertyModel from "./propertyModel";
+const PropertyModel = require("./propertyModel");
 
-export default class StationModel extends PropertyModel{
+class StationModel extends PropertyModel{
     constructor(id, name, rentPrice, mortgagePrice, price, tile, card, isMortgaged, image) {
         super(id, name, rentPrice, mortgagePrice, price, tile, card);
         this.isMortgaged = isMortgaged;
@@ -8,3 +8,5 @@ export default class StationModel extends PropertyModel{
     }
 
 }
+
+module.exports = StationModel;
