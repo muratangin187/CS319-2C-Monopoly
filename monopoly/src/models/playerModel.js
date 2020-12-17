@@ -18,12 +18,11 @@
 class PlayerModel{
     /**
      *
-     * @param id: User ID
-     * @param username: Username
-     * @param avatar: Picture (Object)
-     * @param state: State: Send the Initial State
-     * @param character: Player's Character ID
-     * @param money: money: int => Send the initial budget
+     * @param {int} id: User ID
+     * @param {String} username: Username
+     * @param {Object} avatar: Picture (Object)
+     * @param {State} state: State: Send the Initial State
+     * @param {int} character: Player's Character ID
      * In constructor;
      * the cards[] is set to []
      * the properties[] is set to []

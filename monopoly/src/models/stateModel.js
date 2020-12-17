@@ -23,3 +23,5 @@ class StateModel{
         this.stations = stations;
     }
 }
+
+module.exports = new StateModel();

@@ -4,6 +4,7 @@ const {ipcMain} = require('electron');
 const networkManager = require("./networkManager");
 const playerManager = require("./playerManager");
 const cardManager = require("./cardManager");
+const EventManager = require("./eventManager");
 
 class GameManager{
     constructor() {

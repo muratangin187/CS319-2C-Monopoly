@@ -1,13 +1,13 @@
 import StateModel from "./stateModel"
-class eventModel{
+class EventModel{
     /**
      * eventModel is based on eventProps Class in Design Report 2
      * event and tile IDs can be String. Why not String
-     * @param eventID: int
-     * @param tileID: int
-     * @param willBeEffected: PlayerModel[]
-     * @param createdBy: PlayerModel
-     * @param effect: function
+     * @param {int} eventID: int
+     * @param {int} tileID: int
+     * @param {PlayerModel[]} willBeEffected: PlayerModel[]
+     * @param {PlayerModel} createdBy: PlayerModel
+     * @param {function} effect: function
      */
     constructor(eventID, tileID, willBeEffected, createdBy, effect) {
         this.eventID = eventID;

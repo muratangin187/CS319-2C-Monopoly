@@ -14,3 +14,28 @@ GameManager sunu yapabilmeli
 ->  EventManager.getEvents(currentUser, currentUser.tileId) -> [Event..]
 
  */
+const EventModel = require("../models/eventModel");
+
+class EventManager{
+
+    constructor() {
+        this.eventList = [];
+        this.eventID = 0;
+    }
+    // Affected Tile, Player, EventCreator, Function
+    createEvent(tileID, willBeEffected, createdBy, effect){
+        let newEvent = new EventModel(this.eventID, tileID, willBeEffected, createdBy, effect);
+        this.eventID++;
+        this.eventList.push(newEvent);
+    }
+
+    removeEvent(createdBy, tileID){
+        this.eventList.filter((event)=> (event.createdBy !== createdBy && event.tileID !== tileID));
+    }
+
+    getEvent(createdBy, tileID){
+        return this.eventList.filter((event) => (event.tileID === tileID && event.createdBy === createdBy));
+    }
+}
+
+module.exports = new EventManager;
