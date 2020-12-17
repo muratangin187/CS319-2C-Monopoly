@@ -56,7 +56,13 @@ function initPixi(){
 
 
     let tiles = Globals.tiles;
-    let image = Globals.resources.start_tile.texture;
+    let image = Globals.resources["board_center"].texture;
+    let board_center = new PIXI.Sprite(image);
+    board_center.x = Globals.sizeOfBoard / 11;
+    board_center.y = Globals.sizeOfBoard / 11;
+    board_center.width = Globals.sizeOfBoard / 11 * 9;
+    board_center.height = Globals.sizeOfBoard / 11 * 9;
+    Globals.app.stage.addChild(board_center);
     for(let i = 0; i < 40; i++){
       let type = tiles[i]["type"];
       let name = tiles[i]["name"];

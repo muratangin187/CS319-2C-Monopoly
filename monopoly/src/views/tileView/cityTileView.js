@@ -26,12 +26,14 @@ class cityTileView extends tileView{
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",
         });
-        let titleText =new PIXI.Text(this.city.name, {...style, align: "center", fontSize: 9});
+        let formattedTitle = this.city.name;
+        formattedTitle = formattedTitle.split(" ").join("\n");
+        let titleText =new PIXI.Text(formattedTitle, {...style, align: "center", fontSize: 9});
         titleText.name = "titleText";
         titleText.anchor.x =0.5;
         titleText.anchor.y =0.5;
         titleText.x = titleBackground.getBounds().x + titleBackground.getBounds().width / 2;
-        titleText.y = titleBackground.getBounds().y + titleBackground.getBounds().height + 10;
+        titleText.y = titleBackground.getBounds().y + titleBackground.getBounds().height + 20;
         this.title.addChild(titleText);
 
         let rentText = new PIXI.Text("Price " + this.city.price, {...style, align: "center", fontSize: 8});

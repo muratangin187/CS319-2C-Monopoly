@@ -106,7 +106,7 @@ class Globals{
             },
             {
                 "type": "CornerTile",
-                "image": "visits_jail", //Globals.resources.visit_jail.texture
+                "image": "visit_jail", //Globals.resources.visit_jail.texture
                 "tile": 10
             },
             {
