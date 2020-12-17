@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {useFormik} from "formik";
 import BoardSelectionBox from "./BoardSelectionBox";
+import PasswordDialog from "../../select_room_page/components/PasswordDialog";
+import Paper from "@material-ui/core/Paper";
 const {ipcRenderer} = require("electron");
 
 const useStyles = makeStyles((theme) => ({
@@ -38,7 +40,8 @@ export default function CreateRoom() {
         },
         onSubmit: roomModel => {
             //send roomModel object to gameManager
-            ipcRenderer.send('create_room_fb', roomModel);
+            setSelectedRoom(roomModel);
+            setOpen(true);
         }
     });
 
@@ -46,9 +49,19 @@ export default function CreateRoom() {
         formik.values.selectedBoard = selectedBoard;
     };
 
+    const handleClose = (room, type, password, username) => {
+        if(type==="join"){
+            console.log("GIRDIN");
+            ipcRenderer.send('create_room_fb', {roomModel:room, username: username});
+        }
+        setOpen(false);
+    };
+
     const classes = useStyles();
 
     const [boards, setBoards] = useState(["Template-1", "Template-2"]);
+    const [open, setOpen] = React.useState(false);
+    const [selectedRoom, setSelectedRoom] = React.useState(null);
     return (
         <Container className={classes.container} component="main" maxWidth="xs">
             <CssBaseline />
@@ -92,6 +105,7 @@ export default function CreateRoom() {
                     </Button>
                 </form>
             </div>
+            <PasswordDialog open={open} handleClose={handleClose} room={selectedRoom} passwordRequired={false}/>
         </Container>
     );
 }

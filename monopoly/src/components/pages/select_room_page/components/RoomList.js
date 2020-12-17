@@ -10,6 +10,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Button from "@material-ui/core/Button";
 import PasswordDialog from "./PasswordDialog";
+const {ipcRenderer} = require('electron');
 
 const columns = [
     {
@@ -54,6 +55,8 @@ const RoomList = (props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [open, setOpen] = React.useState(false);
+    const [passwordRequired, setPasswordRequired] = React.useState(false);
+    const [selectedRoom, setSelectedRoom] = React.useState(null);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -64,14 +67,24 @@ const RoomList = (props) => {
         setPage(0);
     };
 
-    const handleClickOpen = (password) => {
-        if(password !== ""){
-            setOpen(true);
-        }
+    const handleClickOpen = (room, isRequired) => {
+        setSelectedRoom(room);
+        setPasswordRequired(isRequired);
+        setOpen(true);
     };
 
-    const handleClose = () => {
-      setOpen(false);
+    const handleClose = (room, type, password, username) => {
+        if(type==="join"){
+            // check password and join room
+            console.log("Real:" + room.password + " User:" + JSON.stringify(password));
+            if(room.password === password){
+                console.log("GIRDIN");
+                ipcRenderer.send("join_room_fb", {roomName: room.room_name, username: username});
+            }else {
+                console.log("SIFRE YANLIS");
+            }
+        }
+        setOpen(false);
     };
 
     return (
@@ -97,12 +110,18 @@ const RoomList = (props) => {
                                 return (
                                     <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                         {columns.map((column) => {
-                                            const value = row[column.id];
+                                            let value = row[column.id];
+                                            if(column.id === "password"){
+                                                if(row[column.id] === "")
+                                                    value = "Not required";
+                                                else
+                                                    value = "Required";
+                                            }
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
                                                     {
                                                         !(column.id === "joinButton") ? value : (
-                                                            <Button color="primary" variant="contained" onClick={() => handleClickOpen(row["password"])}>
+                                                            <Button color="primary" variant="contained" onClick={() => handleClickOpen(row, !!row["password"])}>
                                                                 JOIN
                                                             </Button>
                                                         )
@@ -126,7 +145,7 @@ const RoomList = (props) => {
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                     style={{backgroundColor: "rgb(125, 125, 125)", color: "white"}}
                 />
-                <PasswordDialog open={open} handleClose={handleClose}/>
+                <PasswordDialog open={open} handleClose={handleClose} room={selectedRoom} passwordRequired={passwordRequired}/>
             </Paper>
     );
 }
