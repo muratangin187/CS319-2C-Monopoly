@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import tileView from "./tileView";
-import Globals from "../../globals"
+
 
 class propertyTileView extends tileView{
     constructor(property) {
@@ -36,7 +36,7 @@ class propertyTileView extends tileView{
         titleText.y = this.y + 12;
         this.title.addChild(titleText);
 
-        let rentText = new PIXI.Text("Price " + this.property.price, {...style, align: "center", fontSize: 10});
+        let rentText = new PIXI.Text("Price " + this.property.price + "$", {...style, align: "center", fontSize: 10});
 
         rentText.anchor.x =0.5;
         rentText.anchor.y =0.5;

@@ -93,7 +93,7 @@ function initPixi(){
         //   image = Globals.resources.goto_jail.texture;
         // }
         let cornerTile = new CornerTileView(image, tile);
-        cornerTile.initializeDrawings();
+        //cornerTile.initializeDrawings();
       }
       else if (type === "StationTile") {
         // console.log("Station tile: " + tiles[i]["tile"] );
@@ -107,7 +107,7 @@ function initPixi(){
         image = Globals.resources[imageType].texture;
         let station = new StationModel(id, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
         let stationTile = new otherPropertyTileView(station);
-        stationTile.initializeDrawings();
+        //stationTile.initializeDrawings();
       }
       else if (type === "CityTile") {
         // console.log("City tile: " + tiles[i]["tile"] );
@@ -148,7 +148,7 @@ function initPixi(){
         let city = new CityModel(id, name,  rentPrice, mortgagePrice, price, tile, null, houseCost, hotelCost, null, cityGroup);
         cityGroup.cities.push(city);
         let cityTile = new cityTileView(city);
-        cityTile.initializeDrawings();
+        //cityTile.initializeDrawings();
       }
       else if (type === "SpecialTile") {
         // console.log("Special tile: " + tiles[i]["tile"] );
@@ -169,7 +169,7 @@ function initPixi(){
         let imageType = tiles[i]["image"];
         image = Globals.resources[imageType].texture;
         let specialTile = new SpecialTileView(name ,image, tile);
-        specialTile.initializeDrawings();
+        //specialTile.initializeDrawings();
       }
       else if (type === "UtilityTile") {
         // console.log("Utility tile: " + tiles[i]["tile"] );
@@ -188,7 +188,7 @@ function initPixi(){
         image = Globals.resources[imageType].texture;
         let utility = new UtilityModel(tile, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
         let utilityTile = new otherPropertyTileView(utility);
-        utilityTile.initializeDrawings();
+        //utilityTile.initializeDrawings();
       }
     }
 
@@ -199,12 +199,12 @@ function initPixi(){
     let char4 = new Character(Globals.resources.electric.texture, 6,3);
     //char1.move(39);
 
-    for(let i = 0; i < 10; i++){
-      await char1.move(Math.abs(i-39) % 40);
-      await char2.move(Math.abs(i-39) % 40);
-      await char3.move(Math.abs(i-39) % 40);
-      await char4.move(Math.abs(i-39) % 40);
-    }
+    // for(let i = 0; i < 10; i++){
+    //   await char1.move(Math.abs(i-39) % 40);
+    //   await char2.move(Math.abs(i-39) % 40);
+    //   await char3.move(Math.abs(i-39) % 40);
+    //   await char4.move(Math.abs(i-39) % 40);
+    // }
 
 
     //(char1.x = 50;
