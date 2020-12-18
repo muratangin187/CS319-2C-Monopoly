@@ -10,13 +10,13 @@
   }
 }
 
-@media screen and (prefers-color-scheme: dark) {
-  /* Dark theme */
-  body {
-    color: #fff;
-    background-color: #000;
-  }
-}
+/*@media screen and (prefers-color-scheme: dark) {*/
+/*  !* Dark theme *!*/
+/*  body {*/
+/*    color: #fff;*/
+/*    background-color: #000;*/
+/*  }*/
+/*}*/
 
 h1 {
   font-family: Helvetica, Arial, sans-serif;

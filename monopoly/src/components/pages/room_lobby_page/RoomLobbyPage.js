@@ -9,6 +9,7 @@ const {ipcRenderer} = require('electron');
 
 function RoomLobbyPage(props) {
     const [roomUsers, setRoomUsers] = React.useState(props.room.roomUsers);
+    const [selectedCharId, setSelectedCharId] = React.useState(-1);
     const roomLeader = props.room.roomUsers[0];
     const currentUser = props.currentUser;
 
@@ -16,8 +17,9 @@ function RoomLobbyPage(props) {
         //if(roomUsers.length !== 4){
         //    console.log("WAIT OTHER PEOPLE");
         //}else{
-            ipcRenderer.send("start_game_fb", props.room.roomName);
+        //     ipcRenderer.send("start_game_fb", props.room.roomName);
         //}
+        ipcRenderer.send("start_game_fb", props.room.roomName);
     }
 
     useEffect(()=>{
@@ -40,7 +42,7 @@ function RoomLobbyPage(props) {
                 <Chat/>
                 <div style={{width:"50vw", display: "grid", gridTemplateColumns: "1fr"}}>
                     <PlayerList users={roomUsers}/>
-                    <CharacterList />
+                    <CharacterList setSelectedCharId={setSelectedCharId}/>
                     <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}><Button disabled={roomLeader != currentUser} onClick={()=>{startGame()}} style={{width: 200, height: 75}}>Start Game</Button></div>
                 </div>
             </div>
