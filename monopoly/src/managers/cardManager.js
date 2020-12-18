@@ -27,9 +27,10 @@ class CardManager {
     */
    createChanceCards(){
       const fs = require('fs');
-
+      let count = 0;
       chanceDesc.forEach(desc => {
-         this.chanceCards.push(new SpecialCardModel(desc));
+         this.chanceCards.push(new SpecialCardModel(count,desc));
+         count++;
       });
 
       console.log("Total number of Chance Cards is: ",this.chanceCards.length);
@@ -40,9 +41,10 @@ class CardManager {
     */
    createChestCards(){
       const fs = require('fs');
-
+      let count = 0;
       chestDesc.forEach(desc => {
-         this.chestCards.push(new SpecialCardModel(desc));
+         this.chestCards.push(new SpecialCardModel(count, desc));
+         count++;
       });
 
       console.log("Total number of Chest Cards is: ",this.chestCards.length);

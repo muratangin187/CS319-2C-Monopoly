@@ -15,7 +15,13 @@ let chance = [7, 22, 36];
 let communityChest = [2, 17, 33];
 let goJail = 30;
 let incomeTax = 4;
+/*
 
+    Special Card1 ID = 16
+    Special Card2 ID = 17
+
+
+ */
 class GameManager{
     constructor() {
         this.createListeners();
@@ -315,8 +321,8 @@ class GameManager{
     }
 
     useCardToExitJail(currentUser){
-        let chanceCardID = 13; //Degeri salladim. Bu deger chance card jail free cardi
-        let chestCardID = 12; //Degeri salladim. Bu deger chest card jail free cardi
+        let chanceCardID = 6; //Degeri salladim. Bu deger chance card jail free cardi
+        let chestCardID = 4; //Degeri salladim. Bu deger chest card jail free cardi
         let cond1 = playerManager.useCard(currentUser, chanceCardID);
 
         if(cond1){
