@@ -1,12 +1,25 @@
 class ViewManager{
     constructor() {
-        this.currentUserViews = {card: [], character: null};
+        // this.currentUserViews = {card: [], character: null};
+        // window.initializeGame = this.initializeGame;
+        // //window.test
+        // console.log("constructor ");
     }
 
-    initilizaGame(currentPlayer){
+    initializeGame(currentPlayer){
         // draw board
         // draw initial properties
+        let a = 0;
+        console.log("Game initialized");
+        currentPlayer.cards.forEach(card => {
+            //this.currentUserViews.card.push(new cardView(card["type"]));
+
+            card.x = a;
+            a = a + 10;
+        });
+
     }
+
 
     movePlayer(tileId){
         //this.currentUserViews.character;
@@ -15,6 +28,7 @@ class ViewManager{
     setCards(newCards){
         //this.currentUserViews.cards.destroy();
         //newCards.forEach();
+
     }
 
     addCard(newCard){
@@ -24,6 +38,8 @@ class ViewManager{
     removeCard(newCard){
         //this.currentUserViews.card.remove();
     }
+
+
 }
 
-module.exports = ViewManager;
+module.exports = new ViewManager();

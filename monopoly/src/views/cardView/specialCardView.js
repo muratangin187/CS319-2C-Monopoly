@@ -4,7 +4,7 @@ import Globals from "../../globals"
 
 class SpecialCardView extends CardView{
     constructor(specialCard) {
-        super();
+        super(specialCard.id);
         this.specialCard = specialCard;
         this.content = new PIXI.Container();
         this.content.name = "content";

@@ -2,6 +2,7 @@ const PropertyModel = require("../models/propertyModel");
 
 const {ipcMain} = require('electron');
 const networkManager = require("./networkManager");
+const viewManager = require("./viewManager");
 const playerManager = require("./playerManager");
 const cardManager = require("./cardManager");
 const EventManager = require("./eventManager");
