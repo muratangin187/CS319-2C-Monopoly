@@ -18,7 +18,7 @@ class StateManager{
          */
     }
 
-    changeState(newState){
+    updateState(newState){
         this.currentState = newState;
     }
 
