@@ -22,13 +22,13 @@ function createWindow() {
     width: 1600,
     height: 905,
     show: false,
-    frame: false,
     resizable: false,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true
     }
   })
+  mainWindow.setMenuBarVisibility(false);
 
   let indexPath
 

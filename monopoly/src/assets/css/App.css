@@ -1,3 +1,41 @@
 /* Main CSS file */
+.rcw-widget-container {
+    bottom: 0;
+    display: -ms-flexbox;
+    display: block ;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    margin: 0 20px 20px 0;
+    max-width: 370px;
+    position: fixed;
+    left: 20px;
+    width: auto;
+    z-index: 9999
+}
+
+#canvas{
+    margin:0;
+    padding:0;
+}
+
+#canvas canvas{
+    width: 880px;
+    height: 880px;
+    margin:0;
+    padding:0;
+}
+
+#canvas_hand{
+    margin:0;
+    padding:0;
+}
+
+#canvas_hand canvas{
+    border: 1px solid black;
+    width:720px;
+    height:450px;
+    margin:0;
+    padding:0;
+}
 
 @import '_example/_example.css';

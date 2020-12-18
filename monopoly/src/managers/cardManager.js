@@ -27,9 +27,10 @@ class CardManager {
     */
    createChanceCards(){
       const fs = require('fs');
-
+      let count = 0;
       chanceDesc.forEach(desc => {
-         this.chanceCards.push(new SpecialCardModel(desc));
+         this.chanceCards.push(new SpecialCardModel(count,desc));
+         count++;
       });
 
       console.log("Total number of Chance Cards is: ",this.chanceCards.length);
@@ -40,9 +41,10 @@ class CardManager {
     */
    createChestCards(){
       const fs = require('fs');
-
+      let count = 0;
       chestDesc.forEach(desc => {
-         this.chestCards.push(new SpecialCardModel(desc));
+         this.chestCards.push(new SpecialCardModel(count, desc));
+         count++;
       });
 
       console.log("Total number of Chest Cards is: ",this.chestCards.length);
@@ -65,40 +67,29 @@ class CardManager {
 
       return array;
    }
-   // Below might be handled in Manager?
-   /*
-   /**
-    * When a card is drawn, the card placed at the bottom of the pile
-    * @param cards: Card list (Chest or Community)
-    * @returns cards: Card List
-    */
-   /*drawCard(cards){
-       let card = cards[0];
-       let description = cards[0].description;
+   drawChanceCard(){
+      let card = this.chanceCards[0];
 
-       if(description === "Get Out of Jail Free")
-           //Player.addCard(card);
-           return cards;
-       cards.splice(0, 1);
+      this.chanceCards.splice(0,1);
 
-       cards.append(card);
+      return card;
+   }
 
-       return cards;
-   }*/
+   drawChestCard(){
+      let card = this.chestCards[0];
 
-   /**
-    * Chest Card is Drawn
-    */
-   /*drawChestCard(){
-       this.chestCards = this.drawCard(this.chestCards);
-   }*/
+      this.chanceCards.splice(0,1);
 
-   /**
-    * Chance Card is drawn
-    */
-   /*drawChanceCard(){
-       this.chanceCards = this.drawCard(this.chanceCards);
-   }*/
+      return card;
+   }
+
+   addChanceCard(cardID, description){
+      this.chanceCards.push(new SpecialCardModel(cardID, description));
+   }
+
+   addChestCard(cardID, description){
+      this.chestCards.push(new SpecialCardModel(cardID, description));
+   }
 }
 
 module.exports = new CardManager();

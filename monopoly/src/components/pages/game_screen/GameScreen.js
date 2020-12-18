@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import { Widget } from 'react-chat-widget';
 
 import * as PIXI from "pixi.js";
 import Globals from "../../../globals";
@@ -23,12 +24,16 @@ import cityTileView from "../../../views/tileView/cityTileView";
 import SpecialTileView from "../../../views/tileView/specialTileView";
 import UtilityModel from "../../../models/utilityModel";
 import Character from "../../../views/tileView/Character";
+import {Button, Card, Drawer, Position} from "@blueprintjs/core";
+import ReactDice from 'react-dice-complete'
+import YourTurnState from "./components/YourTurnState";
+import OtherPlayersTurn from "./components/OtherPlayersTurn";
 
 function initPixi(){
     PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
-    Globals.app = new PIXI.Application({resolution: 1});
+    Globals.app = new PIXI.Application({resolution: 2});
     Globals.app.renderer.roundPixels = true;
-    Globals.app.renderer.resize(770, 900);
+    Globals.app.renderer.resize(880, 880);
     document.getElementById("canvas").appendChild(Globals.app.view);
     const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("railroad", railroad).load(async (loader, resources)=>{
         Globals.resources = resources;
@@ -184,18 +189,59 @@ function initPixi(){
 
         //(char1.x = 50;
         console.log(char1.x) ;
+        initPixiForHand();
     });
 }
 
+function initPixiForHand(){
+    let appHand = new PIXI.Application({resolution: 2});
+    appHand.renderer.roundPixels = true;
+    appHand.renderer.resize(720, 450);
+    appHand.renderer.backgroundColor = 0xffffff;
+    document.getElementById("canvas_hand").appendChild(appHand.view);
+    let board_center = new PIXI.Sprite(Globals.resources.board_center.texture);
+    board_center.x = 300 / Globals.tileNumber;
+    board_center.y = 300 / Globals.tileNumber;
+    board_center.width = 300 / Globals.tileNumber * (Globals.tileNumber-2);
+    board_center.height = 300 / Globals.tileNumber * (Globals.tileNumber-2);
+    appHand.stage.addChild(board_center);
+}
+
 function GameScreen(props) {
+    const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
+    const [currentState, setCurrentState] = React.useState({});
 
     useEffect(()=>{
         initPixi();
     }, []);
-
     return (
-        <div className="canvasDiv">
-            <div id="canvas"/>
+        <div className="canvasDiv" style={{display: "grid", gridTemplateColumns: "720px 880px"}}>
+            <div style={{width: 720, display:"grid", gridTemplateRows:"1fr 1fr", gridTemplateColumns: "1fr"}}>
+                <div>
+                    <Card style={{margin: "20px", padding: "20px"}} elevation={4}>
+                        <Button intent={"primary"} onClick={()=>setIsScoreboardOpen(!isScoreboardOpen)}>Scoreboard</Button>
+                        <YourTurnState/>
+                    </Card>
+                    <Widget />
+                    <Drawer
+                        isOpen={isScoreboardOpen}
+                        canOutsideClickClose={true}
+                        hasBackdrop={true}
+                        isCloseButtonShown={true}
+                        title="Scoreboard"
+                        autoFocus= "true"
+                        canEscapeKeyClose= "true"
+                        enforceFocus= "true"
+                        position={Position.LEFT}
+                        size={500}
+                        onClose={() => setIsScoreboardOpen(false)}
+                        usePortal= "true">
+                        SELAM
+                    </Drawer>
+                </div>
+                <div id="canvas_hand" />
+            </div>
+            <div id="canvas" />
         </div>
     );
 }
