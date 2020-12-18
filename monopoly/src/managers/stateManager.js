@@ -10,11 +10,11 @@ class StateManager{
         /*
             In state Model, we need to initialize:
              * @param players: PlayerModel[]
-     * @param properties: PropertyModel[]
-     * @param cities: CityModel[]
-     * @param utilities: utilityModel[]
-     * @param usableCards: specialCards[]
-     * @param stations: stationModel[]
+             * @param properties: PropertyModel[]
+             * @param cities: CityModel[]
+             * @param utilities: utilityModel[]
+             * @param usableCards: specialCards[]
+             * @param stations: stationModel[]
          */
     }
 

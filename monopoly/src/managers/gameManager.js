@@ -22,7 +22,7 @@ class GameManager{
     createListeners(){
         ipcMain.on("create_room_fb", (event, args) => {
             networkManager.createRoom(args);
-        })
+        });
         ipcMain.on("join_room_fb", (event, args)=>{
             networkManager.joinRoom(args);
         });
@@ -73,6 +73,14 @@ class GameManager{
             }
         });
         /**
+         * args =
+         */
+        ipcMain.on("sell_building", (event, args)=>{
+
+        });
+        /**
+         * channel: event name
+         *
          * args = property
          */
         ipcMain.on("auction_fb", (event, args)=>{
