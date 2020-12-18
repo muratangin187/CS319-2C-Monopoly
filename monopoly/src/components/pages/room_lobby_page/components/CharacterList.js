@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React, {useEffect, useState} from "react";
-import {Button, Card, H3, Overlay, Classes, Intent} from "@blueprintjs/core";
+import {Button, Card, H3, Dialog, Classes, Intent} from "@blueprintjs/core";
 import Grid from '@material-ui/core/Grid';
 
 const {ipcRenderer} = require('electron');
@@ -43,18 +43,16 @@ export default function CharacterList(props){
                     <Card key={char.id} interactive={true} elevation={charSelected === index ? 4 : 1} style={{margin: 8}} onClick={()=>{setCharSelected(index);props.setSelectedCharId(char.id);}}>
                         <h5><a href="#">{char.charName}</a></h5>
                         <Button onClick={() => setOpenIndex(index)}>Description</Button>
-                        <Overlay isOpen={index === openIndex} onClose={() => setOpenIndex(-1)} usePortal={true}>
-                            <div className={classes}>
+                        <Dialog isOpen={index === openIndex} onClose={() => setOpenIndex(-1)} usePortal={true}>
+                            <div style={{margin: "50px"}}>
                                 <H3>Description</H3>
                                 <p>{char.description}</p>
-                                <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                                     <Button intent={Intent.DANGER} onClick={() => setOpenIndex(-1)} style={{margin: ""}}>
                                         Close
                                     </Button>
-                                </div>
                             </div>
-                        </Overlay>
+                        </Dialog>
                     </Card>);
             })
         }</Grid>)
-}
+};

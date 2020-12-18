@@ -61,6 +61,10 @@ class NetworkManager {
         this.socket.emit("join_room_bs", args);
     }
 
+    setCharacter(characterId){
+        this.socket.emit("set_character_bs", {characterId: characterId, userId: this.currentUser.id});
+    }
+
     /**
      * signal_to: get_characters_bs
      * Request sending from server to get character list
