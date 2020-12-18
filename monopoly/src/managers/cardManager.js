@@ -86,6 +86,13 @@ class CardManager {
        return cards;
    }*/
 
+   addChanceCard(cardID, description){
+      this.chanceCards.push(new SpecialCardModel(cardID, description));
+   }
+
+   addChestCard(cardID, description){
+      this.chestCards.push(new SpecialCardModel(cardID, description));
+   }
    /**
     * Chest Card is Drawn
     */

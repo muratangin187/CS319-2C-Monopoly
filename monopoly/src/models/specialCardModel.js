@@ -5,8 +5,8 @@ class SpecialCardModel{
      * Chance Cards with Natural Disaster and Profit Card
      * Chest Cards
      */
-    constructor(description){
-        this.cardOwnerID = null;
+    constructor(id, description){
+        this.cardID = id;
         this.description = description;
     }
 }

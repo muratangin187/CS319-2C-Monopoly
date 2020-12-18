@@ -249,7 +249,103 @@ class GameManager{
            //}
 
         //});
+
+        ipcMain.on("useCardToExit_fb", (event, args) =>{
+            let currentUser = networkManager.getCurrentUser();
+
+            let cond = this.useCardToExitJail(currentUser.id);
+
+            if(cond){
+                //rollDice();
+                //move();
+            }
+        });
+
+        ipcMain.on("payToExit_fb", (event, args) =>{
+            let currentUser = networkManager.getCurrentUser();
+
+            let cond = this.payToExitJail(currentUser.id);
+
+            if(cond){
+                //rollDice();
+                //move();
+            }
+        });
+
+        ipcMain.on("rollToExit_fb", (event, args) =>{
+            let currentUser = networkManager.getCurrentUser();
+
+            //let {x,y} = rollDice();
+
+            let cond = this.rollToExitJail(currentUser.id);
+
+            if(cond){
+               //move(x, y);
+            }
+            else{
+                //while(!choose(pay, use)){}
+
+                //move(x, y);
+            }
+        });
+
+
     }
+
+    rollToExitJail(currentUser){
+        if(x === y)
+            playerManager.exitJail(currentUser);
+
+        else{
+            if(playerManager.getJailLeft(currentUser) > 0)
+                playerManager.reduceJailLeft(currentUser);
+
+            else
+                return false;
+
+        }
+
+        return true;
+    }
+
+    payToExitJail(currentUser){
+        let amount = 50;
+
+        return playerManager.setMoney(currentUser, -amount);
+    }
+
+    useCardToExitJail(currentUser){
+        let chanceCardID = 13; //Degeri salladim. Bu deger chance card jail free cardi
+        let chestCardID = 12; //Degeri salladim. Bu deger chest card jail free cardi
+        let cond1 = playerManager.useCard(currentUser, chanceCardID);
+
+        if(cond1){
+            cardManager.addChanceCard(chanceCardID, "Get Out of Jail Free");
+            playerManager.exitJail(currentUser);
+
+            return true;
+        }
+        else{
+            let cond2 = playerManager.useCard(currentUser, chestCardID);
+
+            if(cond2) {
+                cardManager.addChestCard(chestCardID, "Get Out of Jail Free");
+                playerManager.exitJail(currentUser);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Send Current User to the Jail
+     */
+    goJail(playerID){
+        playerManager.sendJail(playerID);
+    }
+
 
 }
 

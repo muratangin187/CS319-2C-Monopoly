@@ -38,7 +38,8 @@ class PlayerModel{
         this.state = state;
         this.character = character;
         this.money = 200;
-
+        this.inJail = false;
+        this.inJailLeft = 0;
         this.cards = [];
         this.properties = [];
         this.currentTile = 0;
@@ -75,24 +76,6 @@ class PlayerModel{
      */
     addCard(newCard){
         this.cards.push(newCard);
-    }
-
-    /**
-     *
-     * @param card: Card
-     * removes the card from card list
-     * if the card is not exist, console.log error message
-     */
-    removeCard(card) {
-        const index = this.cards.indexOf(card);
-        if(index !== -1){
-            this.cards.splice(index, 1);
-            return true;
-        }
-        else{
-            console.log("No Card found");
-            return false;
-        }
     }
 
     changeState(newState){

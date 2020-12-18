@@ -63,9 +63,18 @@ class PlayerManager{
         this.players[playerId].properties.filter((property)=>property.id !== removedProperty.id);
     }
 
-
     /**
-     * @param {int} playerID
+     *
+     * @param {}playerID
+     * @param {int} cardID
+     */
+    searchCard(playerID, cardID){
+        let player = this.players[playerID];
+
+        return player.cards.find(cards => cards.id === cardID);
+    }
+    /**
+     * @param {} playerID
      * @param {CityModel} property
      * @param {BuildingModel} newBuilding: Building
      * @returns {boolean}
@@ -160,7 +169,7 @@ class PlayerManager{
 
         //player is selling a hotel to the bank
         if (building.type === 'hotel') {
-            if (hotels == 1) {
+            if (hotels === 1) {
                 playerProperty.hotelCount = 0;
                 playerProperty.buildings = [];
                 this.setMoney(playerId, cost);
@@ -190,6 +199,37 @@ class PlayerManager{
             }
         }
         return false;
+    }
+
+    reduceJailLeft(playerID){
+        this.players[playerID].inJailLeft = this.players[playerID].inJailLeft - 1;
+    }
+
+    getJailLeft(playerID){
+        return this.players[playerID].inJailLeft;
+    }
+
+    sendJail(playerID){
+        this.players[playerID].inJail = true;
+        this.players[playerID].inJailLeft = 3;
+    }
+
+    useCard(playerID, cardID){
+        let player = this.players[playerID];
+
+        player.cards.forEach(card => {
+            if(card.id === cardID){
+                player.cards.filter(card => card.id !== cardID);
+                return true;
+            }
+        });
+
+        return false;
+    }
+
+    exitJail(playerID){
+        this.players[playerID].inJail = false;
+        this.players[playerID].inJailLeft = 0;
     }
 }
 
