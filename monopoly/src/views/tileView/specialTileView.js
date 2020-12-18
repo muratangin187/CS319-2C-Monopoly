@@ -14,9 +14,9 @@ class SpecialTileView extends tileView{
     }
     initializeDrawings() {
         super.initializeDrawings();
-        this.image.width = 60;
-        this.image.height = 60;
-        this.image.x = this.x + this.size / 2 - 30;
+        this.image.width = 50;
+        this.image.height = 50;
+        this.image.x = this.x + this.size / 2 - 25;
         this.image.y = this.y + this.size / 4;
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",

@@ -19,9 +19,11 @@ if (process.platform === 'win32') {
 function createWindow() {
   // Create the browser window.
   exports.mainWindow = mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
+    width: 1600,
+    height: 905,
     show: false,
+    frame: false,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true

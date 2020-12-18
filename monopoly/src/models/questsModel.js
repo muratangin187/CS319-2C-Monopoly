@@ -1,6 +1,6 @@
 // Include to a proper class
 
-class questsModel{
+class QuestsModel{
     /**
      * Should we write the check conditions in here or in Game Manager class.
      * @param quest1 = int[] => Holds the locations of the seven Wonders
@@ -11,3 +11,5 @@ class questsModel{
         this.quest2 = quest2;
     }
 }
+
+module.exports = QuestsModel;

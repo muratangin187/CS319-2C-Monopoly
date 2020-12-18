@@ -1,6 +1,6 @@
-import PropertyModel from "./propertyModel";
+const PropertyModel = require("./propertyModel");
 
-export default class CityModel extends PropertyModel {
+class CityModel extends PropertyModel {
 
     /**
      * Creates a city data model
@@ -70,3 +70,4 @@ export default class CityModel extends PropertyModel {
         return addedMoney;
     }
 }
+module.exports = CityModel;

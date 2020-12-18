@@ -18,10 +18,10 @@ class propertyTileView extends tileView{
         super.initializeDrawings();
 
         let icon = new PIXI.Sprite(this.property.image);
-        icon.width = 35;
-        icon.height = 35;
-        icon.x = this.x + this.size / 2 - 17.5;
-        icon.y = this.y + this.size / 4;
+        icon.width = 30;
+        icon.height = 30;
+        icon.x = this.x + this.size / 2 - 15;
+        icon.y = this.y + this.size / 4 + 5;
 
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",

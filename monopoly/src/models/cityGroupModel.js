@@ -1,6 +1,6 @@
-import cityModel from "./cityModel";
+const CityModel = require("./cityModel");
 
-export default class CityGroupModel {
+class CityGroupModel {
     constructor(cities, color) {
         this.cities = cities;
         this.color = color;
@@ -27,3 +27,5 @@ export default class CityGroupModel {
         return true;
     }
 }
+
+module.exports = CityGroupModel;

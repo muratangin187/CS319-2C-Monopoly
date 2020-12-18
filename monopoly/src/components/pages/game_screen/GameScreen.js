@@ -28,7 +28,7 @@ function initPixi(){
     PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
     Globals.app = new PIXI.Application({resolution: 1});
     Globals.app.renderer.roundPixels = true;
-    Globals.app.renderer.resize(880, 880);
+    Globals.app.renderer.resize(770, 900);
     document.getElementById("canvas").appendChild(Globals.app.view);
     const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("railroad", railroad).load(async (loader, resources)=>{
         Globals.resources = resources;
@@ -73,7 +73,6 @@ function initPixi(){
                 //   image = Globals.resources.goto_jail.texture;
                 // }
                 let cornerTile = new CornerTileView(image, tile);
-                cornerTile.initializeDrawings();
             }
             else if (type === "StationTile") {
                 // console.log("Station tile: " + tiles[i]["tile"] );
@@ -87,7 +86,6 @@ function initPixi(){
                 image = Globals.resources[imageType].texture;
                 let station = new StationModel(id, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
                 let stationTile = new otherPropertyTileView(station);
-                stationTile.initializeDrawings();
             }
             else if (type === "CityTile") {
                 // console.log("City tile: " + tiles[i]["tile"] );
@@ -128,7 +126,6 @@ function initPixi(){
                 let city = new CityModel(id, name,  rentPrice, mortgagePrice, price, tile, null, houseCost, hotelCost, null, cityGroup);
                 cityGroup.cities.push(city);
                 let cityTile = new cityTileView(city);
-                cityTile.initializeDrawings();
             }
             else if (type === "SpecialTile") {
                 // console.log("Special tile: " + tiles[i]["tile"] );
@@ -149,7 +146,6 @@ function initPixi(){
                 let imageType = tiles[i]["image"];
                 image = Globals.resources[imageType].texture;
                 let specialTile = new SpecialTileView(name ,image, tile);
-                specialTile.initializeDrawings();
             }
             else if (type === "UtilityTile") {
                 // console.log("Utility tile: " + tiles[i]["tile"] );
@@ -168,7 +164,6 @@ function initPixi(){
                 image = Globals.resources[imageType].texture;
                 let utility = new UtilityModel(tile, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
                 let utilityTile = new otherPropertyTileView(utility);
-                utilityTile.initializeDrawings();
             }
         }
 
@@ -200,14 +195,6 @@ function GameScreen(props) {
 
     return (
         <div className="canvasDiv">
-            <div>
-                <ul>
-                    <li>SELAM</li>
-                    <li>SELAM</li>
-                    <li>SELAM</li>
-                    <li>SELAM</li>
-                </ul>
-            </div>
             <div id="canvas"/>
         </div>
     );

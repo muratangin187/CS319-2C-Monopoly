@@ -1,4 +1,4 @@
-class boardModel{
+class BoardModel{
     /**
      *
      * @param color: String. City Group's color
@@ -15,3 +15,5 @@ class boardModel{
         this.price = price;
     }
 }
+
+module.exports = BoardModel;
