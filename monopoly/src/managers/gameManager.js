@@ -73,11 +73,11 @@ class GameManager{
             }
         });
         /**
-         * args =
+         * args = {PropertyModelId, BuildingModel}
          */
         ipcMain.on("sell_building", (event, args)=>{
             const user = networkManager.getCurrentUser();
-            let property = cardManager.getCardById(args[1]);
+            let property = cardManager.getCardById(args[0]);
 
             let type = args[1].type;
 
