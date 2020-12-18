@@ -188,6 +188,10 @@ function initPixi(){
 }
 
 function GameScreen(props) {
+    //let currentUserId = props.currentUser.id;
+    //let currentUsername = props.currentUser.username;
+    //let room = props.room;
+    //let currentPlayerObject = props.room.users.find(user => user.id === currentUserId);
 
     useEffect(()=>{
         initPixi();
