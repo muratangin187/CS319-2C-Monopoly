@@ -33,6 +33,11 @@ io.on('connection', (socket) => {
         socket.to(args[0].roomName).emit("update_room_users_sb", joinedRoom.users );
     });
 
+    socket.on("start_game_bs", (roomName) => {
+        let joinedRoom = rooms.find((room)=>room.room_name === roomName);
+        io.in(roomName).emit("start_game_sb", joinedRoom);
+    });
+
 });
 
 http.listen(3000, () => {

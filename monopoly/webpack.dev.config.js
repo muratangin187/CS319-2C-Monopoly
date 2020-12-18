@@ -12,7 +12,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
-        include: defaultInclude
+        include: [defaultInclude, path.resolve(__dirname,"node_modules/@blueprintjs/core/lib/css/")]
       },
       {
         test: /\.jsx?$/,
