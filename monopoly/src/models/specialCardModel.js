@@ -6,7 +6,7 @@ class SpecialCardModel{
      * Chest Cards
      */
     constructor(id, description){
-        this.cardID = id;
+        this.id = id;
         this.description = description;
     }
 }

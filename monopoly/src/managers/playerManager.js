@@ -41,7 +41,7 @@ class PlayerManager{
     }
 
     /**
-     * @param {int} playerId: Buyers ID
+     * @param {} playerId: Buyers ID
      * @param {PropertyModel} newProperty: PropertyModel Add to the player's properties
      * In the addProperty function, the owner of the newProperty is also updated
      */
@@ -73,6 +73,11 @@ class PlayerManager{
 
         return player.cards.find(cards => cards.id === cardID);
     }
+
+    addCard(playerID, card){
+        this.players[playerID].cards.push(card);
+    }
+
     /**
      * @param {} playerID
      * @param {CityModel} property

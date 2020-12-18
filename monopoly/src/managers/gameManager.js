@@ -15,13 +15,11 @@ let chance = [7, 22, 36];
 let communityChest = [2, 17, 33];
 let goJail = 30;
 let incomeTax = 4;
-/*
 
-    Special Card1 ID = 16
-    Special Card2 ID = 17
+let chanceUsableCards = [16, 17, 6];
+let chestUsableCards = [4];
 
 
- */
 class GameManager{
     constructor() {
         this.createListeners();
@@ -138,6 +136,7 @@ class GameManager{
                 }
             });
             let winner = newTrade.closeTrade();
+            //ToDO
             /*
                 If winner length is not zero. Finish the Trade
              */
@@ -167,7 +166,7 @@ class GameManager{
             playerManager.move(currentUser, newTile, startBonus);
 
             // if new tile is jail
-            if (newTile != goJail) {
+            if (newTile !== goJail) {
                 //ToDo
                 //Here call the function which the player is sent to jail to wait 3 turns
             }
@@ -236,7 +235,7 @@ class GameManager{
                 }
             }
         });
-
+        //ToDo
         //ipcMain.on('moveResult', (event, args)=>{
            //let property = ....;
            //property => Satin alinabilecek
@@ -255,19 +254,20 @@ class GameManager{
            //}
 
         //});
-
-        ipcMain.on("useCardToExit_fb", (event, args) =>{
+        //ToDo : listener eleman almasa olur mu
+        ipcMain.on("useCardToExit_fb", () =>{
             let currentUser = networkManager.getCurrentUser();
 
             let cond = this.useCardToExitJail(currentUser.id);
 
             if(cond){
+                //ToDo for Each rollDice and Move
                 //rollDice();
                 //move();
             }
         });
-
-        ipcMain.on("payToExit_fb", (event, args) =>{
+        //ToDo : listener eleman almasa olur mu
+        ipcMain.on("payToExit_fb", () =>{
             let currentUser = networkManager.getCurrentUser();
 
             let cond = this.payToExitJail(currentUser.id);
@@ -277,8 +277,8 @@ class GameManager{
                 //move();
             }
         });
-
-        ipcMain.on("rollToExit_fb", (event, args) =>{
+        //ToDo : listener eleman almasa olur mu
+        ipcMain.on("rollToExit_fb", () =>{
             let currentUser = networkManager.getCurrentUser();
 
             //let {x,y} = rollDice();
@@ -321,8 +321,8 @@ class GameManager{
     }
 
     useCardToExitJail(currentUser){
-        let chanceCardID = 6; //Degeri salladim. Bu deger chance card jail free cardi
-        let chestCardID = 4; //Degeri salladim. Bu deger chest card jail free cardi
+        let chanceCardID = 6;
+        let chestCardID = 4;
         let cond1 = playerManager.useCard(currentUser, chanceCardID);
 
         if(cond1){
@@ -352,7 +352,29 @@ class GameManager{
         playerManager.sendJail(playerID);
     }
 
+    drawChestCard(playerID){
+        let card = cardManager.drawChestCard();
 
+        if(!chestUsableCards.includes(card.id)){
+            cardManager.addChestCard(card.id, card.description);
+
+            // TODO Apply the Card Effect
+        }
+        else
+            playerManager.addCard(playerID, card);
+    }
+
+    drawChanceCard(playerID){
+        let card = cardManager.drawChanceCard();
+
+        if(!chanceUsableCards.includes(card.id)){
+            cardManager.addChanceCard(card.id, card.description);
+
+            // TODO Apply the Card Effect
+        }
+        else
+            playerManager.addCard(playerID, card);
+    }
 }
 
 module.exports = new GameManager();
