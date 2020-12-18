@@ -76,7 +76,7 @@ class GameManager{
             }
         });
         /**
-         * args = {PropertyModelID, BuildingModel}
+         * args = {PropertyModelId, BuildingModel}
          */
         ipcMain.on("sell_building", (event, args)=>{
             const user = networkManager.getCurrentUser();
