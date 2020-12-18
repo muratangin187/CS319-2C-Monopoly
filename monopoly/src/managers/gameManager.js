@@ -177,6 +177,13 @@ class GameManager{
            //}
 
         //});
+
+        /**
+         * signal_from: get_characters_fb
+         * */
+        ipcMain.on('get_characters_fb', (event, args) => {
+            networkManager.getCharacters();
+        });
     }
 
 }

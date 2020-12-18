@@ -27,6 +27,17 @@ class NetworkManager {
             console.log("main - update_room_users_sb");
             mainWindow.send("update_room_users_bf", args[0]);
         });
+
+        /**
+         * signal_from: get_characters_sb
+         * signal_to: get_characters_bf
+         * sending character array (nm -> RoomLobbyPage.CharacterList)
+         * */
+        this.socket.on('get_characters_sb', (characters) => {
+            console.log("Character Object Array:");
+            console.log(characters);
+            mainWindow.send("get_characters_bf", characters);
+        });
     }
 
     getRoom(roomName){
@@ -48,6 +59,14 @@ class NetworkManager {
     joinRoom(args){
         console.log("EMIT ON NETWORK:" + args.roomName + " - " + args.username);
         this.socket.emit("join_room_bs", args);
+    }
+
+    /**
+     * signal_to: get_characters_bs
+     * Request sending from server to get character list
+     * */
+    getCharacters(){
+        this.socket.emit('get_characters_bs');
     }
 }
 
