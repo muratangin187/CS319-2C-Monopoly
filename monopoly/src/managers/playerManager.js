@@ -129,7 +129,55 @@ class PlayerManager{
         return false;
     }
 
+    /**
+     * Used to sell one of players buildings to bank
+     * @param playerId: id of the player
+     * @param property: property in which the building is to be removed
+     * @param building: building to be removed
+     * @returns {boolean}
+     */
+    sellBuilding(playerId, property, building) {
+        let player = this.players[playerID];
 
+        let cost = building.cost;
+
+        let playerProperty = player.properties.find(myp => myp.id === property.id);//Why can't access parent's variable
+
+        let houses = playerProperty.houseCount;
+        let hotels = playerProperty.hotelCount;
+
+        //player is selling a hotel to the bank
+        if (building.type.localeCompare('hotel')) {
+            if (hotels == 1) {
+                player.money += cost;
+                playerProperty.hotelCount = 0;
+                playerProperty.buildings = [];
+                return true;
+            }
+            return false;
+        }
+
+        //player is selling a house to the bank
+        if (building.type.localeCompare('house')) {
+            if (houses === 0) {
+                return false;
+            }
+            let flag = true;
+            for (let j = 0; j < playerProperty.cityGroup.getCityCount(); j++) {
+                if (playerProperty.cityGroup[j].houseCount > houses) {
+                    flag = false;
+                }
+            }
+
+            //remove the house.
+            player.money += cost;
+            playerProperty.houseCount -= 1;
+            playerProperty.buildings.remove();
+            return true;
+        }
+
+        return false;
+    }
 }
 
 module.exports = new PlayerManager();

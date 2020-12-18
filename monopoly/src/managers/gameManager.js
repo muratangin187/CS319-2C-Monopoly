@@ -76,7 +76,8 @@ class GameManager{
          * args =
          */
         ipcMain.on("sell_building", (event, args)=>{
-
+            const user = networkManager.getCurrentUser();
+            let property = cardManager.getCardById(args[1])
         });
         /**
          * channel: event name
