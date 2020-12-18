@@ -15,7 +15,7 @@ export default function PlayerList() {
     );
 
     return (
-            <div>
+            <div style={{width: 100}}>
                 <p>Chat</p>
                 <ul style={{listStyle: "none"}}>
                     {messages.map(message => {
@@ -32,12 +32,10 @@ export default function PlayerList() {
                         )
                     })}
                 </ul>
-                <form>
                     <input
                         placeholder="Type your message and hit ENTER"
                         type="text"
                         style={{padding: 20, borderRadius: 20, width: "50vw"}}/>
-                </form>
             </div>
         );
 }

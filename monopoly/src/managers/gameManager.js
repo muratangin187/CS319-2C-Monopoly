@@ -11,6 +11,10 @@ class GameManager{
         this.createListeners();
     }
 
+    getCurrentUser(){
+        return networkManager.getCurrentUser();
+    }
+
     createListeners(){
         ipcMain.on("create_room_fb", (event, args) => {
             networkManager.createRoom(args);
@@ -25,6 +29,7 @@ class GameManager{
                 new PropertyModel(0, "Ankara", 10, 1, 100, 2, 0),
                 new PropertyModel(1, "Konya", 10, 1, 3, 2, 0)
             ]);
+            networkManager.startGame(args);
         });
         ipcMain.on("buy_property_fb", (event, args)=>{
             const user = networkManager.getCurrentUser();
