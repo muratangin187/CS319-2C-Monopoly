@@ -26,6 +26,8 @@ import UtilityModel from "../../../models/utilityModel";
 import Character from "../../../views/tileView/Character";
 import {Button, Card, Drawer, Position} from "@blueprintjs/core";
 import ReactDice from 'react-dice-complete'
+import YourTurnState from "./components/YourTurnState";
+import OtherPlayersTurn from "./components/OtherPlayersTurn";
 
 function initPixi(){
     PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
@@ -206,38 +208,19 @@ function initPixiForHand(){
 }
 
 function GameScreen(props) {
-    const [reactDice, setReactDice] = React.useState(null);
     const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
+    const [currentState, setCurrentState] = React.useState({});
 
     useEffect(()=>{
         initPixi();
     }, []);
-
-    function rollAll() {
-        reactDice.rollAll()
-    }
     return (
         <div className="canvasDiv" style={{display: "grid", gridTemplateColumns: "720px 880px"}}>
             <div style={{width: 720, display:"grid", gridTemplateRows:"1fr 1fr", gridTemplateColumns: "1fr"}}>
                 <div>
                     <Card style={{margin: "20px", padding: "20px"}} elevation={4}>
-                        <Card style={{margin: "20px"}} elevation={2}>
-                            <Button intent={"primary"} style={{float: "left", margin: "1em 0"}} onClick={()=>setIsScoreboardOpen(!isScoreboardOpen)}>Scoreboard</Button>
-                            <h3 style={{textAlign: "center"}}>Your turn, please roll dice</h3>
-                        </Card>
-                        <Card style={{margin: "20px", textAlign: "center"}} elevation={2}>
-                            <ReactDice
-                                numDice={2}
-                                rollDone={(sum, rollArr)=>console.log(rollArr[0] + " | " + rollArr[1])}
-                                ref={dice => setReactDice(dice)}
-                                dotColor="#000000"
-                                faceColor="#ffffff"
-                                outline="true"
-                                outlineColor="#575757"
-                                disableIndividual="true"
-                            />
-                            <Button onClick={rollAll} intent={"success"}>Roll</Button>
-                        </Card>
+                        <Button intent={"primary"} onClick={()=>setIsScoreboardOpen(!isScoreboardOpen)}>Scoreboard</Button>
+                        <YourTurnState/>
                     </Card>
                     <Widget />
                     <Drawer
@@ -258,7 +241,7 @@ function GameScreen(props) {
                 </div>
                 <div id="canvas_hand" />
             </div>
-            <div id="canvas" style={{margin: "auto"}}/>
+            <div id="canvas" />
         </div>
     );
 }
