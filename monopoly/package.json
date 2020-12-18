@@ -53,6 +53,8 @@
     "pixi.js": "^5.3.4",
     "postcss": "^8.1.4",
     "react": "^17.0.1",
+    "react-chat-widget": "^3.0.5",
+    "react-dice-complete": "^1.2.1",
     "react-dom": "^17.0.1",
     "socket.io-client": "^3.0.3",
     "url-loader": "^4.1.1"
