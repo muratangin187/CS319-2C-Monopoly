@@ -102,6 +102,7 @@ class PlayerManager{
             playerProperty.buildings = [newBuilding];
             playerProperty.houseCount = 0;
             playerProperty.hotelCount = 1;
+            this.setMoney(playerID, -cost);
             return true;
         }
         else {
@@ -123,6 +124,7 @@ class PlayerManager{
                 //build the house
                 playerProperty.buildings.push(newBuilding);
                 playerProperty.houseCount += 1;
+                this.setMoney(playerID, -cost);
                 return true;
             }
         }
@@ -149,9 +151,9 @@ class PlayerManager{
         //player is selling a hotel to the bank
         if (building.type.localeCompare('hotel')) {
             if (hotels == 1) {
-                player.money += cost;
                 playerProperty.hotelCount = 0;
                 playerProperty.buildings = [];
+                this.setMoney(playerId, cost);
                 return true;
             }
             return false;
@@ -170,7 +172,7 @@ class PlayerManager{
             }
 
             //remove the house.
-            player.money += cost;
+            this.setMoney(playerId, cost);
             playerProperty.houseCount -= 1;
             playerProperty.buildings.remove();
             return true;
