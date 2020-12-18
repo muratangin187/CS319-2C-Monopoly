@@ -77,7 +77,30 @@ class GameManager{
          */
         ipcMain.on("sell_building", (event, args)=>{
             const user = networkManager.getCurrentUser();
-            let property = cardManager.getCardById(args[1])
+            let property = cardManager.getCardById(args[1]);
+
+            let type = args[1].type;
+
+            if(type === 'hotel' && hotel_Count === 12)
+                console.log("All hotels are in the bank, there cannot be a hotel on the board.");
+
+            else if(type === 'house' && house_Count === 32)
+                console.log("All houses are in the bank, there cannot be a house on the board.");
+
+            else {
+                let cond = playerManager.sellBuilding(user.id, property, args[1]);
+
+                if (cond) {
+                    console.log("Building is removed successfully!");
+                    if (type === 'hotel') {
+                        hotel_Count += 1;
+                    } else if (type === 'house') {
+                        house_Count += 1;
+                    }
+                } else {
+                    console.log('Failed to remove building due to an error.')
+                }
+            }
         });
         /**
          * channel: event name

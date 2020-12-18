@@ -171,13 +171,14 @@ class PlayerManager{
                 }
             }
 
-            //remove the house.
-            this.setMoney(playerId, cost);
-            playerProperty.houseCount -= 1;
-            playerProperty.buildings.remove();
-            return true;
+            //remove the house if flag.
+            if (flag) {
+                this.setMoney(playerId, cost);
+                playerProperty.houseCount -= 1;
+                playerProperty.buildings.remove();
+                return true;
+            }
         }
-
         return false;
     }
 }
