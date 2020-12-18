@@ -220,7 +220,7 @@ function GameScreen(props) {
                 <div>
                     <Card style={{margin: "20px", padding: "20px"}} elevation={4}>
                         <Button intent={"primary"} onClick={()=>setIsScoreboardOpen(!isScoreboardOpen)}>Scoreboard</Button>
-                        <YourTurnState/>
+                        <YourTurnState currentUser={props.currentUser}/>
                     </Card>
                     <Widget />
                     <Drawer

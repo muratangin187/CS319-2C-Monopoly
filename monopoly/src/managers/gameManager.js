@@ -50,6 +50,15 @@ class GameManager{
             let property = cardManager.getCardById(args[0]);
             playerManager.addProperty(user.id, property);
         });
+        ipcMain.on("move_player_fb", (event, args)=>{
+            const user = networkManager.getCurrentUser();
+            let currentUserModel = playerManager.getPlayers()[user.id];
+            let destinationTileId = currentUserModel.currentTile + args.movementAmount;
+            playerManager.move(user.id, destinationTileId,false);
+            // TODO viewManager.moveCharacterView
+            networkManager.movePlayer(user.id, destinationTileId);
+        });
+
         //same buildings, bidding commences and the buildings go to the highest bidder
         //we need to implement an auction for bidding houses and hotels
         /**
@@ -142,7 +151,6 @@ class GameManager{
              */
             StateManager.updateState(newTrade);
         });
-
 
         /**
          * args: {newTile:number, }
@@ -296,6 +304,11 @@ class GameManager{
         });
 
 
+    }
+
+    moveOtherPlayer(userId, destinationTileId){
+        console.log("USER: " + userId + " moved to tile " + destinationTileId);
+        // TODO viewManager.moveCharacterView(userId, destinationTileId)
     }
 
     rollToExitJail(currentUser){

@@ -38,6 +38,14 @@ io.on('connection', (socket) => {
         io.in(roomName).emit("start_game_sb", joinedRoom);
     });
 
+    socket.on("move_player_bs", (args)=>{
+        let playerId = args.playerId;
+        let destinationTileId = args.destinationTileId;
+        let roomName = args.roomName;
+        console.log(`MOVE PLAYER(${playerId}) to ${destinationTileId} in room ${roomName}`);
+        socket.in(roomName).emit("move_player_sb", {playerId, destinationTileId});
+    });
+
 });
 
 http.listen(3000, () => {

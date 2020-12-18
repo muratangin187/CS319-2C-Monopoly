@@ -9,7 +9,7 @@ import RoomLobbyPage from "./pages/room_lobby_page/RoomLobbyPage";
 import GameScreen from "./pages/game_screen/GameScreen";
 
 function App() {
-  const [page, setPage] = useState("gameScreen");
+  const [page, setPage] = useState("mainPage");
   const [rooms, setRooms] = useState([]);
   const [gameRoom, setGameRoom] = useState({});
   const [selectedRoom, setSelectedRoom] = useState({});
