@@ -42,9 +42,12 @@ class GameManager{
         });
         //same buildings, bidding commences and the buildings go to the highest bidder
         //we need to implement an auction for bidding houses and hotels
+        /**
+         * args = {propertyModelID, BuildingModel}
+         */
         ipcMain.on("set_building_fb", (event, args)=>{
             const user = networkManager.getCurrentUser();
-            let property = cardManager.getCardById(args[1]);
+            let property = cardManager.getCardById(args[0]);
 
             let type = args[1].type;
 
@@ -73,11 +76,11 @@ class GameManager{
             }
         });
         /**
-         * args =
+         * args = {PropertyModelID, BuildingModel}
          */
         ipcMain.on("sell_building", (event, args)=>{
             const user = networkManager.getCurrentUser();
-            let property = cardManager.getCardById(args[1]);
+            let property = cardManager.getCardById(args[0]);
 
             let type = args[1].type;
 
