@@ -4,7 +4,7 @@ import * as PIXI from 'pixi.js';
 
 class UtilityCardView extends CardView{
     constructor(utility) {
-        super();
+        super(utility.id);
         this.utility = utility;
         this.content = new PIXI.Container();
         this.content.name = "content";

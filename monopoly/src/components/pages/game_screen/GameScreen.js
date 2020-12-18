@@ -21,9 +21,12 @@ import StationModel from "../../../models/stationModel";
 import otherPropertyTileView from "../../../views/tileView/otherPropertyTileView";
 import CityModel from "../../../models/cityModel";
 import cityTileView from "../../../views/tileView/cityTileView";
+import cityCardView from "../../../views/cardView/cityCardView"; //card for test
 import SpecialTileView from "../../../views/tileView/specialTileView";
 import UtilityModel from "../../../models/utilityModel";
 import Character from "../../../views/tileView/Character";
+import stationCardView from "../../../views/cardView/stationCardView";
+import utilityCardView from "../../../views/cardView/utilityCardView";
 import {Button, Card, Drawer, Position} from "@blueprintjs/core";
 import ReactDice from 'react-dice-complete'
 import YourTurnState from "./components/YourTurnState";
@@ -171,7 +174,211 @@ function initPixi(){
                 let utilityTile = new otherPropertyTileView(utility);
             }
         }
+        let cards = [
+            // {
+            //     "type": "station",
+            //     "value" : new StationModel(10, "ankara", [50,100,200,400,600,1000], 25, 50, 10, null, false, image)
+            // },
+            {
+                "type" : "city",
+                "value" : new CityModel(10, "Ankara",  [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, browns)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(4, "IZMIR", [50,100,200,400,600,1000], 25, 50,10 , null, 200, 200, null, lightBlues)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(8, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, pinks)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(27, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, oranges)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(21, "Ankara",  [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, reds)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50,10 , null, 200, 200, null, yellows)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, greens)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, blues)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(23, "Ankara",  [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, browns)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50,10 , null, 200, 200, null, lightBlues)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, pinks)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, oranges)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(23, "Ankara",  [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, reds)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50,10 , null, 200, 200, null, yellows)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, greens)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, blues)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(23, "Ankara",  [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, browns)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50,10 , null, 200, 200, null, lightBlues)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, pinks)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, oranges)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(23, "Ankara",  [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, reds)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50,10 , null, 200, 200, null, yellows)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, greens)
+            },
+            {
+                "type" : "city",
+                "value" : new CityModel(2, "IZMIR", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, blues)
+            },
 
+        ];
+
+        //
+        //let offset = [0,0,0,0,0,0,0,0]
+        let cardExs = [];
+        function offset(selectedId) {
+            let found =false;
+            for (let i = 0; i < 5; i++) {
+
+                if (!found) {
+                    cardExs[i].card.x =cardExs[i].card.oldx +  i * 30;
+                }
+                else {
+                    cardExs[i].card.x = cardExs[i].card.oldx + i * 30 + 100;
+                }
+                if (cardExs[i].id === selectedId) {
+                    found =true;
+
+                }
+                console.log("founded" +" cardExs[i].card.id: " + cardExs[i].id);
+
+            }
+        }
+
+        for(let i = 0; i < 5; i++) {
+            let type = cards[i]["type"];
+            let value = cards[i]["value"];
+            if (type === "city"){
+                let cardEx = new cityCardView(value);
+                cardEx.setCallBack((selectedId) =>{
+                    offset(selectedId);
+                    console.log("SelectedIdIn" + selectedId);
+                },(selectedId)=>{
+                    console.log("SelectedIdOut" + selectedId);
+                });
+                cardEx.card.oldx = cardEx.card.x;
+                cardEx.card.x += i * 30;
+                // console.log("Bunu da yap " + cardEx.id)
+
+                cardExs.push(cardEx);
+                //cardEx.
+                // if (value.cityGroup === browns) {
+                //     cardEx.card.x = 0;
+                //     //offset[0] += 1;
+                //     //cardEx.card.x += //offset[0]*20;
+                //
+                // }
+                // if (value.cityGroup === lightBlues) {
+                //     cardEx.card.x = 150;
+                //     //offset[1] += 1;
+                //     //cardEx.card.x += //offset[1]*20;
+                // }
+                // if (value.cityGroup === pinks) {
+                //     cardEx.card.x = 300;
+                //     //offset[2] += 1;
+                //     //cardEx.card.x += //offset[2]*20;
+                // }
+                // if (value.cityGroup === oranges) {
+                //     cardEx.card.x = 450;
+                //     //offset[3] += 1;
+                //     //cardEx.card.x += //offset[3]*20;
+                // }
+                // if (value.cityGroup === reds) {
+                //     cardEx.card.x = 0;
+                //     cardEx.card.y += 250;
+                //     //offset[4] += 1;
+                //     //cardEx.card.x += //offset[4]*20;
+                // }
+                // if (value.cityGroup === yellows) {
+                //     cardEx.card.x = 150;
+                //     cardEx.card.y += 250;
+                //     //offset[5] += 1;
+                //     //cardEx.card.x += //offset[5]*20;
+                // }
+                // if (value.cityGroup === greens) {
+                //     cardEx.card.x = 300;
+                //     cardEx.card.y += 250
+                //     //offset[6] += 1;
+                //     //cardEx.card.x += //offset[6]*20;
+                // }
+                // if (value.cityGroup === blues) {
+                //     cardEx.card.x = 450;
+                //     cardEx.card.y += 250
+                //     //offset[7] += 1;
+                //     //cardEx.card.x += //offset[7]*20;
+                // }
+
+
+            }
+            // else if (type === "station"){
+            //     console.log("value : " + value.name);
+            //     let cardEx = new stationCardView(value);
+            // }
+            // else if(type === "utility"){
+            //     let cardEx = new utilityCardView(value);
+            // }
+            else if(type === "special"){
+                console.log("special card is not ready.");
+            }
+        }
+
+        // let city1 =
+        //let card1 = new cityCardView(new CityModel(0, "ankara", [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, blues));
 
         let char1 = new Character(Globals.resources.electric.texture, 0, 0);
         let char2 = new Character(Globals.resources.electric.texture, 22,1) ;

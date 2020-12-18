@@ -70,14 +70,14 @@ class cityTileView extends tileView{
             // }
 
             this.popUP.beginFill(0xFFFFFF);
-            this.popUP.lineStyle(1, 0x333333);
+            this.popUP.lineStyle(3, 0x333333);
             this.popUP.drawRect(Globals.sizeOfBoard/2 - this.size , Globals.sizeOfBoard/2 - this.size - offset, 200, 300);
             this.popUP.alpha = 0.8;
 
             let titleBackground = new PIXI.Graphics();
             titleBackground.name = "titleBackground";
             titleBackground.beginFill(this.city.cityGroup.color);
-            titleBackground.lineStyle(5, 0x333333);
+            titleBackground.lineStyle(1, 0x333333);
             titleBackground.drawRect(Globals.sizeOfBoard/2 - this.size , Globals.sizeOfBoard/2 - this.size - offset, 200, 50);
             this.popUP.addChild(titleBackground);
 
