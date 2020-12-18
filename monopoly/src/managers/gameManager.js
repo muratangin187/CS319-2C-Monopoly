@@ -133,6 +133,32 @@ class GameManager{
         });
 
 
+        /**
+         * args: {newTile:number, }
+         */
+        ipcMain.on('new_tile', (event, args)=>{
+            let players = playerManager.getPlayers();
+            let currentUser = networkManager.getCurrentUser();
+
+            //get the player id
+            let playerId = currentUser.id;
+
+            //current tile of the player before moving
+            let oldTile = players[playerId].currentTile;
+            let newTile = args[0]
+
+            let startBonus = false;
+            if (oldTile <= 39 && newTile >= 0) {
+                startBonus = true;
+            }
+
+            playerManager.move(currentUser, newTile, startBonus);
+
+            let newProperty = cardManager.getCardById(newTile);
+
+
+        });
+
         //ipcMain.on('moveResult', (event, args)=>{
            //let property = ....;
            //property => Satin alinabilecek

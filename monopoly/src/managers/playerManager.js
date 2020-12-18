@@ -19,6 +19,16 @@ class PlayerManager{
         return this.players[playerId].money;
     }
 
+    /**
+     *
+     * @param playerId: id of the player moves
+     * @param newTile: new tile that the player goes
+     * @param startBonus: boolean
+     */
+    move(playerId, newTile, startBonus) {
+        this.players[playerId].move(newTile, startBonus);
+    }
+
     setMoney(playerId, amount){
         if(amount < 0 && !this.isMoneyEnough(playerId, amount))
             return false;
@@ -79,7 +89,7 @@ class PlayerManager{
 
 
         //if hotel is to be erected
-        if (newBuilding.type.localeCompare('hotel')) {
+        if (newBuilding.type === 'hotel') {
             //cannot erect a hotel if there are not 4 houses
             if (playerProperty.houseCount !== 4)
                 return false;
@@ -149,7 +159,7 @@ class PlayerManager{
         let hotels = playerProperty.hotelCount;
 
         //player is selling a hotel to the bank
-        if (building.type.localeCompare('hotel')) {
+        if (building.type === 'hotel') {
             if (hotels == 1) {
                 playerProperty.hotelCount = 0;
                 playerProperty.buildings = [];
@@ -160,7 +170,7 @@ class PlayerManager{
         }
 
         //player is selling a house to the bank
-        if (building.type.localeCompare('house')) {
+        if (building.type === 'house') {
             if (houses === 0) {
                 return false;
             }
