@@ -10,6 +10,16 @@ const StateManager = require("./stateManager");
 let house_Count = 32;
 let hotel_Count = 12;
 
+let properties = [1, 3, 5, 6, 8, 9, 11, 12, 13, 14, 15, 16, 18, 19, 21, 23, 24, 25, 26, 27, 28, 29, 31, 32, 34, 35, 37, 39];
+let chance = [7, 22, 36];
+let communityChest = [2, 17, 33];
+let goJail = 30;
+let incomeTax = 4;
+
+let chanceUsableCards = [16, 17, 6];
+let chestUsableCards = [4];
+
+
 class GameManager{
     constructor() {
         this.createListeners();
@@ -126,6 +136,7 @@ class GameManager{
                 }
             });
             let winner = newTrade.closeTrade();
+            //ToDO
             /*
                 If winner length is not zero. Finish the Trade
              */
@@ -154,11 +165,77 @@ class GameManager{
 
             playerManager.move(currentUser, newTile, startBonus);
 
-            let newProperty = cardManager.getCardById(newTile);
+            // if new tile is jail
+            if (newTile !== goJail) {
+                //ToDo
+                //Here call the function which the player is sent to jail to wait 3 turns
+            }
 
+            //if tile is income, player spends $200 or 10% of his/her money
+            else if (newTile === incomeTax) {
+                playerManager.setMoney(playerId, -200);
+            }
 
+            //traverse the arrays in order to find the tile type
+            else {
+                let typeTile = -1;
+                let found = false;
+                for (let i = 0; i < properties.length; i++) {
+                    if (properties[i] === newTile) {
+                        typeTile = 0;
+                        found = true;
+                        break;
+                    }
+                }
+
+                //if tile type is found, no need to traverse other arrays
+                if (!found) {
+                    for (let i = 0; i < chance.length; i++) {
+                        if (chance[i] === newTile) {
+                            typeTile = 1;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        for (let i = 0; i < communityChest.length; i++) {
+                            if (communityChest[i] === newTile) {
+                                typeTile = 2;
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //arrays are traversed, do what needs to be done after moving to a new tile
+                if (typeTile === 0) {
+                    let property = cardManager.getCardById(args[0]);
+                    if (property.ownerId == null) {
+                        //ToDo
+                        //depending on whether the user chooses to buy or not, give tile to user start an auction
+
+                        //give tile if no auction
+                        playerManager.addProperty(playerId, property);
+                    }
+
+                }
+                else if (typeTile === 1) {
+                    //ToDo
+                    //Draw a chance card
+                    // let chanceCard = cardManager.
+                }
+                else if (typeTile === 2) {
+                    //ToDo
+                    //Draw a community chest card
+                    // let communityCard = cardManager.
+                }
+                else {
+                    console.log("Cannot find the type of the newTile. Debug.");
+                }
+            }
         });
-
+        //ToDo
         //ipcMain.on('moveResult', (event, args)=>{
            //let property = ....;
            //property => Satin alinabilecek
@@ -177,8 +254,127 @@ class GameManager{
            //}
 
         //});
+        //ToDo : listener eleman almasa olur mu
+        ipcMain.on("useCardToExit_fb", () =>{
+            let currentUser = networkManager.getCurrentUser();
+
+            let cond = this.useCardToExitJail(currentUser.id);
+
+            if(cond){
+                //ToDo for Each rollDice and Move
+                //rollDice();
+                //move();
+            }
+        });
+        //ToDo : listener eleman almasa olur mu
+        ipcMain.on("payToExit_fb", () =>{
+            let currentUser = networkManager.getCurrentUser();
+
+            let cond = this.payToExitJail(currentUser.id);
+
+            if(cond){
+                //rollDice();
+                //move();
+            }
+        });
+        //ToDo : listener eleman almasa olur mu
+        ipcMain.on("rollToExit_fb", () =>{
+            let currentUser = networkManager.getCurrentUser();
+
+            //let {x,y} = rollDice();
+
+            let cond = this.rollToExitJail(currentUser.id);
+
+            if(cond){
+               //move(x, y);
+            }
+            else{
+                //while(!choose(pay, use)){}
+
+                //move(x, y);
+            }
+        });
+
+
     }
 
+    rollToExitJail(currentUser){
+        if(x === y)
+            playerManager.exitJail(currentUser);
+
+        else{
+            if(playerManager.getJailLeft(currentUser) > 0)
+                playerManager.reduceJailLeft(currentUser);
+
+            else
+                return false;
+
+        }
+
+        return true;
+    }
+
+    payToExitJail(currentUser){
+        let amount = 50;
+
+        return playerManager.setMoney(currentUser, -amount);
+    }
+
+    useCardToExitJail(currentUser){
+        let chanceCardID = 6;
+        let chestCardID = 4;
+        let cond1 = playerManager.useCard(currentUser, chanceCardID);
+
+        if(cond1){
+            cardManager.addChanceCard(chanceCardID, "Get Out of Jail Free");
+            playerManager.exitJail(currentUser);
+
+            return true;
+        }
+        else{
+            let cond2 = playerManager.useCard(currentUser, chestCardID);
+
+            if(cond2) {
+                cardManager.addChestCard(chestCardID, "Get Out of Jail Free");
+                playerManager.exitJail(currentUser);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Send Current User to the Jail
+     */
+    goJail(playerID){
+        playerManager.sendJail(playerID);
+    }
+
+    drawChestCard(playerID){
+        let card = cardManager.drawChestCard();
+
+        if(!chestUsableCards.includes(card.id)){
+            cardManager.addChestCard(card.id, card.description);
+
+            // TODO Apply the Card Effect
+        }
+        else
+            playerManager.addCard(playerID, card);
+    }
+
+    drawChanceCard(playerID){
+        let card = cardManager.drawChanceCard();
+
+        if(!chanceUsableCards.includes(card.id)){
+            cardManager.addChanceCard(card.id, card.description);
+
+            // TODO Apply the Card Effect
+        }
+        else
+            playerManager.addCard(playerID, card);
+    }
 }
 
 module.exports = new GameManager();
