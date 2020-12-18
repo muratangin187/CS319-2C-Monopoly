@@ -132,6 +132,25 @@ class GameManager{
             StateManager.updateState(newTrade);
         });
 
+
+        //ipcMain.on('moveResult', (event, args)=>{
+           //let property = ....;
+           //property => Satin alinabilecek
+           //if(property.ownerID !== PlayerID){
+               //pay rent
+                    //!== null
+                //payRent
+               // buy land
+                /*
+                2 secenek
+                1. secenek -> satin al
+                2. secenek -> auction
+                //event Yaratilir
+                bu eventi yolla
+                 */
+           //}
+
+        //});
     }
 
 }

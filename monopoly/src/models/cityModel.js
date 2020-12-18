@@ -27,43 +27,6 @@ export default class CityModel extends PropertyModel {
     }
 
     /**
-     *
-     * @param buildingType: string
-     * @returns {boolean}
-     */
-    sellBuilding(buildingType) {
-        if (!(buildingType.localeCompare('hotel')) || !(buildingType.localeCompare('house'))) {
-            return false;
-        }
-
-        //if no building, nothing to sell.
-        if (this.hotelCount === 0 || this.houseCount === 0) {
-            return false;
-        }
-
-        //if hotel, sell directly.
-        if (buildingType.localeCompare('hotel')) {
-            this.buildings = null;
-            this.hotelCount = 0;
-            return true;
-        }
-        else if (buildingType.localeCompare('house')) {
-
-            //you must break down evenly, meaning that you cannot sell from this property,
-            //if other one of cities have one more house. i.e., if this property has 3, and other has 4, you have to sell from the other.
-            for (let i = 0; i < this.cityGroup.getCityCount(); i++) {
-                 if (this.cityGroup[i].houseCount > this.houseCount) {
-                     return false;
-                 }
-            }
-            this.buildings.pop();
-            this.houseCount -= 1;
-            return true;
-        }
-        return false;
-    }
-
-    /**
      *  //below shows the rents of city for different combinations:
         //0 house -> rentPrice[0]
         //1 house -> rentPrice[1]
