@@ -26,6 +26,10 @@ class CityModel extends PropertyModel {
         this.hotelCount = 0;
     }
 
+    getID(){
+        return super.getID();
+    }
+
     /**
      *  //below shows the rents of city for different combinations:
         //0 house -> rentPrice[0]

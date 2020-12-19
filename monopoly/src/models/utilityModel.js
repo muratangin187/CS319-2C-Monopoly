@@ -6,6 +6,9 @@ class UtilityModel extends PropertyModel{
         this.image = image;
     }
 
+    getID(){
+        return super.getID();
+    }
 
     getRentPrice(diceRoll, ownedUtilityNumber){
         if(ownedUtilityNumber === 1)

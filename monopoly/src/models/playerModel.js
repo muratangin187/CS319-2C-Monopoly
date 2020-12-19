@@ -44,7 +44,9 @@ class PlayerModel{
         this.properties = [];
         this.currentTile = 0;
     }
-
+    getID(){
+        return this.id;
+    }
     /**
      *
      * @param newTileID: int

@@ -7,6 +7,9 @@ class StationModel extends PropertyModel{
         this.image = image;
     }
 
+    getID(){
+        return super.getID();
+    }
 }
 
 module.exports = StationModel;

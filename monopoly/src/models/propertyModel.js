@@ -10,7 +10,9 @@ class PropertyModel {
         this.card = card;
         this.isMortgaged = false;
     }
-
+    getID(){
+        return this.id;
+    }
     setOwner(newOwner) {
         this.ownerId = newOwner;
     }
@@ -27,8 +29,7 @@ class PropertyModel {
     liftMortgage() {
         this.isMortgaged = false;
         //amount of money that player needs to pay
-        let amount = this.mortgagePrice * 1.1;
-        return amount;
+        return this.mortgagePrice * 1.1;
     }
 
     //

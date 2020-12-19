@@ -1,4 +1,4 @@
-module.exports = chanceDescs = [
+module.exports = chanceDesc = [
 "Advance to Go (Collect $200)"
 ,"Advance to Illinois Ave—If you pass Go, collect $200"
 ,"Advance to St. Charles Place – If you pass Go, collect $200"

@@ -10,8 +10,8 @@ class PlayerManager{
     createPlayers(newPlayerList){
         this.players = {};
         newPlayerList.forEach((newPlayer)=>{
-            let playerModel = new PlayerModel(newPlayer.id, newPlayer.username, null, null, 0);
-            this.players[playerModel.id] = playerModel;
+            let playerModel = new PlayerModel(newPlayer.id, newPlayer.username, null, null, newPlayer.character);
+            this.players[playerModel.getID()] = playerModel;
         });
     }
 
@@ -41,7 +41,7 @@ class PlayerManager{
     }
 
     /**
-     * @param {} playerId: Buyers ID
+     * @param  playerId: Buyers ID
      * @param {PropertyModel} newProperty: PropertyModel Add to the player's properties
      * In the addProperty function, the owner of the newProperty is also updated
      */
@@ -65,7 +65,7 @@ class PlayerManager{
 
     /**
      *
-     * @param {}playerID
+     * @param playerID
      * @param {int} cardID
      */
     searchCard(playerID, cardID){
@@ -79,7 +79,7 @@ class PlayerManager{
     }
 
     /**
-     * @param {} playerID
+     * @param  playerID
      * @param {CityModel} property
      * @param {BuildingModel} newBuilding: Building
      * @returns {boolean}
@@ -90,7 +90,7 @@ class PlayerManager{
 
         let cost = newBuilding.cost;
 
-        let playerProperty = player.properties.find(myp => myp.id === property.id);//Why can't access parent's variable
+        let playerProperty = player.properties.find(myp => myp.id === property.getID());
 
         if(!this.isMoneyEnough(playerID, -cost))
             return false;
@@ -163,7 +163,7 @@ class PlayerManager{
      * @returns {boolean}
      */
     sellBuilding(playerId, property, building) {
-        let player = this.players[playerID];
+        let player = this.players[playerId];
 
         let cost = building.cost;
 
