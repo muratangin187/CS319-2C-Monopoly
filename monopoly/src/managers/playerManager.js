@@ -232,9 +232,43 @@ class PlayerManager{
         return false;
     }
 
+    isInJail(playerID){
+        return this.players[playerID].inJail;
+    }
     exitJail(playerID){
         this.players[playerID].inJail = false;
         this.players[playerID].inJailLeft = 0;
+    }
+
+    mortgage(playerID, property){
+        if(property.getOwner() !== playerID){
+            console.log("You are not own the property");
+            return false;
+        }
+
+        let mortgaged = this.players[playerID].properties.find(prop => prop.getID() === property.getID());
+
+        let amount = mortgaged.mortgage();
+
+        this.setMoney(playerID, amount);
+
+        return true;
+    }
+
+    liftMortgage(playerID, property){
+        if(property.getOwner() !== playerID){
+            console.log("You are not own the property");
+            return false;
+        }
+
+        let mortgaged = this.players[playerID].properties.find(prop => prop.getID() === property.getID());
+
+        let amount = mortgaged.liftMortgage();
+
+        this.setMoney(playerID, -amount);
+
+        return true;
+
     }
 }
 

@@ -20,7 +20,6 @@ let incomeTax = 4;
 let chanceUsableCards = [16, 17, 6];
 let chestUsableCards = [4];
 
-
 class GameManager{
     constructor() {
         this.createListeners();
@@ -143,7 +142,6 @@ class GameManager{
              */
             StateManager.updateState(newTrade);
         });
-
 
         /**
          * args: {newTile:number, }
@@ -315,6 +313,10 @@ class GameManager{
         return true;
     }
 
+    isInJail(playerID){
+        return playerManager.isInJail(playerID);
+    }
+
     payToExitJail(currentUser){
         let amount = 50;
 
@@ -375,6 +377,15 @@ class GameManager{
         }
         else
             playerManager.addCard(playerID, card);
+    }
+
+
+    mortgage(playerID, property){
+        playerManager.mortgage(playerID, property);
+    }
+
+    liftMortgage(playerID, property){
+        playerManager.liftMortgage(playerID,property);
     }
 }
 

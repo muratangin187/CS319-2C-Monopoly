@@ -40,8 +40,8 @@ class PropertyModel {
         return this.rentPrice[0];
     }
 
-    isOwned() {
-        return this.ownerId !== null;
+    getOwner() {
+        return this.ownerId;
     }
 }
 
