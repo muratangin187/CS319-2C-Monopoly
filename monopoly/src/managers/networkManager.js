@@ -38,6 +38,18 @@ class NetworkManager {
             console.log(characters);
             mainWindow.send("get_characters_bf", characters);
         });
+
+        /**
+         * signal_from: set_character_sb
+         * signal_to: set_character_bf
+         * msgObj: {success, message}
+         * */
+        this.socket.on('set_character_sb', msgObj => {
+            console.log("MESSAGE");
+            console.log(msgObj);
+
+            mainWindow.send('set_character_bf', msgObj);
+        });
     }
 
     getRoom(roomName){
@@ -61,8 +73,12 @@ class NetworkManager {
         this.socket.emit("join_room_bs", args);
     }
 
-    setCharacter(characterId){
-        this.socket.emit("set_character_bs", {characterId: characterId, userId: this.currentUser.id});
+    /**
+     * signal_to: set_character_bs
+     * setCharObj: {roomName, currentUser, selectedCharId}
+     * */
+    setCharacter(setCharObj){
+        this.socket.emit("set_character_bs", setCharObj);
     }
 
     /**

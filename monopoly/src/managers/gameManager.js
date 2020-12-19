@@ -301,6 +301,14 @@ class GameManager{
         ipcMain.on('get_characters_fb', (event, args) => {
             networkManager.getCharacters();
         });
+
+        /**
+         * signal_from: get_character_sb
+         * setCharObj: {roomName, currentUser, selectedCharId}
+         * */
+        ipcMain.on('set_character_fb', (event, setCharObj) => {
+           networkManager.setCharacter(setCharObj);
+        });
     }
 
     rollToExitJail(currentUser){

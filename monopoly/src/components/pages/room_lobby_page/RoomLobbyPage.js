@@ -22,6 +22,10 @@ function RoomLobbyPage(props) {
         ipcRenderer.send("start_game_fb", props.room.roomName);
     }
 
+    function setCharacters(){
+        ipcRenderer.send('set_character_fb', {roomName: props.room.roomName, currentUser: currentUser, selectedCharId: selectedCharId});
+    }
+
     useEffect(()=>{
         function update_room_users_listener(event, args){
             console.log(args);
@@ -30,7 +34,13 @@ function RoomLobbyPage(props) {
         }
         console.log(roomUsers);
 
+        function setCharacterListener(event, msgObj){
+            console.log("SET CHARACTER MSG");
+            console.log(msgObj);
+        }
+
         ipcRenderer.on("update_room_users_bf", update_room_users_listener);
+        ipcRenderer.on('set_character_bf', setCharacterListener);
         return ()=>{
             ipcRenderer.removeListener("update_room_users_bf", update_room_users_listener);
         };
@@ -43,7 +53,10 @@ function RoomLobbyPage(props) {
                 <div style={{width:"50vw", display: "grid", gridTemplateColumns: "1fr"}}>
                     <PlayerList users={roomUsers}/>
                     <CharacterList setSelectedCharId={setSelectedCharId}/>
-                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}><Button disabled={roomLeader != currentUser} onClick={()=>{startGame()}} style={{width: 200, height: 75}}>Start Game</Button></div>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <Button onClick={()=>{setCharacters()}} style={{width: 200, height: 75, margin: 8}}>Set character as selected</Button>
+                        <Button disabled={roomLeader != currentUser} onClick={()=>{startGame()}} style={{width: 200, height: 75, margin: 8}}>Start Game</Button>
+                    </div>
                 </div>
             </div>
         </div>

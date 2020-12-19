@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
 
     socket.on("create_room_bs", (...args) => {
         // TODO change username
-        args[0].roomModel.users = [{id: socket.id, username: args[0].username}];
+        args[0].roomModel.users = [{id: socket.id, username: args[0].username, characterId: -1}];
         rooms.push(args[0].roomModel);
         socket.join(args[0].roomModel.room_name);
         socket.emit("change_page_sb", {page: "roomLobbyPage", room: args[0].roomModel.room_name, users:args[0].roomModel.users});
@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     socket.on("join_room_bs", (...args) =>{
         socket.join(args[0].roomName);
         let joinedRoom = rooms.find((room)=>room.room_name === args[0].roomName);
-        joinedRoom.users.push({id: socket.id, username: args[0].username});
+        joinedRoom.users.push({id: socket.id, username: args[0].username, characterId: -1});
         socket.emit("change_page_sb", {page: "roomLobbyPage", room: args[0], users:joinedRoom.users});
         socket.to(args[0].roomName).emit("update_room_users_sb", joinedRoom.users );
     });
@@ -56,6 +56,29 @@ io.on('connection', (socket) => {
         io.emit('get_characters_sb', characters);
     });
 
+    /**
+     * signal_from: set_character_bs
+     * signal_to: set_character_sb
+     * setCharObj: {roomName, currentUser, selectedCharId}
+     * msgObj: {success, message}
+     * */
+    socket.on('set_character_bs', (setCharObj) => {
+        console.log("SET CHARACTER: ");
+        console.log(setCharObj);
+        let roomName = setCharObj.roomName;
+        let currentUser = setCharObj.currentUser;
+        let selectedCharId = setCharObj.selectedCharId;
+
+        let character = characters.find(char => char.id === selectedCharId);
+
+        let roomIndex = rooms.findIndex(room => room.room_name === roomName);
+        let userIndex = rooms[roomIndex].users.findIndex(user => currentUser.id === user.id);
+
+        rooms[roomIndex].users[userIndex].characterId = selectedCharId;
+        console.log(rooms[roomIndex].users);
+
+        socket.emit('set_character_sb', {success: 1, message: "Your character is set to character with name " + character.charName});
+    });
 });
 
 http.listen(3000, () => {
