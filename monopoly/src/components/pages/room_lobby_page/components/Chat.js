@@ -1,41 +1,79 @@
 import React from 'react';
+import {Card, H3, H5, Elevation, InputGroup, Button} from "@blueprintjs/core";
 
-export default function PlayerList() {
-    const [messages, setMessages] = React.useState(
-        [
-                    {
-                        senderId: "perborgen",
-                        text: "who'll win?"
-                    },
-                    {
-                        senderId: "janedoe",
-                        text: "who'll win?"
-                    }
-                ]
+const messages = [
+    {sendBy: "username", message: "message text"},
+    {sendBy: "username - 2", message: "message text - 2"},
+];
+
+export default function Chat() {
+
+    const styles = {
+        card: {
+            height: 700,
+            display: "grid",
+            gridTemplateRows: "[header-start] 40px [header-end-msg-start] auto [msg-end-footer-start] 40px [footer-end]",
+            gridTemplateAreas: `
+                "header"
+                "main"
+                "footer"
+            `
+        },
+        chat_header: {
+            gridArea: "header",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+        },
+
+        chat_body: {
+            gridArea: "main",
+            display: "flex",
+            flexDirection: "column",
+        },
+        chat_footer: {
+            gridArea: "footer",
+        },
+        message: {
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            margin: 8,
+            padding: 0,
+        }
+    };
+
+    const sendButton = (
+        <Button
+            icon="send-message"
+            minimal={true}
+        />
     );
-
     return (
-            <div style={{width: 100}}>
-                <p>Chat</p>
-                <ul style={{listStyle: "none"}}>
-                    {messages.map(message => {
+        <div className="chat">
+            <Card style={styles.card}>
+                <div className="chat_header" style={styles.chat_header}>
+                    <H3>CHAT</H3>
+                </div>
+                <div className="chat_body" style={styles.chat_body}>
+                    {messages.map((msgObj) => {
                         return (
-                            <li key={message.id} style={{backgroundColor: "lightgrey", border: "1px solid black", borderRadius: 20,padding: 10,marginBottom: 10,
-                            }}>
-                                <div style={{borderBottom: "1px solid black", padding: "5px", marginBottom: "10px"}}>
-                                    {message.senderId}
-                                </div>
-                                <div style={{paddingLeft: "20px"}}>
-                                    {message.text}
-                                </div>
-                            </li>
-                        )
+                            <Card interactive={true} elevation={Elevation.TWO} style={styles.message}>
+                                <H5 style={{marginLeft: 8, marginTop: 8}}>{msgObj.sendBy}</H5>
+                                <p style={{alignSelf: "center"}}>{msgObj.message}</p>
+                            </Card>
+                        );
                     })}
-                </ul>
-                    <input
-                        placeholder="Type your message and hit ENTER"
+                </div>
+                <div className="chat_footer" style={styles.chat_footer}>
+                    <InputGroup
+                        large={true}
+                        placeholder="Send a message"
+                        rightElement={sendButton}
                         type="text"
-                        style={{padding: 20, borderRadius: 20, width: "50vw"}}/>
-            </div>
-        );
+                    />
+                </div>
+            </Card>
+        </div>
+    );
 }
