@@ -16,7 +16,7 @@ class CardView{
     initializeDrawings(){
         this.border.beginFill(0xf0f7f1); //0xCEE5D1
         this.border.lineStyle(2, 0x333333);
-        this.border.drawRect(0, 40, 150, 200);
+        this.border.drawRect(0, 32, 150, 170);
         this.border.position.set(0,0);
         this.border.alpha = 0.95;
 

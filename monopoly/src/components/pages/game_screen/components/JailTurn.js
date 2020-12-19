@@ -1,9 +1,8 @@
 import {Button, Card} from "@blueprintjs/core";
 import ReactDice from "react-dice-complete";
 import React from "react";
-const {ipcRenderer} = require('electron');
 
-export default function YourTurnState() {
+export default function JailTurn() {
     const [reactDice, setReactDice] = React.useState(null);
 
     function rollAll() {
@@ -18,9 +17,7 @@ export default function YourTurnState() {
             <Card style={{margin: "20px", textAlign: "center", backgroundColor: "#CEE5D1"}} elevation={2}>
                 <ReactDice
                     numDice={2}
-                    rollDone={(sum, rolledDice)=>{
-                        ipcRenderer.send("move_player_fb", rolledDice);
-                    }}
+                    rollDone={()=>{}}
                     ref={dice => setReactDice(dice)}
                     dotColor="#000000"
                     faceColor="#a9dbb0"
@@ -28,7 +25,9 @@ export default function YourTurnState() {
                     outlineColor="#575757"
                     disableIndividual="true"
                 />
-                <Button onClick={rollAll} intent={"success"}>Roll</Button>
+                <Button onClick={rollAll} intent={"success"}>Roll to exit</Button>
+                <Button onClick={rollAll} intent={"success"}>Pay to exit</Button>
+                <Button onClick={rollAll} intent={"success"}>Use card to exit</Button>
             </Card>
         </>
     );

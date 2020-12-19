@@ -10,6 +10,7 @@ class Globals{
                 QUEST: 2
             }
         };
+        this.isDouble = false;
         this.tileNumber = 11;
         this.sizeOfBoard = this.tileNumber*80;
         this.tiles = [
@@ -410,4 +411,4 @@ class Globals{
         ];
     }
 }
-export default (new Globals())
+module.exports = new Globals();

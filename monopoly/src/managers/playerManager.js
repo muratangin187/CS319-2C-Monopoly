@@ -12,7 +12,17 @@ class PlayerManager{
         newPlayerList.forEach((newPlayer)=>{
             let playerModel = new PlayerModel(newPlayer.id, newPlayer.username, null, null, newPlayer.character);
             this.players[playerModel.getID()] = playerModel;
+            console.log("NEW USER ADDED:");
+            console.log(this.players[playerModel.getID()]);
         });
+    }
+
+    increaseDoubleCount(playerId){
+        return ++this.players[playerId].doubleCount === 3;
+    }
+
+    resetDoubleCount(playerId){
+        this.players[playerId].doubleCount = 0;
     }
 
     getMoney(playerId){
@@ -213,6 +223,7 @@ class PlayerManager{
     getJailLeft(playerID){
         return this.players[playerID].inJailLeft;
     }
+
 
     sendJail(playerID){
         this.players[playerID].inJail = true;

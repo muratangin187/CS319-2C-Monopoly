@@ -1,6 +1,7 @@
 const PropertyModel = require("../models/propertyModel");
 
 const {ipcMain} = require('electron');
+const mainWindow = require("../../main").mainWindow;
 const networkManager = require("./networkManager");
 const viewManager = require("./viewManager");
 const playerManager = require("./playerManager");
@@ -8,6 +9,7 @@ const cardManager = require("./cardManager");
 const EventManager = require("./eventManager");
 const TradeManager = require("./tradeManager");
 const StateManager = require("./stateManager");
+const Globals = require("../globals");
 let house_Count = 32;
 let hotel_Count = 12;
 
@@ -23,10 +25,20 @@ let chestUsableCards = [4];
 class GameManager{
     constructor() {
         this.createListeners();
+        networkManager.setStateListener(this.stateTurn);
+        networkManager.setStartGameListener(this.startGameListenerCallback);
     }
 
     getCurrentUser(){
         return networkManager.getCurrentUser();
+    }
+
+    startGameListenerCallback(room){
+        playerManager.createPlayers(room.users);
+        cardManager.setCards([
+            new PropertyModel(0, "Ankara", 10, 1, 100, 2, 0),
+            new PropertyModel(1, "Konya", 10, 1, 3, 2, 0)
+        ]);
     }
 
     createListeners(){
@@ -37,18 +49,50 @@ class GameManager{
             networkManager.joinRoom(args);
         });
         ipcMain.on("start_game_fb", (event, args)=>{
-            let room = networkManager.getRoom(args);
-            playerManager.createPlayers(room.users);
-            cardManager.setCards([
-                new PropertyModel(0, "Ankara", 10, 1, 100, 2, 0),
-                new PropertyModel(1, "Konya", 10, 1, 3, 2, 0)
-            ]);
             networkManager.startGame(args);
         });
         ipcMain.on("buy_property_fb", (event, args)=>{
             const user = networkManager.getCurrentUser();
             let property = cardManager.getCardById(args[0]);
             playerManager.addProperty(user.id, property);
+        });
+        ipcMain.on("determineStartOrder_fb", (event, sum)=>{
+            networkManager.determineStartOrder(sum);
+        });
+        ipcMain.on("move_player_fb", (event, rolledDice)=>{
+            console.log("NETWORKMANAGER CURRENT: ");
+            console.log(networkManager.getCurrentUser());
+            console.log("PLAYERMANAGER ALL:");
+            console.log(playerManager.getPlayers());
+            let currentTile = playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile;
+            let destinationTileId = (currentTile + rolledDice[0] + rolledDice[1]) % (Globals.tileNumber * 4);
+            if(rolledDice[0] === rolledDice[1]){
+                // double rolled
+                if(playerManager.increaseDoubleCount(networkManager.getCurrentUser().id)){
+                    // goto jail
+                    destinationTileId = Globals.tileNumber;
+                    playerManager.sendJail(networkManager.getCurrentUser().id);
+                }
+            }else{
+                playerManager.resetDoubleCount(networkManager.getCurrentUser().id);
+            }
+            networkManager.movePlayer(destinationTileId);
+            playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile = destinationTileId;
+            if(playerManager.isInJail(networkManager.getCurrentUser().id)){
+                // set state to jail screen
+                Globals.isDouble = false;
+                this.stateTurn({stateName: "playNormalTurn", payload:{}});
+            }else{
+                if(rolledDice[0] === rolledDice[1]) {
+                    Globals.isDouble = true;
+                }else{
+                    Globals.isDouble = false;
+                }
+                // set state to according to tile
+                // TODO quest check
+                console.log("WENT TO NEW TILE: " + destinationTileId);
+                // TODO call stateTurn according to new tile
+            }
         });
         //same buildings, bidding commences and the buildings go to the highest bidder
         //we need to implement an auction for bidding houses and hotels
@@ -253,7 +297,6 @@ class GameManager{
            //}
 
         //});
-        //ToDo : listener eleman almasa olur mu
         ipcMain.on("useCardToExit_fb", () =>{
             let currentUser = networkManager.getCurrentUser();
 
@@ -265,7 +308,6 @@ class GameManager{
                 //move();
             }
         });
-        //ToDo : listener eleman almasa olur mu
         ipcMain.on("payToExit_fb", () =>{
             let currentUser = networkManager.getCurrentUser();
 
@@ -276,7 +318,6 @@ class GameManager{
                 //move();
             }
         });
-        //ToDo : listener eleman almasa olur mu
         ipcMain.on("rollToExit_fb", () =>{
             let currentUser = networkManager.getCurrentUser();
 
@@ -297,6 +338,26 @@ class GameManager{
 
     }
 
+    stateTurn(stateObject){
+        let stateName = stateObject.stateName;
+        let payload = stateObject.payload;
+        console.log("NEXT STATE: " + stateName + " PAYLOAD: " + JSON.stringify(payload));
+        switch (stateName) {
+            case "playNormalTurn":
+                if(playerManager.isInJail(networkManager.getCurrentUser().id)){
+                }else{
+                   mainWindow.send("nextState", {stateName:"playNormalTurn", payload: payload});
+                }
+                break;
+            case "waitOtherPlayerTurn":
+                mainWindow.send("nextState", {stateName:"waitOtherPlayerTurn", payload: payload});
+                break;
+            default:
+                console.log("GIRMEMEN LAZIMDI");
+                break;
+        }
+    }
+
     rollToExitJail(currentUser){
         if(x === y)
             playerManager.exitJail(currentUser);
@@ -311,10 +372,6 @@ class GameManager{
         }
 
         return true;
-    }
-
-    isInJail(playerID){
-        return playerManager.isInJail(playerID);
     }
 
     payToExitJail(currentUser){

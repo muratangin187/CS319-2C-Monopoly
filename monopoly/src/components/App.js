@@ -9,7 +9,7 @@ import RoomLobbyPage from "./pages/room_lobby_page/RoomLobbyPage";
 import GameScreen from "./pages/game_screen/GameScreen";
 
 function App() {
-  const [page, setPage] = useState("gameScreen");
+  const [page, setPage] = useState("mainPage");
   const [rooms, setRooms] = useState([]);
   const [gameRoom, setGameRoom] = useState({});
   const [selectedRoom, setSelectedRoom] = useState({});
@@ -28,6 +28,7 @@ function App() {
       function start_game_listener(event, roomObject){
           //{room_name: "Test", password: "123", selectedBoard: "Template - 1", users: []}
           setGameRoom(roomObject);
+          console.log(gameRoom);
           setPage("gameScreen");
       };
       ipcRenderer.on("get_rooms_bf", get_room_listener);

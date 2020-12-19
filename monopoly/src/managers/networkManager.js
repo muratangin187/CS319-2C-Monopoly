@@ -1,12 +1,10 @@
 const socketIOClient = require("socket.io-client");
 const mainWindow = require("../../main").mainWindow;
+const gameManager = require("./gameManager");
 class NetworkManager {
     constructor() {
         this.socket = socketIOClient("http://localhost:3000");
         this.rooms = [];
-        this.socket.on("start_game_sb", (roomObject)=>{
-            mainWindow.send("start_game_bf", roomObject);
-        });
         this.socket.on("get_rooms_sb", (...args) => {
             console.log("main - get_rooms_sb");
             this.rooms = args[0];
@@ -23,9 +21,31 @@ class NetworkManager {
             mainWindow.send("change_page_bf", {result:args[0], currentUser: this.currentUser});
         });
 
-        this.socket.on("update_room_users_sb", (...args) => {
+        this.socket.on("update_room_users_sb", (args) => {
             console.log("main - update_room_users_sb");
-            mainWindow.send("update_room_users_bf", args[0]);
+            this.rooms.find((room)=>room.room_name === args.roomName).users = args.users;
+            mainWindow.send("update_room_users_bf", args.users);
+        });
+
+        this.socket.on("move_player_sb", (args) => {
+            mainWindow.send("move_player_bf", args);
+        });
+    }
+
+    movePlayer(destinationTileId){
+        this.socket.emit("move_player_bs", {playerId: this.getCurrentUser().id, destinationTileId: destinationTileId});
+    }
+
+    setStateListener(func){
+        this.socket.on("nextState", (stateObject) => {
+            func(stateObject);
+        });
+    }
+
+    setStartGameListener(func){
+        this.socket.on("start_game_sb", (roomObject)=>{
+            func(this.getRoom(roomObject.room_name));
+            mainWindow.send("start_game_bf", roomObject);
         });
     }
 
@@ -35,6 +55,10 @@ class NetworkManager {
 
     getCurrentUser(){
         return this.currentUser;
+    }
+
+    determineStartOrder(sum){
+        this.socket.emit("determineStartOrder_bs", {sum: sum, userId: this.currentUser.id});
     }
 
     createRoom(args) {

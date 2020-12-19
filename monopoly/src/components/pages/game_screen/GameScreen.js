@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
 import { Widget } from 'react-chat-widget';
+const {ipcRenderer} = require('electron');
 
 import * as PIXI from "pixi.js";
 import Globals from "../../../globals";
@@ -31,6 +32,7 @@ import ReactDice from 'react-dice-complete'
 import YourTurnState from "./components/YourTurnState";
 import OtherPlayersTurn from "./components/OtherPlayersTurn";
 import StationCardView from "../../../views/cardView/stationCardView";
+import DetermineStartOrder from "./components/DetermineStartOrder";
 
 function initPixi(){
     PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
@@ -374,18 +376,31 @@ function initPixiForHand(){
 
 function GameScreen(props) {
     const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
-    const [currentState, setCurrentState] = React.useState({});
+    const [currentState, setCurrentState] = React.useState({stateName:"determineStartOrder", payload:{}});
+    const [currentView, setCurrentView] = React.useState(null);
 
     useEffect(()=>{
         initPixi();
+        ipcRenderer.on("nextState", (event, stateObject)=>{
+            setCurrentState(stateObject);
+        });
+        ipcRenderer.on("move_player_bf", (event, args)=>{
+            let playerId = args.playerId;
+            let destinationTileId = args.destinationTileId;
+            console.log("USER: " + playerId + " MOVED TO " + destinationTileId);
+        });
+
     }, []);
+
     return (
         <div className="canvasDiv" style={{display: "grid", gridTemplateColumns: "720px 880px"}}>
             <div style={{width: 720, display:"grid", gridTemplateRows:"1fr 1fr", gridTemplateColumns: "1fr"}}>
                 <div style={{backgroundColor: "#CEE5D1"}}>
                     <Card style={{margin: "20px", padding: "20px", backgroundColor: "#a9dbb0"}} elevation={2}>
                         <Button intent={"warning"} onClick={()=>setIsScoreboardOpen(!isScoreboardOpen)}>Scoreboard</Button>
-                        <YourTurnState/>
+                        {currentState.stateName === "determineStartOrder"
+                            ? (<DetermineStartOrder/>) : currentState.stateName === "playNormalTurn"
+                                ? (<YourTurnState/>) : currentState.stateName === "inJainTurn" ? (<JailTurn/>) : (<OtherPlayersTurn/>)}
                     </Card>
                     <Widget />
                     <Drawer
@@ -401,7 +416,7 @@ function GameScreen(props) {
                         size={500}
                         onClose={() => setIsScoreboardOpen(false)}
                         usePortal= "true">
-                        SELAM
+                        SCOREBOARD
                     </Drawer>
                 </div>
                 <div id="canvas_hand" />
