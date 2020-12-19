@@ -353,7 +353,7 @@ function initPixiForHand(){
             card.selectedBorder = new PIXI.Graphics();
             card.selectedBorder.name = "selectedBorder";
             card.selectedBorder.lineStyle(5, 0x000);
-            card.selectedBorder.drawRect(0, 0, 150, 200);
+            card.selectedBorder.drawRect(0, 0, 150, 242);
             card.selectedBorder.position.set(card.border.x,card.border.y);
             card.card.addChild(card.selectedBorder);
             console.log("SELECTED CARD: " + selectedCardId);
