@@ -173,10 +173,10 @@ function initPixiForHand(){
     let greens = new CityGroupModel([], "0x24733B");
     let blues = new CityGroupModel([], "0x0541CA");
     let cards = [
-        //{
-        //    "type": "station",
-        //    "value" : new StationModel(14, "ATG", [50,100,200,400,600,1000], 25, 50, 10, null, false, Globals.resources.station)
-        //},
+        {
+            "type": "station",
+            "value" : new StationModel(30, "ATG", [50,100,200,400,600,1000], 25, 50, 10, null, false, Globals.resources.station)
+        },
         {
             "type" : "city",
             "value" : new CityModel(1, "Ankara",  [50,100,200,400,600,1000], 25, 50, 10, null, 200, 200, null, browns)

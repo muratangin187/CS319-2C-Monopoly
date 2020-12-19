@@ -18,29 +18,31 @@ class StationCardView extends CardView{
     initializeDrawings() {
         super.initializeDrawings();
 
-        let icon = new PIXI.Sprite(this.station.image);
-        icon.width = 70;
-        icon.height = 70;
-        icon.x = this.border.width / 2 - 35;
-        icon.y = this.border.y + 10;
-        this.card.addChild(icon);
+        let titleBackground = new PIXI.Graphics();
+        titleBackground.name = "titleBackground";
+        titleBackground.beginFill(0x000000);
+        titleBackground.lineStyle(2, 0x333333);
+        console.log(this.border);
+        titleBackground.drawRect(this.border.x, this.border.y, this.border.width-2, this.border.height/5);
+        titleBackground.alpha = 0.9;
+        this.title.addChild(titleBackground);
 
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",
         });
-        this.titleText =new PIXI.Text(this.station.name, style);
+        this.titleText =new PIXI.Text(this.station.name, {...style, fill: "white"});
         this.titleText.name = "titleText";
         this.titleText.anchor.x =0.5;
         this.titleText.anchor.y =0.5;
-        this.titleText.x = this.border.getBounds().x + this.border.getBounds().width / 2;
-        this.titleText.y = this.border.getBounds().y + this.border.getBounds().height / 2;
+        this.titleText.x = this.border.x + this.border.width / 2;
+        this.titleText.y = titleBackground.y + titleBackground.height / 2;
         this.title.addChild(this.titleText);
 
-        let propText = new PIXI.Text(`Rent ................................. ${this.station.rentPrice[0]}
-If 1 owned ....................... ${this.station.rentPrice[1]}
-If 2 owned ....................... ${this.station.rentPrice[2]}
-If 3 owned ....................... ${this.station.rentPrice[3]}`,{...style, fontSize: 16});
-        let costText = new PIXI.Text(`Mortgage Value ${this.station.mortgagePrice}`,{...style, align: "center", fontSize: 16});
+        let propText = new PIXI.Text(`Rent ................................. ${this.station.rentPrice[0]}$
+If 1 owned ....................... ${this.station.rentPrice[1]}$
+If 2 owned ....................... ${this.station.rentPrice[2]}$
+If 3 owned ....................... ${this.station.rentPrice[3]}$`,{...style, fontSize: 11});
+        let costText = new PIXI.Text(`Mortgage Value ${this.station.mortgagePrice}`,{...style, align: "center", fontSize: 10});
 
         propText.anchor.x =0.5;
         propText.anchor.y =0.5;
@@ -49,8 +51,8 @@ If 3 owned ....................... ${this.station.rentPrice[3]}`,{...style, font
         costText.anchor.y =0.5;
         costText.x = this.border.getBounds().x + this.border.getBounds().width / 2;
 
-        propText.y = 200;
-        costText.y = 300;
+        propText.y = this.border.y + this.border.height/2;
+        costText.y = propText.y + this.border.height/4;
 
         this.content.addChild(propText);
         this.content.addChild(costText);
