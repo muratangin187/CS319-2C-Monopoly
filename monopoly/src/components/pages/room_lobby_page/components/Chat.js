@@ -1,18 +1,45 @@
-import React from 'react';
-import {Card, H3, H5, Elevation, InputGroup, Button} from "@blueprintjs/core";
+import React, {useEffect, useState} from 'react';
+import {Card, H5, Elevation, InputGroup, Button, H4} from "@blueprintjs/core";
+const {ipcRenderer} = require("electron");
 
-const messages = [
-    {sendBy: "username", message: "message text"},
-    {sendBy: "username - 2", message: "message text - 2"},
-];
+export default function Chat(props) {
+    const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState("");
 
-export default function Chat() {
+    function sendMessage(messageObj){
+        ipcRenderer.send('send_message_fb', messageObj);
+    }
+
+    useEffect(() => {
+        function getMessagesListener(event, messages) {
+            console.log("Messages are set to:");
+            console.log(messages);
+            setMessages(messages);
+        }
+
+        function sendMessageListener(event, successMsg){
+            console.log("State message: ");
+            console.log(successMsg);
+        }
+
+        //listen
+        ipcRenderer.on('get_messages_bf', getMessagesListener);
+        ipcRenderer.on('send_message_bf', sendMessageListener);
+
+        //send
+        ipcRenderer.send('get_messages_fb');
+
+        return () => {
+            ipcRenderer.removeListener('get_messages_bf', getMessagesListener);
+            ipcRenderer.removeListener('send_message_bf', sendMessageListener);
+        };
+    }, []);
 
     const styles = {
         card: {
             height: 700,
             display: "grid",
-            gridTemplateRows: "[header-start] 40px [header-end-msg-start] auto [msg-end-footer-start] 40px [footer-end]",
+            gridTemplateRows: "[header-start] 40px [header-end-msg-start] auto [msg-end-footer-start] 48px [footer-end]",
             gridTemplateAreas: `
                 "header"
                 "main"
@@ -30,9 +57,11 @@ export default function Chat() {
             gridArea: "main",
             display: "flex",
             flexDirection: "column",
+            overflowY: "auto",
         },
         chat_footer: {
             gridArea: "footer",
+            marginTop: 8,
         },
         message: {
             display: "flex",
@@ -47,13 +76,15 @@ export default function Chat() {
         <Button
             icon="send-message"
             minimal={true}
+            onClick={() => sendMessage({sendBy: props.currentUser.username, message: message})}
         />
     );
+
     return (
         <div className="chat">
             <Card style={styles.card}>
                 <div className="chat_header" style={styles.chat_header}>
-                    <H3>CHAT</H3>
+                    <H4>Chat (Room: {props.roomName})</H4>
                 </div>
                 <div className="chat_body" style={styles.chat_body}>
                     {messages.map((msgObj) => {
@@ -71,6 +102,9 @@ export default function Chat() {
                         placeholder="Send a message"
                         rightElement={sendButton}
                         type="text"
+                        onChange={event => {
+                            setMessage(event.target.value);
+                        }}
                     />
                 </div>
             </Card>

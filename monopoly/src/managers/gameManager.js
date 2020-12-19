@@ -354,6 +354,14 @@ class GameManager{
         ipcMain.on('set_character_fb', (event, setCharObj) => {
            networkManager.setCharacter(setCharObj);
         });
+
+        ipcMain.on('get_messages_fb', (event, args) => {
+           networkManager.getMessages();
+        });
+
+        ipcMain.on('send_message_fb', (event, messageObj) => {
+            networkManager.sendMessage(messageObj);
+        });
     }
 
     stateTurn(stateObject){

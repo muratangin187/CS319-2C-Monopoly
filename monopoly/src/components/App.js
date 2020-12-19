@@ -8,16 +8,17 @@ import SelectRoomPage from "./pages/select_room_page/SelectRoomPage";
 import RoomLobbyPage from "./pages/room_lobby_page/RoomLobbyPage";
 import GameScreen from "./pages/game_screen/GameScreen";
 import CharacterList from "./pages/room_lobby_page/components/CharacterList";
+import Chat from "./pages/room_lobby_page/components/Chat";
 
 function App() {
-  // const [page, setPage] = useState("mainPage");
-    const [page, setPage] = useState("roomLobbyPage");
+  const [page, setPage] = useState("mainPage");
+  //   const [page, setPage] = useState("test");
   const [rooms, setRooms] = useState([]);
   const [gameRoom, setGameRoom] = useState({});
-  // const [selectedRoom, setSelectedRoom] = useState({});
-  // const [currentUser, setCurrentUser] = useState("");
-    const [selectedRoom, setSelectedRoom] = useState({roomName: "test", roomUsers: [{id: 1, username: "test-1"}]});
-    const [currentUser, setCurrentUser] = useState({id: 1, username: "test-1"});
+  const [selectedRoom, setSelectedRoom] = useState({});
+  const [currentUser, setCurrentUser] = useState("");
+  //   const [selectedRoom, setSelectedRoom] = useState({roomName: "test", roomUsers: [{id: 1, username: "test-1"}]});
+  //   const [currentUser, setCurrentUser] = useState({id: 1, username: "test-1"});
   useEffect(() => {
       function get_room_listener(event, args){
           setRooms(args);
@@ -97,7 +98,7 @@ function App() {
 
 
     default:
-      return (<div className="App">Default Empty Page</div>);
+      return (<div className="App"><Chat /></div>);
   }
 }
 

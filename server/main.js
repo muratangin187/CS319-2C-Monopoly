@@ -16,6 +16,8 @@ const characters = [
     {id: 4, charName: "Character - 4", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "}
 ];
 
+const messages = [];
+
 function getUserRoom(userId){
     return rooms.find((room)=>{
         if(room.users.find((user)=>user.id === userId)){
@@ -126,6 +128,16 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('get_messages_bs', () => {
+        socket.emit('get_messages_sb', messages);
+    });
+
+    socket.on('send_message_bs', (messageObj) => {
+        messages.push({sendBy: messageObj.sendBy, message: messageObj.message});
+        console.log("MESSAGE ADDED TO MESSAGES - SERVER");
+        io.emit('get_messages_sb', messages);
+        socket.emit('send_message_sb', {success: 1, message: "Message send to everyone."});
+    });
 });
 
 http.listen(3000, () => {

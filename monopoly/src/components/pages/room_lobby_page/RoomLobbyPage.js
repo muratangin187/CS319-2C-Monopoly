@@ -51,7 +51,7 @@ function RoomLobbyPage(props) {
         <div className="roomLobbyPage">
             <Header setPage={props.setPage} prevPageName="roomOptionPage" prevPageTitle="Room Option Page"/>
             <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", height: "80vh", marginTop: "100px"}}>
-                <Chat users={roomUsers}/>
+                <Chat currentUser={currentUser} roomName={props.room.roomName}/>
                 <div style={{width:"50vw", display: "grid", gridTemplateColumns: "1fr"}}>
                     <PlayerList users={roomUsers} selectedCharId={selectedCharId} selectedCharName={selectedCharName} currentUser={currentUser}/>
                     <CharacterList setSelectedCharId={setSelectedCharId} setSelectedCharName={setSelectedCharName}/>

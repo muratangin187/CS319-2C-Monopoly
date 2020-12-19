@@ -54,6 +54,15 @@ class NetworkManager {
             mainWindow.send('set_character_bf', msgObj);
         });
 
+        this.socket.on('get_messages_sb', messages => {
+            console.log("MESSAGES");
+            console.log(messages);
+            mainWindow.send('get_messages_bf', messages);
+        });
+
+        this.socket.on('send_message_sb', msgObj => {
+            mainWindow.send('send_message_bf', msgObj);
+        });
 
     }
 
@@ -114,6 +123,14 @@ class NetworkManager {
      * */
     getCharacters(){
         this.socket.emit('get_characters_bs');
+    }
+
+    getMessages(){
+        this.socket.emit('get_messages_bs');
+    }
+
+    sendMessage(messageObj){
+        this.socket.emit('send_message_bs', messageObj);
     }
 }
 
