@@ -4,12 +4,14 @@ import PlayerList from "./components/PlayerList"
 import Chat from "./components/Chat"
 import CharacterList from "./components/CharacterList";
 import {Button} from "@blueprintjs/core";
+import {setIn} from "formik";
 const {ipcRenderer} = require('electron');
 
 
 function RoomLobbyPage(props) {
     const [roomUsers, setRoomUsers] = React.useState(props.room.roomUsers);
     const [selectedCharId, setSelectedCharId] = React.useState(-1);
+    const [selectedCharName, setSelectedCharName] = React.useState("placeholder");
     const roomLeader = props.room.roomUsers[0];
     const currentUser = props.currentUser;
 
@@ -51,8 +53,8 @@ function RoomLobbyPage(props) {
             <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", height: "80vh", marginTop: "100px"}}>
                 <Chat/>
                 <div style={{width:"50vw", display: "grid", gridTemplateColumns: "1fr"}}>
-                    <PlayerList users={roomUsers}/>
-                    <CharacterList setSelectedCharId={setSelectedCharId}/>
+                    <PlayerList users={roomUsers} selectedCharId={selectedCharId} selectedCharName={selectedCharName} currentUser={currentUser}/>
+                    <CharacterList setSelectedCharId={setSelectedCharId} setSelectedCharName={setSelectedCharName}/>
                     <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                         <Button onClick={()=>{setCharacters()}} style={{width: 200, height: 75, margin: 8}}>Set character as selected</Button>
                         <Button disabled={roomLeader != currentUser} onClick={()=>{startGame()}} style={{width: 200, height: 75, margin: 8}}>Start Game</Button>
