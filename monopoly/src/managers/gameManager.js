@@ -65,12 +65,12 @@ class GameManager{
             console.log("PLAYERMANAGER ALL:");
             console.log(playerManager.getPlayers());
             let currentTile = playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile;
-            let destinationTileId = (currentTile + rolledDice[0] + rolledDice[1]) % (Globals.tileNumber * 4);
+            let destinationTileId = (currentTile + rolledDice[0] + rolledDice[1]) % ((Globals.tileNumber-1) * 4);
             if(rolledDice[0] === rolledDice[1]){
                 // double rolled
                 if(playerManager.increaseDoubleCount(networkManager.getCurrentUser().id)){
                     // goto jail
-                    destinationTileId = Globals.tileNumber;
+                    destinationTileId = Globals.tileNumber-1;
                     playerManager.sendJail(networkManager.getCurrentUser().id);
                 }
             }else{

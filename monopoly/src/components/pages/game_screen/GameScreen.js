@@ -376,7 +376,7 @@ function initPixiForHand(){
 
 function GameScreen(props) {
     const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
-    const [currentState, setCurrentState] = React.useState({stateName:"determineStartOrder", payload:{}});
+    const [currentState, setCurrentState] = React.useState({stateName:"waitOtherPlayerTurn", payload:{}});
     const [currentView, setCurrentView] = React.useState(null);
 
     useEffect(()=>{
@@ -387,6 +387,14 @@ function GameScreen(props) {
         ipcRenderer.on("move_player_bf", (event, args)=>{
             let playerId = args.playerId;
             let destinationTileId = args.destinationTileId;
+            // viewManager.movePlayer(playerId, destinationTileId);
+            // viewManager.addCard(playerId, cardId);
+            // viewManager.removeCard(playerId, cardId);
+            // viewManager.addHouse(playerId, tileId);
+            // viewManager.removeHouse(playerId, tileId);
+            // viewManager.addHotel(playerId, tileId);
+            // viewManager.removeHotel(playerId, tileId);
+            // viewManager.startGame();
             console.log("USER: " + playerId + " MOVED TO " + destinationTileId);
         });
 
@@ -400,7 +408,7 @@ function GameScreen(props) {
                         <Button intent={"warning"} onClick={()=>setIsScoreboardOpen(!isScoreboardOpen)}>Scoreboard</Button>
                         {currentState.stateName === "determineStartOrder"
                             ? (<DetermineStartOrder/>) : currentState.stateName === "playNormalTurn"
-                                ? (<YourTurnState/>) : currentState.stateName === "inJainTurn" ? (<JailTurn/>) : (<OtherPlayersTurn/>)}
+                                ? (<YourTurnState/>) : currentState.stateName === "inJailTurn" ? (<JailTurn/>) : (<OtherPlayersTurn/>)}
                     </Card>
                     <Widget />
                     <Drawer
