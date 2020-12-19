@@ -45,20 +45,25 @@ class GameManager{
         ipcMain.on("create_room_fb", (event, args) => {
             networkManager.createRoom(args);
         });
+
         ipcMain.on("join_room_fb", (event, args)=>{
             networkManager.joinRoom(args);
         });
+
         ipcMain.on("start_game_fb", (event, args)=>{
             networkManager.startGame(args);
         });
+
         ipcMain.on("buy_property_fb", (event, args)=>{
             const user = networkManager.getCurrentUser();
             let property = cardManager.getCardById(args[0]);
             playerManager.addProperty(user.id, property);
         });
+
         ipcMain.on("determineStartOrder_fb", (event, sum)=>{
             networkManager.determineStartOrder(sum);
         });
+
         ipcMain.on("move_player_fb", (event, rolledDice)=>{
             console.log("NETWORKMANAGER CURRENT: ");
             console.log(networkManager.getCurrentUser());

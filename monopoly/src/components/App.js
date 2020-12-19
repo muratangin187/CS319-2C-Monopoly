@@ -26,12 +26,14 @@ function App() {
           setCurrentUser(args.currentUser);
           setPage(args.result.page);
       };
+
       function start_game_listener(event, roomObject){
           //{room_name: "Test", password: "123", selectedBoard: "Template - 1", users: []}
           setGameRoom(roomObject);
           console.log(gameRoom);
           setPage("gameScreen");
       };
+
       ipcRenderer.on("get_rooms_bf", get_room_listener);
       ipcRenderer.on("change_page_bf", change_page_listener);
       ipcRenderer.on("start_game_bf", start_game_listener);

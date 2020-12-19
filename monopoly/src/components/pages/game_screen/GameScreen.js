@@ -376,7 +376,7 @@ function initPixiForHand(){
 
 function GameScreen(props) {
     const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
-    const [currentState, setCurrentState] = React.useState({stateName:"waitOtherPlayerTurn", payload:{}});
+    const [currentState, setCurrentState] = React.useState({stateName:"determineStartOrder", payload:{}});
     const [currentView, setCurrentView] = React.useState(null);
 
     useEffect(()=>{
