@@ -17,7 +17,7 @@ class NetworkManager {
             if(this.rooms.find((room)=>room.room_name === args[0].room.roomName))
                 this.rooms.find((room)=>room.room_name === args[0].room.roomName).users = args[0].users;
             console.log("ROOMS: " + JSON.stringify(this.rooms,null,2));
-            console.log("CURRENTUSER: " + JSON.stringify(this.currentUser));
+            console.log("CURRENT USER: " + JSON.stringify(this.currentUser));
             mainWindow.send("change_page_bf", {result:args[0], currentUser: this.currentUser});
         });
 
@@ -29,23 +29,6 @@ class NetworkManager {
 
         this.socket.on("move_player_sb", (args) => {
             mainWindow.send("move_player_bf", args);
-        });
-    }
-
-    movePlayer(destinationTileId){
-        this.socket.emit("move_player_bs", {playerId: this.getCurrentUser().id, destinationTileId: destinationTileId});
-    }
-
-    setStateListener(func){
-        this.socket.on("nextState", (stateObject) => {
-            func(stateObject);
-        });
-    }
-
-    setStartGameListener(func){
-        this.socket.on("start_game_sb", (roomObject)=>{
-            func(this.getRoom(roomObject.room_name));
-            mainWindow.send("start_game_bf", roomObject);
         });
 
         /**
@@ -69,6 +52,26 @@ class NetworkManager {
             console.log(msgObj);
 
             mainWindow.send('set_character_bf', msgObj);
+        });
+
+
+    }
+
+    movePlayer(destinationTileId){
+        this.socket.emit("move_player_bs", {playerId: this.getCurrentUser().id, destinationTileId: destinationTileId});
+    }
+
+    setStateListener(func){
+        this.socket.on("nextState", (stateObject) => {
+            func(stateObject);
+        });
+    }
+
+    setStartGameListener(func){
+        this.socket.on("start_game_sb", (roomObject)=>{
+            // func(this.getRoom(roomObject.room_name));
+            func(roomObject);
+            mainWindow.send("start_game_bf", roomObject);
         });
     }
 

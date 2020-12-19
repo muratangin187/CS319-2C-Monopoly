@@ -34,21 +34,21 @@ io.on('connection', (socket) => {
     console.log('a user connected ' + rooms.length);
     socket.emit("get_rooms_sb", rooms);
 
-    socket.on("create_room_bs", (...args) => {
+    socket.on("create_room_bs", (args) => {
         // TODO change username
-        args[0].roomModel.users = [{id: socket.id, username: args[0].username, characterId: -1}];
-        rooms.push(args[0].roomModel);
-        socket.join(args[0].roomModel.room_name);
-        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args[0].roomModel.room_name, users:args[0].roomModel.users});
+        args.roomModel.users = [{id: socket.id, username: args.username, characterId: -1}];
+        rooms.push(args.roomModel);
+        socket.join(args.roomModel.room_name);
+        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args.roomModel.room_name, users:args.roomModel.users});
         io.emit("get_rooms_sb", rooms);
     });
 
-    socket.on("join_room_bs", (...args) =>{
-        socket.join(args[0].roomName);
-        let joinedRoom = rooms.find((room)=>room.room_name === args[0].roomName);
-        joinedRoom.users.push({id: socket.id, username: args[0].username, characterId: -1});
-        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args[0], users:joinedRoom.users});
-        socket.to(args[0].roomName).emit("update_room_users_sb", {roomName: args[0].roomName, users:joinedRoom.users} );
+    socket.on("join_room_bs", (args) =>{
+        socket.join(args.roomName);
+        let joinedRoom = rooms.find((room)=>room.room_name === args.roomName);
+        joinedRoom.users.push({id: socket.id, username: args.username, characterId: -1});
+        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args.roomName, users:joinedRoom.users});
+        socket.to(args.roomName).emit("update_room_users_sb", {roomName: args.roomName, users:joinedRoom.users} );
     });
 
     socket.on("start_game_bs", (roomName) => {
@@ -83,12 +83,18 @@ io.on('connection', (socket) => {
         let character = characters.find(char => char.id === selectedCharId);
 
         let roomIndex = rooms.findIndex(room => room.room_name === roomName);
+        console.log("BREAKPOINT");
+        console.log("ROOMS");
+        console.log(rooms);
+        console.log("CURRENT USER");
+        console.log(currentUser);
+        console.log(roomName);
         let userIndex = rooms[roomIndex].users.findIndex(user => currentUser.id === user.id);
-
         rooms[roomIndex].users[userIndex].characterId = selectedCharId;
         console.log(rooms[roomIndex].users);
 
         socket.emit('set_character_sb', {success: 1, message: "Your character is set to character with name " + character.charName});
+        // socket.emit('set_character_sb', {userId: currentUser.id, charId: selectedCharId});
     });
     socket.on("move_player_bs", (args)=>{
         let playerId = args.playerId;
