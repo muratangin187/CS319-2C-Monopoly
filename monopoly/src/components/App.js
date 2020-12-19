@@ -7,6 +7,7 @@ import RoomOptionPage from "./pages/room_option_page/RoomOptionPage";
 import SelectRoomPage from "./pages/select_room_page/SelectRoomPage";
 import RoomLobbyPage from "./pages/room_lobby_page/RoomLobbyPage";
 import GameScreen from "./pages/game_screen/GameScreen";
+import CharacterList from "./pages/room_lobby_page/components/CharacterList";
 
 function App() {
   const [page, setPage] = useState("mainPage");

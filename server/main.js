@@ -8,6 +8,14 @@ const io = require('socket.io')(http, {
 
 const rooms = [{room_name: "Test", password: "123", selectedBoard: "Template - 1", users: []}];
 
+const characters = [
+    //TODO fill the placeholders with char description
+    {id: 1, charName: "Character - 1", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "},
+    {id: 2, charName: "Character - 2", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "},
+    {id: 3, charName: "Character - 3", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "},
+    {id: 4, charName: "Character - 4", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "}
+];
+
 function getUserRoom(userId){
     return rooms.find((room)=>{
         if(room.users.find((user)=>user.id === userId)){
@@ -28,7 +36,7 @@ io.on('connection', (socket) => {
 
     socket.on("create_room_bs", (...args) => {
         // TODO change username
-        args[0].roomModel.users = [{id: socket.id, username: args[0].username}];
+        args[0].roomModel.users = [{id: socket.id, username: args[0].username, characterId: -1}];
         rooms.push(args[0].roomModel);
         socket.join(args[0].roomModel.room_name);
         socket.emit("change_page_sb", {page: "roomLobbyPage", room: args[0].roomModel.room_name, users:args[0].roomModel.users});
@@ -38,7 +46,7 @@ io.on('connection', (socket) => {
     socket.on("join_room_bs", (...args) =>{
         socket.join(args[0].roomName);
         let joinedRoom = rooms.find((room)=>room.room_name === args[0].roomName);
-        joinedRoom.users.push({id: socket.id, username: args[0].username});
+        joinedRoom.users.push({id: socket.id, username: args[0].username, characterId: -1});
         socket.emit("change_page_sb", {page: "roomLobbyPage", room: args[0], users:joinedRoom.users});
         socket.to(args[0].roomName).emit("update_room_users_sb", {roomName: args[0].roomName, users:joinedRoom.users} );
     });
@@ -49,6 +57,39 @@ io.on('connection', (socket) => {
         io.in(roomName).emit("start_game_sb", joinedRoom);
     });
 
+
+    /**
+     * signal_from: get_characters_bs
+     * signal_to: get_characters_sb
+     * sending character array (s -> nm)
+     * */
+    socket.on('get_characters_bs', () => {
+        io.emit('get_characters_sb', characters);
+    });
+
+    /**
+     * signal_from: set_character_bs
+     * signal_to: set_character_sb
+     * setCharObj: {roomName, currentUser, selectedCharId}
+     * msgObj: {success, message}
+     * */
+    socket.on('set_character_bs', (setCharObj) => {
+        console.log("SET CHARACTER: ");
+        console.log(setCharObj);
+        let roomName = setCharObj.roomName;
+        let currentUser = setCharObj.currentUser;
+        let selectedCharId = setCharObj.selectedCharId;
+
+        let character = characters.find(char => char.id === selectedCharId);
+
+        let roomIndex = rooms.findIndex(room => room.room_name === roomName);
+        let userIndex = rooms[roomIndex].users.findIndex(user => currentUser.id === user.id);
+
+        rooms[roomIndex].users[userIndex].characterId = selectedCharId;
+        console.log(rooms[roomIndex].users);
+
+        socket.emit('set_character_sb', {success: 1, message: "Your character is set to character with name " + character.charName});
+    });
     socket.on("move_player_bs", (args)=>{
         let playerId = args.playerId;
         let destinationTileId = args.destinationTileId;
