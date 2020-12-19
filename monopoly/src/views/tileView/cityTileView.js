@@ -69,7 +69,7 @@ class cityTileView extends tileView{
             //     popUpy = 0 + (this.id % (Globals.tileNumber - 1)) * Globals.sizeOfBoard / Globals.tileNumber - offset / 2;
             // }
 
-            this.popUP.beginFill(0xFFFFFF);
+            this.popUP.beginFill(0xf0f7f1);
             this.popUP.lineStyle(3, 0x333333);
             this.popUP.drawRect(Globals.sizeOfBoard/2 - this.size , Globals.sizeOfBoard/2 - this.size - offset, 200, 300);
             this.popUP.alpha = 0.8;

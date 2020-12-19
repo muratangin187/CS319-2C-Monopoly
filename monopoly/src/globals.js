@@ -2,6 +2,7 @@ class Globals{
 
     constructor(){
         this.app = null;
+        this.appHand = null;
         this.CONSTS = {
             USABLE_TYPE: {
                 CHANCE: 0,
@@ -11,7 +12,6 @@ class Globals{
         };
         this.tileNumber = 11;
         this.sizeOfBoard = this.tileNumber*80;
-
         this.tiles = [
             {
                 "type": "CornerTile",
@@ -114,7 +114,7 @@ class Globals{
             {
                 "type": "CityTile",
                 "id": 11,
-                "name": "ST. CHARLES PLACE",
+                "name": "ST.CHARLES PLACE",
                 "rentPrice": [10, 50, 150, 450, 625, 750],
                 "mortgagePrice": 70,
                 "price": 140,
@@ -170,7 +170,7 @@ class Globals{
             {
                 "type": "CityTile",
                 "id": 16,
-                "name": "ST. JAMES PLACE",
+                "name": "ST.JAMES PLACE",
                 "rentPrice": [14, 70, 200, 550, 750, 950],
                 "mortgagePrice": 90,
                 "price": 180,
@@ -200,7 +200,7 @@ class Globals{
             {
                 "type": "CityTile",
                 "id": 19,
-                "name": "NEW YORK AVENUE",
+                "name": "NEWYORK AVENUE",
                 "rentPrice": [16, 80, 220, 600, 800, 1000],
                 "mortgagePrice": 100,
                 "price": 200,

@@ -31,7 +31,6 @@
 }
 
 #canvas_hand canvas{
-    border: 1px solid black;
     width:720px;
     height:450px;
     margin:0;

@@ -21,16 +21,19 @@ class CityCardView extends CardView{
         let titleBackground = new PIXI.Graphics();
         titleBackground.name = "titleBackground";
         titleBackground.beginFill(this.city.cityGroup.color);
-        titleBackground.lineStyle(3, 0x333333);
+        titleBackground.lineStyle(2, 0x333333);
         console.log(this.border);
-        titleBackground.drawRect(this.border.x, this.border.y, this.border.width -1, this.border.height/5);
-        titleBackground.alpha = this.border.alpha;
+        titleBackground.drawRect(this.border.x, this.border.y, this.border.width-2, this.border.height/5);
+        titleBackground.alpha = 0.9;
         this.title.addChild(titleBackground);
 
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",
+            fontSize: 12
         });
-        let titleText =new PIXI.Text(this.city.name, style);
+        let formattedTitle = this.city.name;
+        formattedTitle = formattedTitle.split(" ").join("\n");
+        let titleText =new PIXI.Text(formattedTitle, {...style, align:"center"});
         titleText.name = "titleText";
         titleText.anchor.x =0.5;
         titleText.anchor.y =0.5;

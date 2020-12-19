@@ -22,7 +22,7 @@ class StationCardView extends CardView{
         icon.width = 70;
         icon.height = 70;
         icon.x = this.border.width / 2 - 35;
-        icon.y = 10;
+        icon.y = this.border.y + 10;
         this.card.addChild(icon);
 
         const style = new PIXI.TextStyle({
@@ -32,8 +32,8 @@ class StationCardView extends CardView{
         this.titleText.name = "titleText";
         this.titleText.anchor.x =0.5;
         this.titleText.anchor.y =0.5;
-        this.titleText.x = 10 + 115;
-        this.titleText.y = 10 + 25 + 70;
+        this.titleText.x = this.border.getBounds().x + this.border.getBounds().width / 2;
+        this.titleText.y = this.border.getBounds().y + this.border.getBounds().height / 2;
         this.title.addChild(this.titleText);
 
         let propText = new PIXI.Text(`Rent ................................. ${this.station.rentPrice[0]}

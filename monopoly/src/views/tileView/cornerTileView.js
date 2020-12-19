@@ -14,7 +14,7 @@ class CornerTileView extends tileView{
 
         this.image.width = this.size-2;
         this.image.height = this.size-2;
-        this.image.x = this.x;
+        this.image.x = this.x+2;
         this.image.y = this.y;
     }
 }

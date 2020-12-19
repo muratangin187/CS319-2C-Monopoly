@@ -11,16 +11,16 @@ export default function YourTurnState(props) {
 
     return (
         <>
-        <Card style={{margin: "20px"}} elevation={2}>
+        <Card style={{margin: "20px",backgroundColor: "#CEE5D1"}} elevation={2}>
             <h3 style={{textAlign: "center"}}>Your turn, please roll dice</h3>
         </Card>
-        <Card style={{margin: "20px", textAlign: "center"}} elevation={2}>
+        <Card style={{margin: "20px", textAlign: "center", backgroundColor: "#CEE5D1"}} elevation={2}>
             <ReactDice
                 numDice={2}
                 rollDone={(sum, rollArr)=>console.log(rollArr[0] + " | " + rollArr[1])}
                 ref={dice => setReactDice(dice)}
                 dotColor="#000000"
-                faceColor="#ffffff"
+                faceColor="#a9dbb0"
                 outline="true"
                 outlineColor="#575757"
                 disableIndividual="true"
