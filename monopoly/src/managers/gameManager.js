@@ -84,6 +84,70 @@ class GameManager{
         mainWindow.send("bm_initializeGame" , playerManager.getPlayers());
     }
 
+    moveAction(destinationTileId){
+        networkManager.movePlayer(destinationTileId);
+        playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile = destinationTileId;
+        if(playerManager.isInJail(networkManager.getCurrentUser().id)){
+            // set state to jail screen
+            Globals.isDouble = false;
+            this.stateTurn({stateName: "playNormalTurn", payload:{}});
+        }else{
+            // set state to according to tile
+            // TODO quest check
+            console.log("WENT TO NEW TILE: " + destinationTileId);
+            // TODO call stateTurn according to new tile
+            console.log("THIS.TILES: " + JSON.stringify(Globals.tiles, null, 2));
+            let currentTile = Globals.tiles.find(tile=> tile.tile === destinationTileId);
+            switch(currentTile.type){
+                case "CornerTile":
+                    break;
+                case "StationTile":
+                    break;
+                case "UtilityTile":
+                    break;
+                case "CityTile":
+                    let cityModel = ModelManager.getModels()[currentTile.tile];
+                    let ownerOfCityId = cityModel.getOwner();
+                    if(ownerOfCityId){
+                        if(ownerOfCityId === networkManager.getCurrentUser().id){
+                            // BU CITY BIZIM
+                            console.log("BU BENIM CITYM");
+                        }else{
+                            // BU CITY BASKASININ
+                            console.log("BU BASKASININ CITYSI");
+                            let rentPrice = cityModel.getRentPrice();
+                            let double = true;
+                            for(let model in ModelManager.getModels()){
+                                if(ModelManager.getModels()[model].color && ModelManager.getModels()[model].color === cityModel.color){
+                                    if(ModelManager.getModels()[model].ownerId !== cityModel.ownerId){
+                                        double = false;
+                                    }
+                                }
+                            }
+                            if(double){
+                                rentPrice = rentPrice * 2;
+                            }
+                            playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            playerManager.setMoney(ownerOfCityId, rentPrice);
+                            console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
+                            console.log(playerManager.getPlayers()[ownerOfCityId].username + " price: " + playerManager.getMoney(ownerOfCityId));
+                            networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfCityId]]);
+                            networkManager.nextState();
+                        }
+                    }else{
+                        // BU CITY ALINMAMIS
+                        this.stateTurn({stateName: "buyNewProperty", payload: cityModel});
+                    }
+                    break;
+                case "SpecialTile":
+                    break;
+                default:
+                    console.log("Wrong tile type");
+                    break;
+            }
+        }
+    }
+
     createListeners(){
         ipcMain.on("create_room_fb", (event, args) => {
             networkManager.createRoom(args);
@@ -134,72 +198,12 @@ class GameManager{
             }else{
                 playerManager.resetDoubleCount(networkManager.getCurrentUser().id);
             }
-            networkManager.movePlayer(destinationTileId);
-            playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile = destinationTileId;
-            if(playerManager.isInJail(networkManager.getCurrentUser().id)){
-                // set state to jail screen
-                Globals.isDouble = false;
-                this.stateTurn({stateName: "playNormalTurn", payload:{}});
+            if(rolledDice[0] === rolledDice[1]) {
+                Globals.isDouble = true;
             }else{
-                if(rolledDice[0] === rolledDice[1]) {
-                    Globals.isDouble = true;
-                }else{
-                    Globals.isDouble = false;
-                }
-                // set state to according to tile
-                // TODO quest check
-                console.log("WENT TO NEW TILE: " + destinationTileId);
-                // TODO call stateTurn according to new tile
-                console.log("THIS.TILES: " + JSON.stringify(Globals.tiles, null, 2));
-                let currentTile = Globals.tiles.find(tile=> tile.tile === destinationTileId);
-                switch(currentTile.type){
-                    case "CornerTile":
-                        break;
-                    case "StationTile":
-                        break;
-                    case "UtilityTile":
-                        break;
-                    case "CityTile":
-                        let cityModel = ModelManager.getModels()[currentTile.tile];
-                        let ownerOfCityId = cityModel.getOwner();
-                        if(ownerOfCityId){
-                            if(ownerOfCityId === networkManager.getCurrentUser().id){
-                                // BU CITY BIZIM
-                                console.log("BU BENIM CITYM");
-                            }else{
-                                // BU CITY BASKASININ
-                                console.log("BU BASKASININ CITYSI");
-                                let rentPrice = cityModel.getRentPrice();
-                                let double = true;
-                                for(let model in ModelManager.getModels()){
-                                    if(ModelManager.getModels()[model].color && ModelManager.getModels()[model].color === cityModel.color){
-                                        if(ModelManager.getModels()[model].ownerId !== cityModel.ownerId){
-                                            double = false;
-                                        }
-                                    }
-                                }
-                                if(double){
-                                    rentPrice = rentPrice * 2;
-                                }
-                                playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
-                                playerManager.setMoney(ownerOfCityId, rentPrice);
-                                console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
-                                console.log(playerManager.getPlayers()[ownerOfCityId].username + " price: " + playerManager.getMoney(ownerOfCityId));
-                                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfCityId]]);
-                                networkManager.nextState();
-                            }
-                        }else{
-                            // BU CITY ALINMAMIS
-                            this.stateTurn({stateName: "buyNewProperty", payload: cityModel});
-                        }
-                        break;
-                    case "SpecialTile":
-                        break;
-                    default:
-                        console.log("Wrong tile type");
-                        break;
-                }
+                Globals.isDouble = false;
             }
+            this.moveAction(destinationTileId);
         });
         //same buildings, bidding commences and the buildings go to the highest bidder
         //we need to implement an auction for bidding houses and hotels

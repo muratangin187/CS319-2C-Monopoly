@@ -41,6 +41,7 @@ class PlayerModel{
         this.inJail = false;
         this.inJailLeft = 0;
         this.doubleCount = 0;
+        this.cards = [];
         this.properties = [];
         this.currentTile = 0;
     }
