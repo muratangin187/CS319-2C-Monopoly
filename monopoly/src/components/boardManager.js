@@ -25,6 +25,10 @@ import start_tile from "../views/assets/start_tile.png";
 import electric from "../views/assets/electric.png";
 import water from "../views/assets/water.png";
 import railroad from "../views/assets/railroad.png";
+import pion1 from "../views/assets/pion1.png";
+import pion2 from "../views/assets/pion2.png";
+import pion3 from "../views/assets/pion3.png";
+import pion4 from "../views/assets/pion4.png";
 const {ipcRenderer} = require('electron');
 import Character from "../views/tileView/Character";
 class BoardManager{
@@ -61,7 +65,7 @@ class BoardManager{
         Globals.app.renderer.roundPixels = true;
         Globals.app.renderer.resize(880, 880);
         document.getElementById("canvas").appendChild(Globals.app.view);
-        const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("railroad", railroad).load(async (loader, resources)=> {
+        const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("pion1", pion1).add("pion2", pion2).add("pion3", pion3).add("pion4", pion4).add("railroad", railroad).load(async (loader, resources)=> {
             Globals.resources = resources;
             Globals.appHand = new PIXI.Application({resolution: 2});
             Globals.appHand.renderer.roundPixels = true;
@@ -128,6 +132,7 @@ class BoardManager{
             }
 
             console.log("PLAYERS FROM BOARDMANAGER: " + JSON.stringify(players));
+            let counter = 0;
             for (let i in players) {
                 console.log("I WILL DRAW CARDS IN FOR");
                 this.views[i] = {player: players[i], cards: []};
@@ -147,7 +152,16 @@ class BoardManager{
                     }
                 });
                 console.log("I WILL DRAW A CHARACTER");
-                this.views[i].character = new Character(Globals.resources.water.texture, 0, players[i].id) //Character (Icon of the character?)
+                if(counter === 0){
+                    this.views[i].character = new Character(Globals.resources.pion1.texture, 0, players[i].id) //Character (Icon of the character?)
+                }else if(counter === 1){
+                    this.views[i].character = new Character(Globals.resources.pion2.texture, 0, players[i].id) //Character (Icon of the character?)
+                } else if(counter === 1){
+                    this.views[i].character = new Character(Globals.resources.pion3.texture, 0, players[i].id) //Character (Icon of the character?)
+                } else if(counter === 1){
+                    this.views[i].character = new Character(Globals.resources.pion4.texture, 0, players[i].id) //Character (Icon of the character?)
+                }
+            counter++;
             }
             //ipcRenderer.send("updateTilesAndModels", {tiles: this.tiles, models: this.models});
         });

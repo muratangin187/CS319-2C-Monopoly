@@ -36,8 +36,8 @@ class Character{
             this.x = Globals.sizeOfBoard- (Globals.sizeOfBoard/Globals.tileNumber);
             this.y = 0 + (this.tileId%(Globals.tileNumber -1))*(Globals.sizeOfBoard/Globals.tileNumber);
         }
-        this.image.width =20;
-        this.image.height = 30;
+        this.image.width =40;
+        this.image.height = 60;
         this.image.x = this.x + this.size/4;
         this.image.y = this.y + this.size/4;
 
