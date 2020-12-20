@@ -81,7 +81,7 @@ class Character{
             await this.moveToNextTile(x);
             this.tileId = (this.tileId + 1)%((Globals.tileNumber-1)*4);
             console.log("this.tileId = " + this.tileId);
-            console.log("i = " + i);
+            //console.log("i = " + i);
 
         }
         return;
@@ -124,13 +124,13 @@ class Character{
                         }
                     }
                     counter = counter + step;
-                    console.log("y önce: " + this.char.y);
+                    //console.log("y önce: " + this.char.y);
                     if(counter === this.size ){
                         //let pos =  this.returnTilePosition(this.tileId + 1);
 
                         //this.char.x = pos.x;
                         //this.char.y = pos.y;
-                        console.log("y sonra: " + this.char.y);
+                        //console.log("y sonra: " + this.char.y);
                         clearInterval(timer);
                         resolve();
                     }

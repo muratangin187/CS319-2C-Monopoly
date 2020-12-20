@@ -281,6 +281,22 @@ class PlayerManager{
         return true;
 
     }
+
+    payRepair(playerID, housePrice, hotelPrice){
+        let player = this.players[playerID];
+        let houseCount = 0;
+        let hotelCount = 0;
+        player.properties.forEach(city => {
+            hotelCount += city.hotelCount;
+            houseCount += city.houseCount;
+        });
+
+        let amount = hotelCount * hotelPrice + houseCount * housePrice;
+
+        if(this.setMoney(playerID, -amount)){
+            console.log("NOT ENOUGH MONEY!!! CANNOT REPAIR");
+        }
+    }
 }
 
 module.exports = new PlayerManager();

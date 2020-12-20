@@ -23,6 +23,9 @@ let incomeTax = 4;
 let chanceUsableCards = [16, 17, 6];
 let chestUsableCards = [4];
 
+let questComb = [];
+let diceComb = [];
+
 class GameManager{
     constructor() {
         this.createListeners();
@@ -32,8 +35,25 @@ class GameManager{
         networkManager.setUpdatePlayerListener(this.updatePlayerListener);
         networkManager.setUpdatePropertyListener(this.updatePropertiesListener);
         networkManager.setAuctionListener(this.auctionListener);
-    }
 
+        for( let i = 0; i < 5; i++){
+            let x = this.getRandomInt(1,6);
+            let y = this.getRandomInt(1,6);
+            let dice = {x: x, y: y};
+            diceComb.push(dice);
+        }
+
+        for( let i = 0; i < 5; i++){
+            let x = this.getRandomInt(0, 40);
+            let loc = {id: x};
+            questComb.push(loc);
+        }
+    }
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
     getCurrentUser(){
         return networkManager.getCurrentUser();
     }
@@ -113,13 +133,16 @@ class GameManager{
             this.stateTurn({stateName: "playNormalTurn", payload:{}});
         }else{
             // set state to according to tile
-            // TODO quest check
             console.log("WENT TO NEW TILE: " + destinationTileId);
             // TODO call stateTurn according to new tile
             console.log("THIS.TILES: " + JSON.stringify(Globals.tiles, null, 2));
             let currentTile = Globals.tiles.find(tile=> tile.tile === destinationTileId);
             switch(currentTile.type){
                 case "CornerTile":
+                    if(destinationTileId === 30){
+                        playerManager.sendJail(networkManager.getCurrentUser().id);
+                    }
+                    networkManager.nextState();
                     break;
                 case "StationTile":
                     break;
@@ -161,12 +184,30 @@ class GameManager{
                     }
                     break;
                 case "SpecialTile":
+                    // let chance = [7, 22, 36];
+                    // let communityChest = [2, 17, 33];
+
+                    if((destinationTileId) === 7 ||(destinationTileId) === 22 ||(destinationTileId) === 36){
+                        this.drawChanceCard(networkManager.getCurrentUser().id, destinationTileId);
+                    }
+
+                    else if((destinationTileId) === 17 ||(destinationTileId) === 2 ||(destinationTileId) === 33){
+                        this.drawChestCard(networkManager.getCurrentUser().id, destinationTileId);
+                    }
+
+                    else if(destinationTileId === 4 || destinationTileId === 38){
+                        playerManager.setMoney(networkManager.getCurrentUser().id, -200);
+                    }
+
+                    networkManager.nextState();
                     break;
                 default:
                     console.log("Wrong tile type");
                     break;
             }
         }
+        // networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
+        // networkManager.nextState();
     }
 
     createListeners(){
@@ -220,11 +261,16 @@ class GameManager{
             }else{
                 playerManager.resetDoubleCount(networkManager.getCurrentUser().id);
             }
-            if(rolledDice[0] === rolledDice[1]) {
-                Globals.isDouble = true;
-            }else{
-                Globals.isDouble = false;
-            }
+            Globals.isDouble = rolledDice[0] === rolledDice[1];
+
+
+            if(questComb.forEach(quest => {if(quest.id === destinationTileId) return true;}))
+                if(diceComb.forEach(dice => {
+                    if(dice.x === rolledDice[0] && dice.y === rolledDice[1] ||
+                        dice.y === rolledDice[0] && dice.x === rolledDice[1])
+                        return true;}))
+                    playerManager.setMoney(networkManager.getCurrentUser().id, 400);
+
             this.moveAction(destinationTileId);
         });
         //same buildings, bidding commences and the buildings go to the highest bidder
@@ -392,25 +438,7 @@ class GameManager{
                 }
             }
         });
-        //ToDo
-        //ipcMain.on('moveResult', (event, args)=>{
-           //let property = ....;
-           //property => Satin alinabilecek
-           //if(property.ownerID !== PlayerID){
-               //pay rent
-                    //!== null
-                //payRent
-               // buy land
-                /*
-                2 secenek
-                1. secenek -> satin al
-                2. secenek -> auction
-                //event Yaratilir
-                bu eventi yolla
-                 */
-           //}
 
-        //});
         ipcMain.on("useCardToExit_fb", () =>{
             let currentUser = networkManager.getCurrentUser();
 
@@ -572,22 +600,301 @@ class GameManager{
         if(!chestUsableCards.includes(card.id)){
             cardManager.addChestCard(card.id, card.description);
 
-            // TODO Apply the Card Effect
+            if(card.id === 0){
+                mainWindow.send("show_notification", {message: "Advance to GO", intent: "success"});
+
+                this.moveAction(0);
+            }
+            else if(card.id === 1){
+                mainWindow.send("show_notification", {message: "Bank error in your favor—Collect $200", intent: "success"});
+                playerManager.setMoney(playerID, 200);
+            }
+            else if(card.id === 2){
+                mainWindow.send("show_notification", {message: "Doctor's fee—Pay $50", intent: "danger"});
+                playerManager.setMoney(playerID, -50);
+            }
+            else if(card.id === 3){
+                mainWindow.send("show_notification", {message: "From sale of stock you get $50", intent: "success"});
+                playerManager.setMoney(playerID, 50);
+
+            }
+
+            else if(card.id === 5){
+                mainWindow.send("show_notification", {message: "Go to Jail–Go directly to jail–Do not pass Go–Do not collect $200!", intent: "danger"});
+                playerManager.sendJail(playerID);
+                this.moveAction(10);
+            }
+
+            else if(card.id === 6){
+                mainWindow.send("show_notification", {message: "Grand Opera Night—Collect $50 from every player for opening night seats", intent: "primary"});
+                let players = playerManager.getPlayers();
+                players.forEach(player =>{
+                    if(playerID === player.id)
+                        playerManager.setMoney(playerID, (50 * (players.length - 1)));
+                    else
+                        playerManager.setMoney(player.id, -50);
+                });
+            }
+            else if(card.id === 7){
+                mainWindow.send("show_notification", {message: "Holiday Fund matures—Receive $100", intent: "success"});
+                playerManager.setMoney(playerID, 100);
+            }
+            else if(card.id === 8){
+                mainWindow.send("show_notification", {message: "Income tax refund–Collect $20", intent: "success"});
+                playerManager.setMoney(playerID, 20);
+
+            }
+            else if(card.id === 9){
+                playerManager.setMoney(playerID, 10);
+                mainWindow.send("show_notification", {message: "It is your birthday—Collect $10!", intent: "success"});
+
+            }
+            else if(card.id === 10){
+                playerManager.setMoney(playerID, 100);
+                mainWindow.send("show_notification", {message: "Life insurance matures–Collect $100", intent: "success"});
+            }
+            else if(card.id === 11){
+                mainWindow.send("show_notification", {message: "Pay hospital fees of $100", intent: "danger"});
+                playerManager.setMoney(playerID, -100);
+            }
+            else if(card.id === 12){
+                mainWindow.send("show_notification", {message: "Pay school fees of $150", intent: "danger"});
+                playerManager.setMoney(playerID, -150);
+            }
+            else if(card.id === 13){
+                playerManager.setMoney(playerID, 25);
+                mainWindow.send("show_notification", {message: "Receive $25 consultancy fee!", intent: "success"});
+
+            }
+            else if(card.id === 14){
+                mainWindow.send("show_notification", {message: "You are assessed for street repairs–$40 per house–$115 per hotel!", intent: "primary"});
+                playerManager.payRepair(playerID, 40, 115);
+            }
+            else if(card.id === 15){
+                mainWindow.send("show_notification", {message: "You have won second prize in a beauty contest–Collect $10!", intent: "success"});
+                playerManager.setMoney(playerID, 10);
+            }
+            else if(card.id === 16){
+                mainWindow.send("show_notification", {message: "You inherit $100!", intent: "success"});
+                playerManager.setMoney(playerID, 100);
+            }
         }
-        else
+        else {
             playerManager.addCard(playerID, card);
+            mainWindow.send("show_notification", {message: "You get a Jail Free Card!", intent: "success"});
+        }
     }
 
-    drawChanceCard(playerID){
+    drawChanceCard(playerID, locationID){
         let card = cardManager.drawChanceCard();
 
         if(!chanceUsableCards.includes(card.id)){
             cardManager.addChanceCard(card.id, card.description);
 
-            // TODO Apply the Card Effect
+            if(card.id === 0){
+                mainWindow.send("show_notification", {message: "Advance to GO", intent: "success"});
+
+                this.moveAction(0);
+            }
+            else if(card.id === 1){
+                //move illinois
+                mainWindow.send("show_notification", {message: "Advance to Illinois Ave – If you pass Go, collect $200", intent: "success"});
+
+                if(locationID > 24){
+                    playerManager.setMoney(networkManager.getCurrentUser().id, 200);
+                    mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
+
+                }
+
+                this.moveAction(24);
+            }
+            else if(card.id === 2){
+                mainWindow.send("show_notification", {message: "Advance to St. Charles Place – If you pass Go, collect $200", intent: "success"});
+
+                if(locationID > 11){
+                    playerManager.setMoney(networkManager.getCurrentUser().id, 200);
+                    mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
+
+                }
+                this.moveAction(11);
+            }
+            else if(card.id === 3){
+                //,"Advance token to nearest Utility. If unowned, you may buy it from the Bank.
+                // If owned, throw dice and pay owner a total ten times the amount thrown."
+                mainWindow.send("show_notification", {message: "Advance token to nearest Utility. If unowned, you may buy it from the Bank. " +
+                        "If owned, throw dice and pay owner a total ten times the amount thrown.", intent: "primary"});
+
+
+                if(locationID === 36){
+                    let currentTile = Globals.tiles[28];
+                    let cityModel = ModelManager.getModels()[currentTile.tile];
+                    let ownerOfCityId = cityModel.getOwner();
+
+                    // if(ownerOfCityId && ownerOfCityId !== playerID){
+                    //     playerManager.setMoney(ownerOfCityId, cityModel.getRentPrice());
+                    //     playerManager.setMoney(playerID, -cityModel.getRentPrice());
+                    // }
+
+                    this.moveAction(28);
+                }
+
+                if(locationID === 22){
+                    let currentTile = Globals.tiles[28];
+                    let cityModel = ModelManager.getModels()[currentTile.tile];
+                    let ownerOfCityId = cityModel.getOwner();
+
+                    // if(ownerOfCityId && ownerOfCityId !== playerID){
+                    //     playerManager.setMoney(ownerOfCityId, cityModel.getRentPrice());
+                    //     playerManager.setMoney(playerID, -cityModel.getRentPrice());
+                    // }
+
+                    this.moveAction(28);
+                }
+
+                if(locationID === 7){
+                    let currentTile = Globals.tiles[12];
+                    let cityModel = ModelManager.getModels()[currentTile.tile];
+                    let ownerOfCityId = cityModel.getOwner();
+
+                    // if(ownerOfCityId && ownerOfCityId !== playerID){
+                    //     playerManager.setMoney(ownerOfCityId, cityModel.getRentPrice());
+                    //     playerManager.setMoney(playerID, -cityModel.getRentPrice());
+                    // }
+
+                    this.moveAction(5);
+                }
+            }
+            else if(card.id === 4){
+                //,"Advance token to the nearest Railroad and pay owner twice the rental to which
+                // he/she {he} is otherwise entitled. If Railroad is unowned, you may buy it from the Bank."
+                mainWindow.send("show_notification", {message: "Advance token to the nearest Railroad and pay owner twice the rental to which " +
+                        "he/she {he} is otherwise entitled. If Railroad is unowned, you may buy it from the Bank", intent: "primary"});
+
+
+                if(locationID === 36){
+                    let currentTile = Globals.tiles[35];
+                    let cityModel = ModelManager.getModels()[currentTile.tile];
+                    let ownerOfCityId = cityModel.getOwner();
+
+                    if(ownerOfCityId && ownerOfCityId !== playerID){
+                        playerManager.setMoney(ownerOfCityId, cityModel.getRentPrice());
+                        playerManager.setMoney(playerID, -cityModel.getRentPrice());
+                    }
+
+                    this.moveAction(35);
+                }
+
+                if(locationID === 22){
+                    let currentTile = Globals.tiles[25];
+                    let cityModel = ModelManager.getModels()[currentTile.tile];
+                    let ownerOfCityId = cityModel.getOwner();
+
+                    if(ownerOfCityId && ownerOfCityId !== playerID){
+                        playerManager.setMoney(ownerOfCityId, cityModel.getRentPrice());
+                        playerManager.setMoney(playerID, -cityModel.getRentPrice());
+                    }
+
+                    this.moveAction(25);
+                }
+
+                if(locationID === 7){
+                    let currentTile = Globals.tiles[5];
+                    let cityModel = ModelManager.getModels()[currentTile.tile];
+                    let ownerOfCityId = cityModel.getOwner();
+
+                    if(ownerOfCityId && ownerOfCityId !== playerID){
+                        playerManager.setMoney(ownerOfCityId, cityModel.getRentPrice());
+                        playerManager.setMoney(playerID, -cityModel.getRentPrice());
+                    }
+
+                    this.moveAction(5);
+                }
+
+            }
+            else if(card.id === 5){
+                //,"Bank pays you dividend of $50"
+                playerManager.setMoney(playerID, 50);
+                mainWindow.send("show_notification", {message: "You earned 50$ from bank!", intent: "success"});
+            }
+
+            else if(card.id === 7){
+                //,"Go Back 3 Spaces"
+                mainWindow.send("show_notification", {message: "Go Back 3 Spaces", intent: "primary"});
+
+                this.moveAction((locationID - 3));
+            }
+            else if(card.id === 8){
+                //,"Go to Jail–Go directly to Jail–Do not pass Go, do not collect $200"
+                mainWindow.send("show_notification", {message: "Go to Jail–Go directly to Jail–Do not pass Go, do not collect $200", intent: "danger"});
+
+                playerManager.sendJail(playerID);
+                this.moveAction(10);
+            }
+            else if(card.id === 9){
+                //,"Make general repairs on all your property–For each house pay $25–For each hotel $100"
+                mainWindow.send("show_notification", {message: "Make general repairs on all your property–For each house pay $25–For each hotel $100", intent: "primary"});
+
+                playerManager.payRepair(playerID, 25, 100);
+            }
+            else if(card.id === 10){
+                //,"Pay poor tax of $15"
+                playerManager.setMoney(playerID, -15);
+                mainWindow.send("show_notification", {message: "You lost 15$ for paying tax!", intent: "danger"});
+
+            }
+            else if(card.id === 11){
+                // ,"Take a trip to Reading Railroad–If you pass Go, collect $200"
+                mainWindow.send("show_notification", {message: "Take a trip to Reading Railroad–If you pass Go, collect $200", intent: "primary"});
+
+                if(locationID > 5){
+                    playerManager.setMoney(playerID, 200);
+                    mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
+
+                }
+
+                this.moveAction(5);
+            }
+            else if(card.id === 12){
+                //,"Take a walk on the Boardwalk–Advance token to Boardwalk"
+                mainWindow.send("show_notification", {message: "Take a walk on the Boardwalk–Advance token to Boardwalk", intent: "primary"});
+
+                this.moveAction(39);
+            }
+            else if(card.id === 13){
+                //,"You have been elected Chairman of the Board–Pay each player $50"
+                mainWindow.send("show_notification", {message: "You have been elected Chairman of the Board–Pay each player $50", intent: "primary"});
+
+                let players = playerManager.getPlayers();
+                players.forEach(player =>{
+                    if(playerID === player.id)
+                        playerManager.setMoney(playerID, -(50 * (players.length - 1)));
+                    else
+                        playerManager.setMoney(player.id, 50);
+                });
+            }
+            else if(card.id === 14){
+                //,"Your building and loan matures—Collect $150"
+                playerManager.setMoney(playerID, 150);
+                mainWindow.send("show_notification", {message: "Your building and loan matures—Collect $150!", intent: "primary"});
+            }
+            else if(card.id === 15){
+                //,"You have won a crossword competition—Collect $100"
+                playerManager.setMoney(playerID, 100);
+                mainWindow.send("show_notification", {message: "You have won a crossword competition—Collect $100!", intent: "primary"});
+
+            }
         }
-        else
+        else { //6-16-17
             playerManager.addCard(playerID, card);
+            if(card.id === 6)
+                mainWindow.send("show_notification", {message: "You get a Jail Free Card!", intent: "success"});
+            else if(card.id === 16)
+                mainWindow.send("show_notification", {message: "You get a Natural Disaster Card!", intent: "success"});
+
+            else if(card.id === 17)
+                mainWindow.send("show_notification", {message: "You get a Profit Card!", intent: "success"});
+
+        }
     }
 
 

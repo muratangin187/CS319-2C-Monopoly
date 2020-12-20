@@ -48,20 +48,7 @@ class PlayerModel{
     getID(){
         return this.id;
     }
-    /**
-     *
-     * @param newTileID: int
-     * @param passedStart: boolean
-     *
-     * if the player passes start, increase the money
-     *      * The condition of passing "Go" is checked before calling move
-     */
-    move(newTileID, passedStart){
-        this.currentTile = newTileID;
 
-        if(passedStart)
-            this.money += 200;
-    }
     /*
     addProperty = newProperty: Property
     addCard = newCard: Card
