@@ -16,7 +16,7 @@ class NetworkManager {
             if(this.rooms.find((room)=>room.room_name === args[0].room))
                 this.rooms.find((room)=>room.room_name === args[0].room).users = args[0].users;
             console.log("ROOMS: " + JSON.stringify(this.rooms,null,2));
-            console.log("CURRENTUSER: " + JSON.stringify(this.currentUser));
+            console.log("CURRENT USER: " + JSON.stringify(this.currentUser));
             mainWindow.send("change_page_bf", {result:args[0], currentUser: this.currentUser});
         });
 
@@ -24,6 +24,47 @@ class NetworkManager {
             console.log("main - update_room_users_sb");
             this.rooms.find((room)=>room.room_name === args.roomName).users = args.users;
             mainWindow.send("update_room_users_bf", args.users);
+        });
+
+        this.socket.on("move_player_sb", (args) => {
+            mainWindow.send("move_player_bf", args);
+        });
+
+        /**
+         * signal_from: get_characters_sb
+         * signal_to: get_characters_bf
+         * sending character array (nm -> RoomLobbyPage.CharacterList)
+         * */
+        this.socket.on('get_characters_sb', (characters) => {
+            console.log("Character Object Array:");
+            console.log(characters);
+            mainWindow.send("get_characters_bf", characters);
+        });
+
+        /**
+         * signal_from: set_character_sb
+         * signal_to: set_character_bf
+         * msgObj: {success, message}
+         * */
+        this.socket.on('set_character_sb', msgObj => {
+            console.log("MESSAGE");
+            console.log(msgObj);
+
+            mainWindow.send('set_character_bf', msgObj);
+        });
+
+        this.socket.on('get_messages_sb', messages => {
+            console.log("MESSAGES");
+            console.log(messages);
+            mainWindow.send('get_messages_bf', messages);
+        });
+
+        this.socket.on('send_message_sb', msgObj => {
+            mainWindow.send('send_message_bf', msgObj);
+        });
+
+        this.socket.on('send_message_widget_sb', messageObj => {
+            mainWindow.send('send_message_widget_bf', messageObj);
         });
     }
 
@@ -58,7 +99,8 @@ class NetworkManager {
 
     setStartGameListener(func){
         this.socket.on("start_game_sb", (roomObject)=>{
-            func(this.getRoom(roomObject.room_name));
+            // func(this.getRoom(roomObject.room_name));
+            func(roomObject);
             mainWindow.send("start_game_bf", roomObject);
         });
     }
@@ -86,6 +128,34 @@ class NetworkManager {
     joinRoom(args){
         console.log("EMIT ON NETWORK:" + args.roomName + " - " + args.username);
         this.socket.emit("join_room_bs", args);
+    }
+
+    /**
+     * signal_to: set_character_bs
+     * setCharObj: {roomName, currentUser, selectedCharId}
+     * */
+    setCharacter(setCharObj){
+        this.socket.emit("set_character_bs", setCharObj);
+    }
+
+    /**
+     * signal_to: get_characters_bs
+     * Request sending from server to get character list
+     * */
+    getCharacters(){
+        this.socket.emit('get_characters_bs');
+    }
+
+    getMessages(){
+        this.socket.emit('get_messages_bs');
+    }
+
+    sendMessage(messageObj){
+        this.socket.emit('send_message_bs', messageObj);
+    }
+
+    sendWidgetMessage(messageObj){
+        this.socket.emit('send_message_widget_bs', messageObj);
     }
 
     updatePlayers(players){

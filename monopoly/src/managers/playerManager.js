@@ -10,7 +10,7 @@ class PlayerManager{
     createPlayers(newPlayerList){
         this.players = {};
         newPlayerList.forEach((newPlayer)=>{
-            let playerModel = new PlayerModel(newPlayer.id, newPlayer.username, null, null, newPlayer.character);
+            let playerModel = new PlayerModel(newPlayer.id, newPlayer.username, null, null, newPlayer.characterId);
             this.players[playerModel.getID()] = playerModel;
             console.log("NEW USER ADDED:");
             console.log(this.players[playerModel.getID()]);

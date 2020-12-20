@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import { Widget } from 'react-chat-widget';
+import {addResponseMessage, addUserMessage, Widget} from 'react-chat-widget';
 const {ipcRenderer} = require('electron');
 
 import * as PIXI from "pixi.js";
@@ -381,6 +381,10 @@ function GameScreen(props) {
     const [currentState, setCurrentState] = React.useState({stateName:"determineStartOrder", payload:{}});
     const [currentView, setCurrentView] = React.useState(null);
 
+    const handleNewUserMessage = (newMessage) => {
+        ipcRenderer.send('send_message_widget_fb', {sendBy: props.currentUser.username, message: newMessage});
+    };
+
     useEffect(()=>{
         //initPixi();
         ipcRenderer.on("next_state_bf", (event, stateObject)=>{
@@ -390,15 +394,11 @@ function GameScreen(props) {
         ipcRenderer.on("move_player_bf", (event, args)=>{
             let playerId = args.playerId;
             let destinationTileId = args.destinationTileId;
-            // viewManager.movePlayer(playerId, destinationTileId);
-            // viewManager.addCard(playerId, cardId);
-            // viewManager.removeCard(playerId, cardId);
-            // viewManager.addHouse(playerId, tileId);
-            // viewManager.removeHouse(playerId, tileId);
-            // viewManager.addHotel(playerId, tileId);
-            // viewManager.removeHotel(playerId, tileId);
-            // viewManager.startGame();
             console.log("USER: " + playerId + " MOVED TO " + destinationTileId);
+        });
+
+        ipcRenderer.on('send_message_widget_bf', (event, messageObj) => {
+            addResponseMessage(messageObj.sendBy + ": " + messageObj.message);
         });
 
     }, []);
@@ -414,7 +414,11 @@ function GameScreen(props) {
                                 ? (<YourTurnState/>) : currentState.stateName === "inJailTurn" ? (<JailTurn/>) :
                                     currentState.stateName === "buyNewProperty" ? (<BuyPropertyState propertyModel={currentState.payload}/>) : (<OtherPlayersTurn/>)}
                     </Card>
-                    <Widget />
+                    <Widget
+                        handleNewUserMessage={handleNewUserMessage}
+                        title="Chat"
+                        subtitle="In-game chat"
+                    />
                     <Drawer
                         isOpen={isScoreboardOpen}
                         canOutsideClickClose={true}

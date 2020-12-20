@@ -7,6 +7,8 @@ import RoomOptionPage from "./pages/room_option_page/RoomOptionPage";
 import SelectRoomPage from "./pages/select_room_page/SelectRoomPage";
 import RoomLobbyPage from "./pages/room_lobby_page/RoomLobbyPage";
 import GameScreen from "./pages/game_screen/GameScreen";
+import CharacterList from "./pages/room_lobby_page/components/CharacterList";
+import Chat from "./pages/room_lobby_page/components/Chat";
 import BoardManager from "./boardManager";
 import { AppToaster } from "./toaster";
 
@@ -27,6 +29,7 @@ function App() {
           setCurrentUser(args.currentUser);
           setPage(args.result.page);
       };
+
       function start_game_listener(event, roomObject){
           //{room_name: "Test", password: "123", selectedBoard: "Template - 1", users: []}
           setGameRoom(roomObject);
