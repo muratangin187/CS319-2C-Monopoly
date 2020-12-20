@@ -138,6 +138,10 @@ io.on('connection', (socket) => {
         io.emit('get_messages_sb', messages);
         socket.emit('send_message_sb', {success: 1, message: "Message send to everyone."});
     });
+
+    socket.on('send_message_widget_bs', (messageObj) => {
+        socket.broadcast.emit('send_message_widget_sb', messageObj);
+    });
 });
 
 http.listen(3000, () => {

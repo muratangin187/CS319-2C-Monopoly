@@ -362,6 +362,10 @@ class GameManager{
         ipcMain.on('send_message_fb', (event, messageObj) => {
             networkManager.sendMessage(messageObj);
         });
+
+        ipcMain.on('send_message_widget_fb', (event, messageObj) => {
+            networkManager.sendWidgetMessage(messageObj);
+        });
     }
 
     stateTurn(stateObject){

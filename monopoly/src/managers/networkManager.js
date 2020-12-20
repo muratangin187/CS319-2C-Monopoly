@@ -64,6 +64,9 @@ class NetworkManager {
             mainWindow.send('send_message_bf', msgObj);
         });
 
+        this.socket.on('send_message_widget_sb', messageObj => {
+            mainWindow.send('send_message_widget_bf', messageObj);
+        });
     }
 
     movePlayer(destinationTileId){
@@ -131,6 +134,10 @@ class NetworkManager {
 
     sendMessage(messageObj){
         this.socket.emit('send_message_bs', messageObj);
+    }
+
+    sendWidgetMessage(messageObj){
+        this.socket.emit('send_message_widget_bs', messageObj);
     }
 }
 
