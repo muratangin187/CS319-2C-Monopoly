@@ -384,10 +384,14 @@ let house2 = new BuildingModel("house", 10);
 let house3 = new BuildingModel("house", 10);
 let hostel1 = new BuildingModel("hostel", 10);
 
-let city1 = new CityModel(1, "city1", 10, 10, 10, 1, 10, 10, [house1, house2, house3], "red");
+let city1 = new CityModel(1, "city1", 10, 10, 10, 1, 10, 10, [house1, house2, house3], "purple");
 let city2 = new CityModel(2, "city2", 10, 10, 10, 2, 10, 10, [hostel1], "red");
 let city3 = new CityModel(3, "city3", 10, 10, 10, 2, 10, 10, [house1, house2], "blue");
-let city4 = new CityModel(4, "city4", 10, 10, 10, 2, 10, 10, [house1, house2], "purple");
+let city4 = new CityModel(4, "city4", 10, 10, 10, 2, 10, 10, [house1, house2], "aquamarine");
+let city5 = new CityModel(5, "city5", 10, 10, 10, 2, 10, 10, [house1, house2], "green");
+let city6 = new CityModel(6, "city6", 10, 10, 10, 2, 10, 10, [house1, house2], "pink");
+let city7 = new CityModel(7, "city7", 10, 10, 10, 2, 10, 10, [house1, house2], "orange");
+let city8 = new CityModel(8, "city8", 10, 10, 10, 2, 10, 10, [house1, house2], "yellow");
 
 let station1 = new StationModel(1, "station1", 10, 10, 10, 3, false, "");
 let station2 = new StationModel(2, "station2", 10, 10, 10, 4, false, "");
@@ -399,7 +403,7 @@ let player1 = new PlayerModel(1, "umityigitbsrn", null, null, 1);
 player1.properties = [city1, station1, utility1, city2, station2, utility2, city3];
 
 let player2 = new PlayerModel(2, "murata42", null, null, 1);
-player2.properties = [city1, station1, utility1, city2, station2, utility2, city3, city4];
+player2.properties = [city1, station1, utility1, city2, station2, utility2, city3, city4, city5, city6, city7, city8];
 
 let users = [player1, player2];
 
