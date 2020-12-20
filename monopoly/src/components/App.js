@@ -13,7 +13,7 @@ import BoardManager from "./boardManager";
 import { AppToaster } from "./toaster";
 
 function App() {
-  const [page, setPage] = useState("mainPage");
+  const [page, setPage] = useState("gameScreen");
   const [rooms, setRooms] = useState([]);
   const [gameRoom, setGameRoom] = useState({});
   const [selectedRoom, setSelectedRoom] = useState({});

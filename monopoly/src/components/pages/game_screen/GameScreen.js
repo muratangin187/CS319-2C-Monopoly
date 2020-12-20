@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {addResponseMessage, addUserMessage, Widget} from 'react-chat-widget';
 const {ipcRenderer} = require('electron');
 
@@ -18,16 +18,13 @@ import water from "../../../views/assets/water.png";
 import railroad from "../../../views/assets/railroad.png";
 import CityGroupModel from "../../../models/cityGroupModel";
 import CornerTileView from "../../../views/tileView/cornerTileView";
-import StationModel from "../../../models/stationModel";
 import OtherPropertyTileView from "../../../views/tileView/otherPropertyTileView";
-import CityModel from "../../../models/cityModel";
 import CityTileView from "../../../views/tileView/cityTileView";
 import CityCardView from "../../../views/cardView/cityCardView";
 import SpecialTileView from "../../../views/tileView/specialTileView";
-import UtilityModel from "../../../models/utilityModel";
 import Character from "../../../views/tileView/Character";
 import UtilityCardView from "../../../views/cardView/utilityCardView";
-import {Button, Card, Drawer, Position} from "@blueprintjs/core";
+import {Button, Card, Drawer, Position, Elevation, Collapse, Pre, H6, Icon} from "@blueprintjs/core";
 import ReactDice from 'react-dice-complete'
 import YourTurnState from "./components/YourTurnState";
 import OtherPlayersTurn from "./components/OtherPlayersTurn";
@@ -35,6 +32,12 @@ import StationCardView from "../../../views/cardView/stationCardView";
 import DetermineStartOrder from "./components/DetermineStartOrder";
 import BoardManager from "../../boardManager";
 import BuyPropertyState from "./components/BuyPropertyState";
+
+import PlayerModel from "../../../models/playerModel";
+import CityModel from "../../../models/cityModel";
+import StationModel from "../../../models/stationModel";
+import UtilityModel from "../../../models/utilityModel";
+import BuildingModel from "../../../models/buildingModel";
 
 function initPixi(){
     PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
@@ -376,10 +379,63 @@ function initPixiForHand(){
     }
 }
 
+let house1 = new BuildingModel("house", 10);
+let house2 = new BuildingModel("house", 10);
+let house3 = new BuildingModel("house", 10);
+let hostel1 = new BuildingModel("hostel", 10);
+
+let city1 = new CityModel(1, "city1", 10, 10, 10, 1, 10, 10, [house1, house2, house3], "red");
+let city2 = new CityModel(2, "city2", 10, 10, 10, 2, 10, 10, [hostel1], "red");
+let city3 = new CityModel(3, "city3", 10, 10, 10, 2, 10, 10, [house1, house2], "blue");
+let city4 = new CityModel(4, "city4", 10, 10, 10, 2, 10, 10, [house1, house2], "purple");
+
+let station1 = new StationModel(1, "station1", 10, 10, 10, 3, false, "");
+let station2 = new StationModel(2, "station2", 10, 10, 10, 4, false, "");
+
+let utility1 = new UtilityModel(1, "utility1", 10, 10, 10, 5, false, "");
+let utility2 = new UtilityModel(2, "utility2", 10, 10, 10, 6, false, "");
+
+let player1 = new PlayerModel(1, "umityigitbsrn", null, null, 1);
+player1.properties = [city1, station1, utility1, city2, station2, utility2, city3];
+
+let player2 = new PlayerModel(2, "murata42", null, null, 1);
+player2.properties = [city1, station1, utility1, city2, station2, utility2, city3, city4];
+
+let users = [player1, player2];
+
 function GameScreen(props) {
     const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
     const [currentState, setCurrentState] = React.useState({stateName:"determineStartOrder", payload:{}});
     const [currentView, setCurrentView] = React.useState(null);
+
+    const [collapseOpen, setCollapseOpen] = useState([]);
+    const [cityExpand, setCityExpand] = useState([]);
+    const [stationExpand, setStationExpand] = useState([]);
+    const [utilityExpand, setUtilityExpand] = useState([]);
+
+    function handleOpenCollapse(index){
+        let tmpCollapseOpen = [...collapseOpen];
+        tmpCollapseOpen[index] = !collapseOpen[index];
+        setCollapseOpen(tmpCollapseOpen);
+    }
+
+    function handleCityCollapse(index){
+        let tmpCollapseOpen = [...cityExpand];
+        tmpCollapseOpen[index] = !cityExpand[index];
+        setCityExpand(tmpCollapseOpen);
+    }
+
+    function handleStationCollapse(index){
+        let tmpCollapseOpen = [...stationExpand];
+        tmpCollapseOpen[index] = !stationExpand[index];
+        setStationExpand(tmpCollapseOpen);
+    }
+
+    function handleUtilityCollapse(index){
+        let tmpCollapseOpen = [...utilityExpand];
+        tmpCollapseOpen[index] = !utilityExpand[index];
+        setUtilityExpand(tmpCollapseOpen);
+    }
 
     const handleNewUserMessage = (newMessage) => {
         ipcRenderer.send('send_message_widget_fb', {sendBy: props.currentUser.username, message: newMessage});
@@ -402,6 +458,79 @@ function GameScreen(props) {
         });
 
     }, []);
+
+    const styles = {
+        drawer_scoreboard: {
+            display: "flex",
+            flexDirection: "column",
+            overflowY: "auto",
+        },
+        card_scoreboard: {
+            margin: 8,
+            padding: 2,
+            display: "grid",
+            gridTemplateRows: "24px auto",
+            gridTemplateAreas: `
+                "header"
+                "main"
+            `
+        },
+        header_scoreboard: {
+            gridArea: "header",
+            display: "grid",
+            gridTemplateRows: "auto",
+            gridTemplateColumns: "auto auto",
+            gridTemplateAreas: `
+                "username money"
+            `,
+        },
+        username: {
+            gridArea: "username",
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            backgroundColor: "aquamarine",
+        },
+        money: {
+            gridArea: "money",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            backgroundColor: "aquamarine",
+        },
+        main_scoreboard: {
+            gridArea: "main",
+            display: "flex",
+            flexDirection: "column",
+        },
+        button_scoreboard: {
+
+        },
+        card_collapse: {
+            margin: 8,
+            padding: 2,
+        },
+        before_card: {
+            display: "grid",
+            gridTemplateColumns: "auto auto",
+            gridTemplateAreas: `
+                "stat1 stat2"
+            `,
+            marginBottom: 4,
+        },
+        stat1: {
+            gridArea: "stat1",
+        },
+        stat2: {
+            gridArea: "stat2",
+            display: "flex",
+            justifyContent: "flex-end",
+        },
+        icon: {
+            marginLeft: 8,
+            marginRight: 8,
+        },
+    };
 
     return (
         <div className="canvasDiv" style={{display: "grid", gridTemplateColumns: "720px 880px"}}>
@@ -431,8 +560,195 @@ function GameScreen(props) {
                         position={Position.LEFT}
                         size={500}
                         onClose={() => setIsScoreboardOpen(false)}
-                        usePortal= "true">
-                        SCOREBOARD
+                        usePortal= "true"
+                        style={styles.drawer_scoreboard}
+                    >
+                        {users.map((user, index) => {
+                            function userStatistics(){
+                                let cities = [];
+                                let stations = [];
+                                let utilities = [];
+                                let numberOfHouses = 0;
+                                let numberOfHostels = 0;
+                                let colors = {
+                                    purple: 0,
+                                    aquamarine: 0,
+                                    pink: 0,
+                                    orange: 0,
+                                    red: 0,
+                                    yellow: 0,
+                                    green: 0,
+                                    blue: 0,
+                                };
+
+                                for (let i = 0; i < user.properties.length; i++){
+                                    if (user.properties[i].type === "CityModel") {
+                                        cities.push(user.properties[i]);
+                                        for (let j = 0; j < user.properties[i].buildings.length; j++){
+                                            if (user.properties[i].buildings[j].type === "house")
+                                                numberOfHouses++;
+                                            else if (user.properties[i].buildings[j].type === "hostel")
+                                                numberOfHostels++;
+                                        }
+                                    }
+                                    else if (user.properties[i].type === "StationModel")
+                                        stations.push(user.properties[i]);
+                                    else if (user.properties[i].type === "UtilityModel")
+                                        utilities.push(user.properties[i]);
+                                }
+
+                                for (let i = 0; i < cities.length; i++){
+                                    if (cities[i].color === "purple")
+                                        colors.purple++;
+                                    else if (cities[i].color === "aquamarine")
+                                        colors.aquamarine++;
+                                    else if (cities[i].color === "pink")
+                                        colors.pink++;
+                                    else if (cities[i].color === "orange")
+                                        colors.orange++;
+                                    else if (cities[i].color === "red")
+                                        colors.red++;
+                                    else if (cities[i].color === "yellow")
+                                        colors.yellow++;
+                                    else if (cities[i].color === "green")
+                                        colors.green++;
+                                    else if (cities[i].color === "blue")
+                                        colors.blue++;
+
+                                    console.log("City: " + cities[i].color);
+                                }
+
+                                return {cities: cities, stations: stations, utilities: utilities, numberOfHouses: numberOfHouses, numberOfHostels: numberOfHostels, colors: colors};
+                            }
+
+                            let statisticObj = userStatistics();
+                            return(
+                                <div key={index}>
+                                    <Card interactive={true} elevation={Elevation.TWO} style={styles.card_scoreboard}>
+                                        <div style={styles.header_scoreboard}>
+                                            <div style={styles.username}><H6 style={{marginBottom: 0}}>Username: {user.username}</H6></div>
+                                            <div style={styles.money}><H6 style={{marginBottom: 0}}>Money: {user.money}</H6> <Icon icon="dollar" iconSize={16}/> </div>
+                                        </div>
+                                        <div style={styles.main_scoreboard}>
+                                            <div style={{marginTop: 8, marginBottom: 8}}>
+                                                <div style={styles.before_card}>
+                                                    <H6 style={styles.stat1}>City</H6>
+                                                    <div style={styles.stat2}>
+                                                        {Object.keys(statisticObj.colors).map(color => {
+
+                                                            console.log(statisticObj.colors[color]);
+
+                                                            if (statisticObj.colors[color] !== 0)
+                                                                return <div style={styles.icon}><Icon icon="tag" color={color}/> {statisticObj.colors[color]}/3</div>;
+                                                            else
+                                                                return <></>;
+                                                        })}
+                                                    </div>
+                                                </div>
+                                                <div style={styles.before_card}>
+                                                    <H6 style={styles.stat1}>Station</H6>
+                                                    <div style={styles.stat2}>
+                                                        <div style={styles.icon}><Icon icon="path" /> {statisticObj.stations.length}/4</div>
+                                                    </div>
+                                                </div>
+                                                <div style={styles.before_card}>
+                                                    <H6 style={styles.stat1}>Utility</H6>
+                                                    <div style={styles.stat2}>
+                                                        <div style={styles.icon}><Icon icon="help" /> {statisticObj.utilities.length}/2</div>
+                                                    </div>
+                                                </div>
+                                                <Collapse isOpen={collapseOpen[index]}>
+                                                    <div style={{marginTop: 8, marginBottom: 8}}>
+                                                        <H6>City</H6>
+                                                        <div style={styles.before_card}>
+                                                            <div style={styles.stat1}>Total # of cities: {statisticObj.cities.length}</div>
+                                                            <div style={styles.stat2}>
+                                                                <div style={styles.icon}><Icon icon="home" color="red"/> : {statisticObj.numberOfHouses}</div>
+                                                                <div style={styles.icon}><Icon icon="office" color="orange  "/> : {statisticObj.numberOfHostels}</div>
+                                                            </div>
+                                                        </div>
+                                                        <Collapse isOpen={cityExpand[index]}>
+                                                            <Card interactive={true} elevation={Elevation.ONE} style={styles.card_collapse}>
+                                                                {statisticObj.cities.map((city) => {
+                                                                    function cityStatistics(){
+                                                                        let numHouse = 0;
+                                                                        let numHostel = 0;
+
+                                                                        for (let i = 0; i < city.buildings.length; i++){
+                                                                            if (city.buildings[i].type === "house")
+                                                                                numHouse++;
+                                                                            else if (city.buildings[i].type === "hostel")
+                                                                                numHostel++;
+                                                                        }
+
+                                                                        return {numHouse: numHouse, numHostel: numHostel};
+                                                                    }
+
+                                                                    let statisticObjCity = cityStatistics();
+                                                                    return (
+                                                                        <div style={styles.before_card}>
+                                                                            <div style={styles.stat1}>City: {city.name}</div>
+                                                                            <div style={styles.stat2}>
+                                                                                <div style={styles.icon}><Icon icon="tag" color={city.color}/></div>
+                                                                                <div style={styles.icon}><Icon icon="home" color="red"/> : {statisticObjCity.numHouse}</div>
+                                                                                <div style={styles.icon}><Icon icon="office" color="orange"/> : {statisticObjCity.numHostel}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </Card>
+                                                        </Collapse>
+                                                        <div style={{display: "flex", justifyContent: "flex-end"}}>
+                                                            <Button small={true} icon="expand-all" minimal={true} style={styles.button_scoreboard} onClick={() => handleCityCollapse(index)}/>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{marginTop: 8, marginBottom: 8}}>
+                                                        <H6>Station</H6>
+                                                        <p>Total # of stations: {statisticObj.stations.length}</p>
+                                                        <Collapse isOpen={stationExpand[index]}>
+                                                            <Card interactive={true} elevation={Elevation.ONE} style={styles.card_collapse}>
+                                                                {statisticObj.stations.map((station) => {
+                                                                    return (
+                                                                        <div>
+                                                                            Station: {station.name}
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </Card>
+                                                        </Collapse>
+                                                        <div style={{display: "flex", justifyContent: "flex-end"}}>
+                                                            <Button small={true} icon="expand-all" minimal={true} style={styles.button_scoreboard} onClick={() => handleStationCollapse(index)}/>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{marginTop: 8, marginBottom: 8}}>
+                                                        <H6>Utility</H6>
+                                                        <p>Total # of utilities: {statisticObj.utilities.length}</p>
+                                                        <Collapse isOpen={utilityExpand[index]}>
+                                                            <Card interactive={true} elevation={Elevation.ONE} style={styles.card_collapse}>
+                                                                {statisticObj.utilities.map((utility) => {
+                                                                    return (
+                                                                        <div>
+                                                                            Utility: {utility.name}
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </Card>
+                                                        </Collapse>
+                                                        <div style={{display: "flex", justifyContent: "flex-end"}}>
+                                                            <Button small={true} icon="expand-all" minimal={true} style={styles.button_scoreboard} onClick={() => handleUtilityCollapse(index)}/>
+                                                        </div>
+                                                    </div>
+                                                </Collapse>
+                                                <div style={{display: "flex", justifyContent: "flex-end"}}>
+                                                    <Button small={true} icon="expand-all" minimal={true} style={styles.button_scoreboard} onClick={() => handleOpenCollapse(index)}/>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </Card>
+                                </div>
+                            );
+                        })}
                     </Drawer>
                 </div>
                 <div id="canvas_hand" />
