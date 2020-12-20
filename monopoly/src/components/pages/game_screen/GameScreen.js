@@ -33,6 +33,8 @@ import YourTurnState from "./components/YourTurnState";
 import OtherPlayersTurn from "./components/OtherPlayersTurn";
 import StationCardView from "../../../views/cardView/stationCardView";
 import DetermineStartOrder from "./components/DetermineStartOrder";
+import BoardManager from "../../boardManager";
+import BuyPropertyState from "./components/BuyPropertyState";
 
 function initPixi(){
     PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
@@ -78,7 +80,7 @@ function initPixi(){
                 let price = tiles[i]["price"];
                 let imageType = tiles[i]["image"];
                 image = Globals.resources[imageType].texture;
-                let station = new StationModel(id, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
+                let station = new StationModel(id, name,  rentPrice, mortgagePrice, price, tile, false, image);
                 let stationTile = new OtherPropertyTileView(station);
             }
             else if (type === "CityTile") {
@@ -117,7 +119,7 @@ function initPixi(){
                 if (color === blues.color) {
                     cityGroup = blues;
                 }
-                let city = new CityModel(id, name,  rentPrice, mortgagePrice, price, tile, null, houseCost, hotelCost, null, cityGroup);
+                let city = new CityModel(id, name,  rentPrice, mortgagePrice, price, tile, houseCost, hotelCost, null, color);
                 cityGroup.cities.push(city);
                 let cityTile = new CityTileView(city);
             }
@@ -132,7 +134,7 @@ function initPixi(){
                 let price = tiles[i]["price"];
                 let imageType = tiles[i]["image"];
                 image = Globals.resources[imageType].texture;
-                let utility = new UtilityModel(tile, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
+                let utility = new UtilityModel(tile, name,  rentPrice, mortgagePrice, price, tile, false, image);
                 let utilityTile = new OtherPropertyTileView(utility);
             }
         }
@@ -376,14 +378,15 @@ function initPixiForHand(){
 
 function GameScreen(props) {
     const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
-    const [currentState, setCurrentState] = React.useState({stateName:"waitOtherPlayerTurn", payload:{}});
+    const [currentState, setCurrentState] = React.useState({stateName:"determineStartOrder", payload:{}});
     const [currentView, setCurrentView] = React.useState(null);
 
     useEffect(()=>{
-        initPixi();
-        ipcRenderer.on("nextState", (event, stateObject)=>{
+        //initPixi();
+        ipcRenderer.on("next_state_bf", (event, stateObject)=>{
             setCurrentState(stateObject);
         });
+        //BoardManager.initializeGame({});
         ipcRenderer.on("move_player_bf", (event, args)=>{
             let playerId = args.playerId;
             let destinationTileId = args.destinationTileId;
@@ -408,7 +411,8 @@ function GameScreen(props) {
                         <Button intent={"warning"} onClick={()=>setIsScoreboardOpen(!isScoreboardOpen)}>Scoreboard</Button>
                         {currentState.stateName === "determineStartOrder"
                             ? (<DetermineStartOrder/>) : currentState.stateName === "playNormalTurn"
-                                ? (<YourTurnState/>) : currentState.stateName === "inJailTurn" ? (<JailTurn/>) : (<OtherPlayersTurn/>)}
+                                ? (<YourTurnState/>) : currentState.stateName === "inJailTurn" ? (<JailTurn/>) :
+                                    currentState.stateName === "buyNewProperty" ? (<BuyPropertyState propertyModel={currentState.payload}/>) : (<OtherPlayersTurn/>)}
                     </Card>
                     <Widget />
                     <Drawer

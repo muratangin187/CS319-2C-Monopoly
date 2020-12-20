@@ -10,6 +10,7 @@ const EventManager = require("./eventManager");
 const TradeManager = require("./tradeManager");
 const StateManager = require("./stateManager");
 const Globals = require("../globals");
+const ModelManager = require("./modelManager");
 let house_Count = 32;
 let hotel_Count = 12;
 
@@ -27,10 +28,48 @@ class GameManager{
         this.createListeners();
         networkManager.setStateListener(this.stateTurn);
         networkManager.setStartGameListener(this.startGameListenerCallback);
+        networkManager.setMoveListener(this.moveListener);
+        networkManager.setUpdatePlayerListener(this.updatePlayerListener);
+        networkManager.setUpdatePropertyListener(this.updatePropertiesListener);
     }
 
     getCurrentUser(){
         return networkManager.getCurrentUser();
+    }
+
+    updatePlayerListener(players){
+        players.forEach(newPlayerModel=>{
+            let oldPlayerModel = playerManager.getPlayers()[newPlayerModel.id];
+            if(newPlayerModel.money > oldPlayerModel.money){
+                let diff = newPlayerModel.money - oldPlayerModel.money;
+                mainWindow.send("show_notification", {message: "You earn " + diff + "$.", intent: "success"});
+            }else if(newPlayerModel.money < oldPlayerModel.money){
+                if(newPlayerModel.id === networkManager.getCurrentUser().id){
+                    let diff = oldPlayerModel.money - newPlayerModel.money;
+                    mainWindow.send("show_notification", {message: "You paid " + diff + "$.", intent: "danger"});
+                }
+            }
+            console.log("Player " + newPlayerModel.username + " money(old,new): " + oldPlayerModel.money + ", " + newPlayerModel.money);
+            // TODO CHECK ALL THE PROPERTIES AND REFLECT THEM TO VIEW
+            // TODO DO THIS FOR OTHER PROPERTIES MIGHT BE CHANGE
+            playerManager.getPlayers()[newPlayerModel.id].money = newPlayerModel.money;
+        });
+    }
+
+    updatePropertiesListener(properties){
+        properties.forEach(newPropertyModel=>{
+            ModelManager.getModels()[newPropertyModel.id].ownerId = newPropertyModel.ownerId;
+            ModelManager.getModels()[newPropertyModel.id].isMortgaged= newPropertyModel.isMortgaged;
+            console.log("Property name: " + newPropertyModel.name + " was bought by " + newPropertyModel.ownerId);
+            // TODO CHECK ALL THE PROPERTIES AND REFLECT THEM TO VIEW
+        });
+    }
+
+    moveListener(args){
+        let playerId = args.playerId;
+        let destinationTileId = args.destinationTileId;
+        playerManager.getPlayers()[playerId].currentTile = destinationTileId;
+        mainWindow.send("bm_move" , {playerId, destinationTileId});
     }
 
     startGameListenerCallback(room){
@@ -39,11 +78,20 @@ class GameManager{
             new PropertyModel(0, "Ankara", 10, 1, 100, 2, 0),
             new PropertyModel(1, "Konya", 10, 1, 3, 2, 0)
         ]);
+        //for(let model in ModelManager.getModels()){
+        //    ModelManager.getModels()[model].setOwner(room.users[0].id);
+        //}
+        mainWindow.send("bm_initializeGame" , playerManager.getPlayers());
     }
 
     createListeners(){
         ipcMain.on("create_room_fb", (event, args) => {
             networkManager.createRoom(args);
+        });
+        ipcMain.on("updateTilesAndModels", (event, args)=>{
+            this.tiles = args.tiles;
+            this.models = args.models;
+            console.log("TILES UPDATED: " + JSON.stringify(this.tiles, null, 2));
         });
         ipcMain.on("join_room_fb", (event, args)=>{
             networkManager.joinRoom(args);
@@ -51,10 +99,20 @@ class GameManager{
         ipcMain.on("start_game_fb", (event, args)=>{
             networkManager.startGame(args);
         });
-        ipcMain.on("buy_property_fb", (event, args)=>{
+        ipcMain.on("buy_property_fb", (event, propertyModel)=>{
             const user = networkManager.getCurrentUser();
-            let property = cardManager.getCardById(args[0]);
-            playerManager.addProperty(user.id, property);
+            propertyModel = ModelManager.getModels()[propertyModel.id];
+            if(playerManager.addProperty(user.id, propertyModel)){
+                // ALDI
+                mainWindow.send("show_notification", {message: "You bought " + propertyModel.name + ".", intent: "success"});
+                mainWindow.send("bm_updateCard", playerManager.getPlayers()[networkManager.getCurrentUser().id]);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
+                networkManager.updateProperties([propertyModel]);
+            }else{
+                // PARA YOK
+                mainWindow.send("show_notification", {message: "You dont have enough money to buy " + propertyModel.name + ".", intent: "danger"});
+            }
+            networkManager.nextState();
         });
         ipcMain.on("determineStartOrder_fb", (event, sum)=>{
             networkManager.determineStartOrder(sum);
@@ -92,6 +150,55 @@ class GameManager{
                 // TODO quest check
                 console.log("WENT TO NEW TILE: " + destinationTileId);
                 // TODO call stateTurn according to new tile
+                console.log("THIS.TILES: " + JSON.stringify(Globals.tiles, null, 2));
+                let currentTile = Globals.tiles.find(tile=> tile.tile === destinationTileId);
+                switch(currentTile.type){
+                    case "CornerTile":
+                        break;
+                    case "StationTile":
+                        break;
+                    case "UtilityTile":
+                        break;
+                    case "CityTile":
+                        let cityModel = ModelManager.getModels()[currentTile.tile];
+                        let ownerOfCityId = cityModel.getOwner();
+                        if(ownerOfCityId){
+                            if(ownerOfCityId === networkManager.getCurrentUser().id){
+                                // BU CITY BIZIM
+                                console.log("BU BENIM CITYM");
+                            }else{
+                                // BU CITY BASKASININ
+                                console.log("BU BASKASININ CITYSI");
+                                let rentPrice = cityModel.getRentPrice();
+                                let double = true;
+                                for(let model in ModelManager.getModels()){
+                                    if(ModelManager.getModels()[model].color && ModelManager.getModels()[model].color === cityModel.color){
+                                        if(ModelManager.getModels()[model].ownerId !== cityModel.ownerId){
+                                            double = false;
+                                        }
+                                    }
+                                }
+                                if(double){
+                                    rentPrice = rentPrice * 2;
+                                }
+                                playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                                playerManager.setMoney(ownerOfCityId, rentPrice);
+                                console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
+                                console.log(playerManager.getPlayers()[ownerOfCityId].username + " price: " + playerManager.getMoney(ownerOfCityId));
+                                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfCityId]]);
+                                networkManager.nextState();
+                            }
+                        }else{
+                            // BU CITY ALINMAMIS
+                            this.stateTurn({stateName: "buyNewProperty", payload: cityModel});
+                        }
+                        break;
+                    case "SpecialTile":
+                        break;
+                    default:
+                        console.log("Wrong tile type");
+                        break;
+                }
             }
         });
         //same buildings, bidding commences and the buildings go to the highest bidder
@@ -341,16 +448,19 @@ class GameManager{
     stateTurn(stateObject){
         let stateName = stateObject.stateName;
         let payload = stateObject.payload;
-        console.log("NEXT STATE: " + stateName + " PAYLOAD: " + JSON.stringify(payload));
+        //console.log("NEXT STATE: " + stateName + " PAYLOAD: " + JSON.stringify(payload));
         switch (stateName) {
             case "playNormalTurn":
                 if(playerManager.isInJail(networkManager.getCurrentUser().id)){
                 }else{
-                   mainWindow.send("nextState", {stateName:"playNormalTurn", payload: payload});
+                   mainWindow.send("next_state_bf", {stateName:"playNormalTurn", payload: payload});
                 }
                 break;
             case "waitOtherPlayerTurn":
-                mainWindow.send("nextState", {stateName:"waitOtherPlayerTurn", payload: payload});
+                mainWindow.send("next_state_bf", {stateName:"waitOtherPlayerTurn", payload: payload});
+                break;
+            case "buyNewProperty":
+                mainWindow.send("next_state_bf", stateObject);
                 break;
             default:
                 console.log("GIRMEMEN LAZIMDI");

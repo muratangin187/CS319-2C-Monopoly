@@ -1,5 +1,5 @@
 class PropertyModel {
-    constructor(id, name, rentPrice, mortgagePrice, price, tile, card) {
+    constructor(id, name, rentPrice, mortgagePrice, price, tile) {
         this.id = id;
         this.name = name;
         this.rentPrice = rentPrice;
@@ -7,7 +7,6 @@ class PropertyModel {
         this.price = price;
         this.ownerId = null;
         this.tile = tile;
-        this.card = card;
         this.isMortgaged = false;
     }
     getID(){

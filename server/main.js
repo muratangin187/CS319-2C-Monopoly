@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
         socket.join(args[0].roomName);
         let joinedRoom = rooms.find((room)=>room.room_name === args[0].roomName);
         joinedRoom.users.push({id: socket.id, username: args[0].username});
-        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args[0], users:joinedRoom.users});
+        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args[0].roomName, users:joinedRoom.users});
         socket.to(args[0].roomName).emit("update_room_users_sb", {roomName: args[0].roomName, users:joinedRoom.users} );
     });
 
@@ -53,6 +53,37 @@ io.on('connection', (socket) => {
         let playerId = args.playerId;
         let destinationTileId = args.destinationTileId;
         io.in(getUserRoom(playerId).room_name).emit("move_player_sb", args);
+    });
+
+    socket.on("update_players_bs", (players)=>{
+        console.log("update_players_bs");
+        socket.to(getUserRoom(players[0].id).room_name).emit("update_players_sb", players);
+    });
+
+    socket.on("update_properties_bs", (args)=>{
+        console.log("update_properties_bs");
+        socket.to(getUserRoom(args.currentUserId).room_name).emit("update_property_sb", args.properties);
+    });
+
+    socket.on("next_state_bs", (lastPlayerId)=>{
+        console.log("next_state_bs");
+        let currentRoom = getUserRoom(lastPlayerId);
+        let nextPlayerIndex;
+        currentRoom.users.forEach((user, index)=>{
+            if(user.id === lastPlayerId){
+                if(index === currentRoom.users.length-1){
+                    nextPlayerIndex = 0;
+                }else{
+                    nextPlayerIndex = index + 1;
+                }
+            }
+        });
+        io.to(currentRoom.users[nextPlayerIndex].id).emit("next_state_sb", {stateName: "playNormalTurn", payload: {}});
+        for (let i = 0; i < currentRoom.users.length; i++) {
+            if(i !== nextPlayerIndex){
+                io.to(currentRoom.users[i].id).emit("next_state_sb", {stateName: "waitOtherPlayerTurn", payload: {}});
+            }
+        }
     });
 
     socket.on("determineStartOrder_bs", (args)=>{
@@ -72,9 +103,9 @@ io.on('connection', (socket) => {
         if(isFinished){
             currentRoom.users.sort((a,b)=>a.dice<b.dice ? 1 : -1);
             console.log("Game is starting. First player is " + currentRoom.users[0].username);
-            io.to(currentRoom.users[0].id).emit("nextState", {stateName: "playNormalTurn", payload: {}});
+            io.to(currentRoom.users[0].id).emit("next_state_sb", {stateName: "playNormalTurn", payload: {}});
             for(let i = 1; i < currentRoom.users.length; i++){
-                io.to(currentRoom.users[i].id).emit("nextState", {stateName: "waitOtherPlayerTurn", payload: {}});
+                io.to(currentRoom.users[i].id).emit("next_state_sb", {stateName: "waitOtherPlayerTurn", payload: {}});
             }
         }
     });

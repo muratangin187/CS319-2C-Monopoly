@@ -28,7 +28,7 @@ export default function DetermineStartOrder(props) {
                     outlineColor="#575757"
                     disableIndividual="true"
                 />
-                <Button onClick={rollAll} intent={"success"}>Roll</Button>
+                <Button onClick={()=>{rollAll();}} intent={"success"}>Roll</Button>
             </Card>
         </>
     );

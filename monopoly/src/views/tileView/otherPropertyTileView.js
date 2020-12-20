@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import tileView from "./tileView";
+import Globals from "../../globals";
 
 
 class propertyTileView extends tileView{
@@ -17,7 +18,7 @@ class propertyTileView extends tileView{
     initializeDrawings() {
         super.initializeDrawings();
 
-        let icon = new PIXI.Sprite(this.property.image);
+        let icon = new PIXI.Sprite(Globals.resources[this.property.image].texture);
         icon.width = 30;
         icon.height = 30;
         icon.x = this.x + this.size / 2 - 15;

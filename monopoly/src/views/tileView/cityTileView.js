@@ -20,7 +20,7 @@ class cityTileView extends tileView{
 
         let titleBackground = new PIXI.Graphics();
         titleBackground.name = "titleBackground";
-        titleBackground.beginFill(this.city.cityGroup.color);
+        titleBackground.beginFill(this.city.color);
         titleBackground.lineStyle(1, 0x333333);
         titleBackground.drawRect(this.x, this.y, this.size, this.size/4);
         this.title.addChild(titleBackground);

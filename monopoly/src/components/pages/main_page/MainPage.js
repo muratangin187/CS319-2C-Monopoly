@@ -38,9 +38,6 @@ function MainPage(props) {
                         <Button fullWidth variant='contained' onClick={() => props.setPage("optionPage")}>Options</Button>
                     </Grid>
                     <Grid item style={{width: "inherit"}}>
-                        <Button fullWidth variant='contained' onClick={() => ipcRenderer.send("buy_property_fb", 0)}>Buy Ankara</Button>
-                    </Grid>
-                    <Grid item style={{width: "inherit"}}>
                         <Button fullWidth variant='contained' onClick={handleExit}>Exit</Button>
                     </Grid>
                 </Grid>

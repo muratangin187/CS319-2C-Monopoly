@@ -19,7 +19,7 @@ export default function YourTurnState() {
                 <ReactDice
                     numDice={2}
                     rollDone={(sum, rolledDice)=>{
-                        ipcRenderer.send("move_player_fb", rolledDice);
+                        ipcRenderer.send("move_player_fb", [4,5]);
                     }}
                     ref={dice => setReactDice(dice)}
                     dotColor="#000000"
@@ -28,7 +28,7 @@ export default function YourTurnState() {
                     outlineColor="#575757"
                     disableIndividual="true"
                 />
-                <Button onClick={rollAll} intent={"success"}>Roll</Button>
+                <Button onClick={()=>{rollAll();}} intent={"success"}>Roll</Button>
             </Card>
         </>
     );

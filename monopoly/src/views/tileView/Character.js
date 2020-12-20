@@ -38,8 +38,8 @@ class Character{
         }
         this.image.width =20;
         this.image.height = 30;
-        this.image.x = this.x + this.size/4+ this.id*5;
-        this.image.y = this.y + this.size/4+ this.id*5;
+        this.image.x = this.x + this.size/4;
+        this.image.y = this.y + this.size/4;
 
     }
 
@@ -143,4 +143,4 @@ class Character{
 
 }
 
-module.exports  = Character;
+export default Character;

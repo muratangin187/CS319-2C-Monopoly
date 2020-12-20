@@ -7,9 +7,11 @@ import RoomOptionPage from "./pages/room_option_page/RoomOptionPage";
 import SelectRoomPage from "./pages/select_room_page/SelectRoomPage";
 import RoomLobbyPage from "./pages/room_lobby_page/RoomLobbyPage";
 import GameScreen from "./pages/game_screen/GameScreen";
+import BoardManager from "./boardManager";
+import { AppToaster } from "./toaster";
 
 function App() {
-  const [page, setPage] = useState("gameScreen");
+  const [page, setPage] = useState("mainPage");
   const [rooms, setRooms] = useState([]);
   const [gameRoom, setGameRoom] = useState({});
   const [selectedRoom, setSelectedRoom] = useState({});
@@ -31,12 +33,21 @@ function App() {
           console.log(gameRoom);
           setPage("gameScreen");
       };
+
+      function showNotificationListener(event, args){
+          AppToaster.show(args);
+      }
+
       ipcRenderer.on("get_rooms_bf", get_room_listener);
       ipcRenderer.on("change_page_bf", change_page_listener);
       ipcRenderer.on("start_game_bf", start_game_listener);
+      ipcRenderer.on("show_notification", showNotificationListener);
       return function cleanup()
       {
           ipcRenderer.removeListener("get_room_bf", get_room_listener);
+          ipcRenderer.removeListener("change_page_bf", change_page_listener);
+          ipcRenderer.removeListener("start_game_bf", start_game_listener);
+          ipcRenderer.removeListener("show_notification", showNotificationListener);
       };
   }, []);
 

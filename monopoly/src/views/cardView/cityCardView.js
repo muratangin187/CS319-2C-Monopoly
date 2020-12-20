@@ -20,7 +20,7 @@ class CityCardView extends CardView{
 
         let titleBackground = new PIXI.Graphics();
         titleBackground.name = "titleBackground";
-        titleBackground.beginFill(this.city.cityGroup.color);
+        titleBackground.beginFill(this.city.color);
         titleBackground.lineStyle(2, 0x333333);
         console.log(this.border);
         titleBackground.drawRect(this.border.x, this.border.y, this.border.width-2, this.border.height/5);

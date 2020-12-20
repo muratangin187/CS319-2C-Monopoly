@@ -1,9 +1,10 @@
 const PropertyModel = require("./propertyModel");
 
 class UtilityModel extends PropertyModel{
-    constructor(id, name, rentPrice, mortgagePrice, price, tile, card, isMortgaged, image) {
-        super(id, name, rentPrice, mortgagePrice, price, tile, card, isMortgaged);
+    constructor(id, name, rentPrice, mortgagePrice, price, tile, isMortgaged, image) {
+        super(id, name, rentPrice, mortgagePrice, price, tile, isMortgaged);
         this.image = image;
+        this.type = "UtilityModel";
     }
 
     getID(){
