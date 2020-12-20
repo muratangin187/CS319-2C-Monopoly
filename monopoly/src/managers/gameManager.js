@@ -31,10 +31,27 @@ class GameManager{
         networkManager.setMoveListener(this.moveListener);
         networkManager.setUpdatePlayerListener(this.updatePlayerListener);
         networkManager.setUpdatePropertyListener(this.updatePropertiesListener);
+        networkManager.setAuctionListener(this.auctionListener);
     }
 
     getCurrentUser(){
         return networkManager.getCurrentUser();
+    }
+
+    auctionListener(winnerId, propertyModel, bidAmount, auctionStarter){
+        let currentProperty = ModelManager.getModels()[propertyModel.id];
+        let winnerPlayer = playerManager.getPlayers()[winnerId];
+        playerManager.setMoney(winnerId, -bidAmount);
+        currentProperty.setOwner(winnerId);
+        winnerPlayer.properties.push(currentProperty);
+        if(networkManager.getCurrentUser().id === winnerId){
+            mainWindow.send("update_money_indicator", winnerPlayer.money);
+            mainWindow.send("show_notification", {message: "You win auction for " + propertyModel.name + ".", intent: "success"});
+            mainWindow.send("bm_updateCard", playerManager.getPlayers()[networkManager.getCurrentUser().id]);
+        }
+        if(networkManager.getCurrentUser().id === auctionStarter){
+            networkManager.nextState();
+        }
     }
 
     updatePlayerListener(players){
@@ -44,10 +61,13 @@ class GameManager{
                 let diff = newPlayerModel.money - oldPlayerModel.money;
                 mainWindow.send("show_notification", {message: "You earn " + diff + "$.", intent: "success"});
             }else if(newPlayerModel.money < oldPlayerModel.money){
-                if(newPlayerModel.id === networkManager.getCurrentUser().id){
-                    let diff = oldPlayerModel.money - newPlayerModel.money;
+                let diff = oldPlayerModel.money - newPlayerModel.money;
+                if(newPlayerModel.id === networkManager.getCurrentUser().id) {
                     mainWindow.send("show_notification", {message: "You paid " + diff + "$.", intent: "danger"});
                 }
+            }
+            if(newPlayerModel.id === networkManager.getCurrentUser().id){
+                mainWindow.send("update_money_indicator", newPlayerModel.money);
             }
             console.log("Player " + newPlayerModel.username + " money(old,new): " + oldPlayerModel.money + ", " + newPlayerModel.money);
             // TODO CHECK ALL THE PROPERTIES AND REFLECT THEM TO VIEW
@@ -130,6 +150,7 @@ class GameManager{
                             playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
                             playerManager.setMoney(ownerOfCityId, rentPrice);
                             console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
+                            mainWindow.send("show_notification", {message: "You paid " + rentPrice + "$.", intent: "danger"});
                             console.log(playerManager.getPlayers()[ownerOfCityId].username + " price: " + playerManager.getMoney(ownerOfCityId));
                             networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfCityId]]);
                             networkManager.nextState();
@@ -172,11 +193,12 @@ class GameManager{
                 mainWindow.send("bm_updateCard", playerManager.getPlayers()[networkManager.getCurrentUser().id]);
                 networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
                 networkManager.updateProperties([propertyModel]);
+                networkManager.nextState();
             }else{
                 // PARA YOK
                 mainWindow.send("show_notification", {message: "You dont have enough money to buy " + propertyModel.name + ".", intent: "danger"});
+                networkManager.setAuction(propertyModel, 0);
             }
-            networkManager.nextState();
         });
         ipcMain.on("determineStartOrder_fb", (event, sum)=>{
             networkManager.determineStartOrder(sum);
@@ -276,26 +298,7 @@ class GameManager{
          * args = property
          */
         ipcMain.on("auction_fb", (event, args)=>{
-            let players = playerManager.getPlayers();
-            let newTrade = new TradeManager(players, args);
-
-            StateManager.updateState(newTrade);
-            /**
-             * args = new Bid amount
-             */
-            ipcMain.on("getOffer_fb",(event, args)=>{
-                let cond = newTrade.newBid(this.getCurrentUser(), args);
-
-                if(!cond){
-                    console.log("Please enter valuable amount");
-                }
-            });
-            let winner = newTrade.closeTrade();
-            //ToDO
-            /*
-                If winner length is not zero. Finish the Trade
-             */
-            StateManager.updateState(newTrade);
+            networkManager.setAuction(args.propertyModel, args.bidAmount);
         });
 
         /**
@@ -489,6 +492,18 @@ class GameManager{
                 mainWindow.send("next_state_bf", {stateName:"waitOtherPlayerTurn", payload: payload});
                 break;
             case "buyNewProperty":
+                mainWindow.send("next_state_bf", stateObject);
+                break;
+            case "BidYourTurn":
+                for( let id in stateObject.payload.auction){
+                    stateObject.payload.auction[id] = {name: playerManager.getPlayers()[id], bid: stateObject.payload.auction[id]};
+                }
+                mainWindow.send("next_state_bf", stateObject);
+                break;
+            case "BidOtherPlayerTurn":
+                for( let id in stateObject.payload.auction){
+                    stateObject.payload.auction[id] = {name: playerManager.getPlayers()[id], bid: stateObject.payload.auction[id]};
+                }
                 mainWindow.send("next_state_bf", stateObject);
                 break;
             default:

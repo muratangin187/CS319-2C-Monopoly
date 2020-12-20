@@ -66,6 +66,7 @@ class NetworkManager {
         this.socket.on('send_message_widget_sb', messageObj => {
             mainWindow.send('send_message_widget_bf', messageObj);
         });
+
     }
 
     movePlayer(destinationTileId){
@@ -75,6 +76,16 @@ class NetworkManager {
     setUpdatePlayerListener(func){
         this.socket.on("update_players_sb", (players)=>{
             func(players);
+        });
+    }
+
+    setAuctionListener(func){
+        this.socket.on("auction_sb", args =>{
+            let winnerId = args.winnerId;
+            let propertyModel = args.propertyModel;
+            let bidAmount = args.bidAmount;
+            let auctionStarter = args.auctionStarter;
+            func(winnerId, propertyModel, bidAmount, auctionStarter);
         });
     }
 
@@ -107,6 +118,10 @@ class NetworkManager {
 
     getRoom(roomName){
         return this.rooms.find((room) => room.room_name === roomName);
+    }
+
+    setAuction(propertyModel, bidAmount){
+        this.socket.emit("auction_bs", {propertyModel: propertyModel, bidAmount:bidAmount, userId: this.currentUser.id});
     }
 
     getCurrentUser(){

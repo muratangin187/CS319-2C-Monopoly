@@ -76,7 +76,7 @@ class cityTileView extends tileView{
 
             let titleBackground = new PIXI.Graphics();
             titleBackground.name = "titleBackground";
-            titleBackground.beginFill(this.city.cityGroup.color);
+            titleBackground.beginFill(this.city.color);
             titleBackground.lineStyle(1, 0x333333);
             titleBackground.drawRect(Globals.sizeOfBoard/2 - this.size , Globals.sizeOfBoard/2 - this.size - offset, 200, 50);
             this.popUP.addChild(titleBackground);

@@ -106,7 +106,65 @@ io.on('connection', (socket) => {
 
     socket.on("update_players_bs", (players)=>{
         console.log("update_players_bs");
-        socket.to(getUserRoom(players[0].id).room_name).emit("update_players_sb", players);
+        io.in(getUserRoom(players[0].id).room_name).emit("update_players_sb", players);
+    });
+
+    socket.on("auction_bs", (args)=>{
+        let propertyModel = args.propertyModel;
+        let bidAmount = args.bidAmount;
+        let userId = args.userId;
+        let currentRoom = getUserRoom(userId);
+        console.log("Auction for " + propertyModel.name + ": (" + userId + ") bidded " + bidAmount);
+        if(!currentRoom.auction) {
+            currentRoom.auction = {};
+            currentRoom.users.forEach(user=>currentRoom.auction[user.id] = 0);
+            currentRoom.auctionStarter = userId;
+            // FIRST BID STARTED
+        }else{
+            if(bidAmount === -1){
+                let count = currentRoom.users.length - 2;
+                for(let id in currentRoom.auction){
+                    if(currentRoom.auction[id] === -1){
+                        count--;
+                    }
+                }
+                if(count === 0){
+                    // SELL PROPERTY TO THE HIGHEST BID
+                    let winnerId;
+                    for(let id in currentRoom.auction){
+                        if(currentRoom.auction[id] !== -1 && id !== userId){
+                            winnerId = id;
+                        }
+                    }
+                    io.to(currentRoom.room_name).emit("auction_sb", {winnerId: winnerId, propertyModel: propertyModel, bidAmount: currentRoom.auction[winnerId], auctionStarter: currentRoom.auctionStarter});
+                    delete currentRoom.auction;
+                    delete currentRoom.auctionStarter;
+                    return;
+                }
+            }
+            // NORMAL BIDDING
+            currentRoom.auction[userId] = bidAmount;
+        }
+
+        let nextPlayerIndex;
+        currentRoom.users.forEach((user, index)=>{
+            if(user.id === userId){
+                if(index === currentRoom.users.length-1){
+                    nextPlayerIndex = 0;
+                }else{
+                    nextPlayerIndex = index + 1;
+                }
+            }
+        });
+
+        io.to(currentRoom.users[nextPlayerIndex].id).emit("next_state_sb", {stateName: "BidYourTurn", payload: {auction:currentRoom.auction, propertyModel:propertyModel}});
+        for (let i = 0; i < currentRoom.users.length; i++) {
+            if(i !== nextPlayerIndex){
+                io.to(currentRoom.users[i].id).emit("next_state_sb", {stateName: "BidOtherPlayerTurn", payload: {auction:currentRoom.auction, propertyModel:propertyModel}});
+            }
+        }
+
+
     });
 
     socket.on("update_properties_bs", (args)=>{

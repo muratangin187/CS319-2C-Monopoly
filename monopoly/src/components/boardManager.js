@@ -32,6 +32,8 @@ class BoardManager{
         this.views = {};
         this.tiles = {};
         this.models = {};
+        this.selectedCardId = -1;
+        this.isClickedCard = false;
         ipcRenderer.on("bm_initializeGame", (event, args)=>{
             setTimeout(()=>{
                 this.initializeGame(args);
@@ -165,11 +167,44 @@ class BoardManager{
     }
 
     updateCards(player){
+        let self = this;
+        function offset(playerId, selectedId) {
+            if(self.selectedCardId !== -1) return;
+            let foundUp =false;
+            let foundDown =false;
+            for (let i = 0; i < cardCount; i++) {
+                if(i < 10){
+                    if (!foundUp) {
+                        self.views[playerId].cards[i].card.x =self.views[playerId].cards[i].card.oldx +  i * 30;
+                    }
+                    else {
+                        self.views[playerId].cards[i].card.x = self.views[playerId].cards[i].card.oldx + i * 30 + 120;
+                    }
+                    if (self.views[playerId].cards[i].id === selectedId) {
+                        foundUp =true;
+                    }
+                }else{
+                    if (!foundDown) {
+                        self.views[playerId].cards[i].card.x =self.views[playerId].cards[i].card.oldx +  (i-10) * 30;
+                    }
+                    else {
+                        self.views[playerId].cards[i].card.x = self.views[playerId].cards[i].card.oldx + (i-10) * 30 + 120;
+                    }
+                    if (self.views[playerId].cards[i].id === selectedId) {
+                        foundDown =true;
+                    }
+                }
+            }
+        }
         if(this.views[player.id].cards)
-            this.views[player.id].cards.forEach(card=>card.destroy());
+            this.views[player.id].cards.forEach(card=>card.card.destroy());
         this.views[player.id].cards = [];
         console.log("updateCard started");
-        player.properties.forEach(property=>{
+        let maxWidth = 100;
+        let cardCount = player.properties.length + player.cards.length;
+        if(cardCount>= 2)
+            maxWidth = (cardCount-2)*30 + 205;
+        player.properties.forEach((property, index)=>{
             if (property.type === "CityModel"){
                 this.views[player.id].cards.push(new CityCardView(property));
             }else if(property.type === "StationModel"){
@@ -182,6 +217,67 @@ class BoardManager{
             else if(property.type === "UtilityModel"){
                 this.views[player.id].cards.push(new UtilityCardView(property));
             }
+            let lastCard = this.views[player.id].cards[this.views[player.id].cards.length - 1];
+            if(index >= 10){
+                lastCard.card.x = (720 - maxWidth) / 2;
+                lastCard.card.oldx = lastCard.card.x;
+                lastCard.card.x += (index-10) * 30;
+                lastCard.card.y += 210;
+            }else{
+                lastCard.card.x = (720 - maxWidth) / 2;
+                lastCard.card.oldx = lastCard.card.x;
+                lastCard.card.x += index * 30;
+            }
+
+            if(this.selectedCardId === property.id){
+                lastCard.selectedBorder = new PIXI.Graphics();
+                lastCard.selectedBorder.name = "selectedBorder";
+                lastCard.selectedBorder.lineStyle(5, 0x000);
+                lastCard.selectedBorder.drawRect(0, 0, 150, 242);
+                lastCard.selectedBorder.position.set(lastCard.border.x,lastCard.border.y);
+                lastCard.card.addChild(lastCard.selectedBorder);
+                offset(player.id, lastCard.id);
+            }
+
+            lastCard.setCallBack((selectedId) =>{
+                offset(player.id, selectedId);
+            },(selectedId)=>{
+                if(this.selectedCardId !== -1) return;
+                for (let i = 0; i < cardCount; i++) {
+                    if(i < 10) {
+                        this.views[player.id].cards[i].card.x = this.views[player.id].cards[i].card.oldx + i * 30;
+                    }else {
+                        this.views[player.id].cards[i].card.x = this.views[player.id].cards[i].card.oldx + (i - 10) * 30;
+                    }
+                }
+            }, (card)=>{
+                if(this.selectedCardId !== -1){
+                    for (let i = 0; i < cardCount; i++) {
+                        if(i < 10)
+                            this.views[player.id].cards[i].card.x = this.views[player.id].cards[i].card.oldx + i * 30;
+                        else
+                            this.views[player.id].cards[i].card.x = this.views[player.id].cards[i].card.oldx + (i-10) * 30;
+                        if(this.views[player.id].cards[i].id === this.selectedCardId)
+                            this.views[player.id].cards[i].selectedBorder.destroy();
+                        this.views[player.id].cards[i].card.removeChild(this.views[player.id].cards[i].selectedBorder);
+                    }
+                    this.selectedCardId = -1;
+                }
+                offset(player.id, card.id);
+                this.selectedCardId = card.id;
+                card.selectedBorder = new PIXI.Graphics();
+                card.selectedBorder.name = "selectedBorder";
+                card.selectedBorder.lineStyle(5, 0x000);
+                card.selectedBorder.drawRect(0, 0, 150, 242);
+                card.selectedBorder.position.set(card.border.x,card.border.y);
+                card.card.addChild(card.selectedBorder);
+                console.log("SELECTED CARD: " + this.selectedCardId);
+                this.isClickedCard = true;
+            });
+
+            console.log("updateCard iteration");
+        });
+        player.cards.forEach(card=>{
             console.log("updateCard iteration");
         });
         console.log("updateCard finished");

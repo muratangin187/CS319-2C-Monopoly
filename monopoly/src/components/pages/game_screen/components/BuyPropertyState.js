@@ -8,7 +8,7 @@ export default function BuyPropertyState(props) {
     }
 
     function pass(){
-
+        ipcRenderer.send("auction_fb", {propertyModel: props.propertyModel, bidAmount: 0});
     }
 
     return (
