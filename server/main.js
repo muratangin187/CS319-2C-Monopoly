@@ -172,12 +172,12 @@ io.on('connection', (socket) => {
         socket.to(getUserRoom(args.currentUserId).room_name).emit("update_property_sb", args.properties);
     });
 
-    socket.on("next_state_bs", (lastPlayerId)=>{
+    socket.on("next_state_bs", (arg)=>{
         console.log("next_state_bs");
-        let currentRoom = getUserRoom(lastPlayerId);
+        let currentRoom = getUserRoom(arg.lastPlayerId);
         let nextPlayerIndex;
         currentRoom.users.forEach((user, index)=>{
-            if(user.id === lastPlayerId){
+            if(user.id === arg.lastPlayerId){
                 if(index === currentRoom.users.length-1){
                     nextPlayerIndex = 0;
                 }else{
@@ -185,10 +185,19 @@ io.on('connection', (socket) => {
                 }
             }
         });
-        io.to(currentRoom.users[nextPlayerIndex].id).emit("next_state_sb", {stateName: "playNormalTurn", payload: {}});
-        for (let i = 0; i < currentRoom.users.length; i++) {
-            if(i !== nextPlayerIndex){
-                io.to(currentRoom.users[i].id).emit("next_state_sb", {stateName: "waitOtherPlayerTurn", payload: {}});
+        if(arg.double){
+            io.to(arg.lastPlayerId).emit("next_state_sb", {stateName: "playNormalTurn", payload: {}});
+            for (let i = 0; i < currentRoom.users.length; i++) {
+                if(currentRoom.users[i].id !== arg.lastPlayerId){
+                    io.to(currentRoom.users[i].id).emit("next_state_sb", {stateName: "waitOtherPlayerTurn", payload: {}});
+                }
+            }
+        }else{
+            io.to(currentRoom.users[nextPlayerIndex].id).emit("next_state_sb", {stateName: "playNormalTurn", payload: {}});
+            for (let i = 0; i < currentRoom.users.length; i++) {
+                if(i !== nextPlayerIndex){
+                    io.to(currentRoom.users[i].id).emit("next_state_sb", {stateName: "waitOtherPlayerTurn", payload: {}});
+                }
             }
         }
     });
