@@ -112,6 +112,7 @@ io.on('connection', (socket) => {
     socket.on("auction_bs", (args)=>{
         let propertyModel = args.propertyModel;
         let bidAmount = args.bidAmount;
+        console.log(bidAmount + " is the bid Amount");
         let userId = args.userId;
         let currentRoom = getUserRoom(userId);
         console.log("Auction for " + propertyModel.name + ": (" + userId + ") bidded " + bidAmount);
@@ -163,8 +164,6 @@ io.on('connection', (socket) => {
                 io.to(currentRoom.users[i].id).emit("next_state_sb", {stateName: "BidOtherPlayerTurn", payload: {auction:currentRoom.auction, propertyModel:propertyModel}});
             }
         }
-
-
     });
 
     socket.on("update_properties_bs", (args)=>{

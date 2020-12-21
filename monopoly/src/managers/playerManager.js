@@ -168,22 +168,22 @@ class PlayerManager{
     /**
      * Used to sell one of players buildings to bank
      * @param playerId: id of the player
-     * @param property: property in which the building is to be removed
-     * @param building: building to be removed
+     * @param propertyID: propertyID in which the building is to be removed
+     * @param buildingType: building to be removed
      * @returns {boolean}
      */
-    sellBuilding(playerId, property, building) {
+    sellBuilding(playerId, propertyID, buildingType) {
         let player = this.players[playerId];
 
         let cost = building.cost;
 
-        let playerProperty = player.properties.find(myp => myp.id === property.id);//Why can't access parent's variable
+        let playerProperty = player.properties.find(myp => myp.id === propertyID);
 
         let houses = playerProperty.houseCount;
         let hotels = playerProperty.hotelCount;
 
         //player is selling a hotel to the bank
-        if (building.type === 'hotel') {
+        if (buildingType === 'hotel') {
             if (hotels === 1) {
                 playerProperty.hotelCount = 0;
                 playerProperty.buildings = [];
@@ -194,7 +194,7 @@ class PlayerManager{
         }
 
         //player is selling a house to the bank
-        if (building.type === 'house') {
+        if (buildingType === 'house') {
             if (houses === 0) {
                 return false;
             }

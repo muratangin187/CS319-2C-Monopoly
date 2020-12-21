@@ -179,13 +179,18 @@ class GameManager{
                                 }
                             }
                             rentPrice = rentPrice * counter;
-                            playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            let cond = playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            if(!cond){
+                                mainWindow.send("show_notification", {message: "You need to sell property", intent: "danger"});
+                                mainWindow.send("next_state_bf", {stateName: "SellState", payload: {}});
+                                cond = playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            }
+
                             playerManager.setMoney(ownerOfStationId, rentPrice);
                             console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
                             mainWindow.send("show_notification", {message: "You paid " + rentPrice + "$.", intent: "danger"});
                             console.log(playerManager.getPlayers()[ownerOfStationId].username + " price: " + playerManager.getMoney(ownerOfStationId));
                             networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfStationId]]);
-                            networkManager.nextState();
                         }
                     }else{
                         // BU CITY ALINMAMIS
@@ -216,13 +221,19 @@ class GameManager{
                                 counter = 10;
                             }
                             let rentPrice = (destinationTileId - oldTile) * counter;
-                            playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            let cond = playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            if(!cond){
+                                mainWindow.send("show_notification", {message: "You need to sell property", intent: "danger"});
+                                mainWindow.send("next_state_bf", {stateName: "SellState", payload: {}});
+                                cond = playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            }
+
+
                             playerManager.setMoney(ownerOfUtilityId, rentPrice);
                             console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
                             mainWindow.send("show_notification", {message: "You paid " + rentPrice + "$.", intent: "danger"});
                             console.log(playerManager.getPlayers()[ownerOfUtilityId].username + " price: " + playerManager.getMoney(ownerOfUtilityId));
                             networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfUtilityId]]);
-                            networkManager.nextState();
                         }
                     }else{
                         // BU CITY ALINMAMIS
@@ -251,13 +262,22 @@ class GameManager{
                             if(double){
                                 rentPrice = rentPrice * 2;
                             }
-                            playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            let cond = playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            if(!cond){
+                                mainWindow.send("show_notification", {message: "You need to sell property", intent: "danger"});
+                                mainWindow.send("next_state_bf", {stateName: "SellState", payload: {}});
+
+                                cond = playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
+                            }
+
                             playerManager.setMoney(ownerOfCityId, rentPrice);
                             console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
-                            mainWindow.send("show_notification", {message: "You paid " + rentPrice + "$.", intent: "danger"});
+                            mainWindow.send("show_notification", {
+                                message: "You paid " + rentPrice + "$.",
+                                intent: "danger"
+                            });
                             console.log(playerManager.getPlayers()[ownerOfCityId].username + " price: " + playerManager.getMoney(ownerOfCityId));
                             networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfCityId]]);
-                            networkManager.nextState();
                         }
                     }else{
                         // BU CITY ALINMAMIS
@@ -365,9 +385,7 @@ class GameManager{
          */
         ipcMain.on("set_building_fb", (event, args)=>{
             const user = networkManager.getCurrentUser();
-            let property = cardManager.getCardById(args[0]);
-
-            let type = args[1].type;
+            console.log("Property ID " + args);
 
             if(type === 'hotel' && hotel_Count === 0)
                     console.log("No hotel left to build");
@@ -396,28 +414,42 @@ class GameManager{
         /**
          * args = {PropertyModelId, BuildingModel}
          */
-        ipcMain.on("sell_building", (event, args)=>{
+        ipcMain.on("sell_building_house_fb", (event, args)=>{
             const user = networkManager.getCurrentUser();
             let property = cardManager.getCardById(args[0]);
 
             let type = args[1].type;
 
-            if(type === 'hotel' && hotel_Count === 12)
-                console.log("All hotels are in the bank, there cannot be a hotel on the board.");
-
-            else if(type === 'house' && house_Count === 32)
+            if(house_Count === 32)
                 console.log("All houses are in the bank, there cannot be a house on the board.");
 
             else {
-                let cond = playerManager.sellBuilding(user.id, property, args[1]);
+                let cond = playerManager.sellBuilding(user.id, args, "house");
 
                 if (cond) {
                     console.log("Building is removed successfully!");
-                    if (type === 'hotel') {
-                        hotel_Count += 1;
-                    } else if (type === 'house') {
-                        house_Count += 1;
-                    }
+
+                    house_Count += 1;
+                } else {
+                    console.log('Failed to remove building due to an error.')
+                }
+            }
+        });
+
+        ipcMain.on("sell_building_hotel_fb", (event, args)=>{
+            const user = networkManager.getCurrentUser();
+            console.log("Property ID " + args);
+
+            if(hotel_Count === 32)
+                console.log("All hotels are in the bank, there cannot be a house on the board.");
+
+            else {
+                let cond = playerManager.sellBuilding(user.id, args, "hotel");
+
+                if (cond) {
+                    console.log("Building is removed successfully!");
+
+                    hotel_Count += 1;
                 } else {
                     console.log('Failed to remove building due to an error.')
                 }
@@ -431,6 +463,12 @@ class GameManager{
         ipcMain.on("auction_fb", (event, args)=>{
             networkManager.setAuction(args.propertyModel, args.bidAmount);
         });
+
+        ipcMain.on("sell_property_fb", (event, args)=>{//property ID
+            let property = ModelManager.getModels()[args];
+            networkManager.setAuction(property, 0);
+        });
+
 
         /**
          * args: {newTile:number, }
@@ -1027,16 +1065,19 @@ class GameManager{
                 mainWindow.send("show_notification", {message: "You have won a crossword competition—Collect $100!", intent: "primary"});
 
             }
+            else if(card.id === 16) {
+                mainWindow.send("show_notification", {message: "You get a Natural Disaster Card!", intent: "success"});
+
+            }
+            else if(card.id === 17) {
+                mainWindow.send("show_notification", {message: "You get a Profit Card!", intent: "success"});
+
+            }
         }
         else { //6-16-17
             playerManager.addCard(playerID, card);
             if(card.id === 6)
                 mainWindow.send("show_notification", {message: "You get a Jail Free Card!", intent: "success"});
-            else if(card.id === 16)
-                mainWindow.send("show_notification", {message: "You get a Natural Disaster Card!", intent: "success"});
-
-            else if(card.id === 17)
-                mainWindow.send("show_notification", {message: "You get a Profit Card!", intent: "success"});
 
         }
     }
