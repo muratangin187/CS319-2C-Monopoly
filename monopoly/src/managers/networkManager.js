@@ -26,10 +26,6 @@ class NetworkManager {
             mainWindow.send("update_room_users_bf", args.users);
         });
 
-        this.socket.on("move_player_sb", (args) => {
-            mainWindow.send("move_player_bf", args);
-        });
-
         /**
          * signal_from: get_characters_sb
          * signal_to: get_characters_bf

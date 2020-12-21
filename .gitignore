@@ -3,6 +3,7 @@ monopoly/.idea
 monopoly/node_modules
 monopoly/package-lock.json
 monopoly/yarn.lock
+monopoly/builds
 server/.idea
 server/package-lock.json
 server/node_modules

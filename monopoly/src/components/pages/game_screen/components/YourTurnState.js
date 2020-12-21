@@ -19,7 +19,7 @@ export default function YourTurnState() {
                 <ReactDice
                     numDice={2}
                     rollDone={(sum, rolledDice)=>{
-                        ipcRenderer.send("move_player_fb", rolledDice);
+                        ipcRenderer.send("move_player_fb", [6,1]);
                     }}
                     ref={dice => setReactDice(dice)}
                     dotColor="#000000"

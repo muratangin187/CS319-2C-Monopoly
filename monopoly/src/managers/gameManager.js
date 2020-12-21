@@ -135,7 +135,7 @@ class GameManager{
             // set state to according to tile
             console.log("WENT TO NEW TILE: " + destinationTileId);
             // TODO call stateTurn according to new tile
-            console.log("THIS.TILES: " + JSON.stringify(Globals.tiles, null, 2));
+            //console.log("THIS.TILES: " + JSON.stringify(Globals.tiles, null, 2));
             let currentTile = Globals.tiles.find(tile=> tile.tile === destinationTileId);
             switch(currentTile.type){
                 case "CornerTile":
@@ -603,7 +603,9 @@ class GameManager{
             if(card.id === 0){
                 mainWindow.send("show_notification", {message: "Advance to GO", intent: "success"});
 
-                this.moveAction(0);
+                setTimeout(()=>{
+                    this.moveAction(0);
+                }, 2000);
             }
             else if(card.id === 1){
                 mainWindow.send("show_notification", {message: "Bank error in your favor—Collect $200", intent: "success"});
@@ -622,7 +624,9 @@ class GameManager{
             else if(card.id === 5){
                 mainWindow.send("show_notification", {message: "Go to Jail–Go directly to jail–Do not pass Go–Do not collect $200!", intent: "danger"});
                 playerManager.sendJail(playerID);
-                this.moveAction(10);
+                setTimeout(()=>{
+                    this.moveAction(10);
+                }, 2000);
             }
 
             else if(card.id === 6){
@@ -694,7 +698,9 @@ class GameManager{
             if(card.id === 0){
                 mainWindow.send("show_notification", {message: "Advance to GO", intent: "success"});
 
-                this.moveAction(0);
+                setTimeout(()=>{
+                    this.moveAction(0);
+                }, 2000);
             }
             else if(card.id === 1){
                 //move illinois
@@ -706,7 +712,9 @@ class GameManager{
 
                 }
 
-                this.moveAction(24);
+                setTimeout(()=>{
+                    this.moveAction(24);
+                }, 2000);
             }
             else if(card.id === 2){
                 mainWindow.send("show_notification", {message: "Advance to St. Charles Place – If you pass Go, collect $200", intent: "success"});
@@ -716,7 +724,9 @@ class GameManager{
                     mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
 
                 }
-                this.moveAction(11);
+                setTimeout(()=>{
+                    this.moveAction(11);
+                }, 2000);
             }
             else if(card.id === 3){
                 //,"Advance token to nearest Utility. If unowned, you may buy it from the Bank.
@@ -735,7 +745,9 @@ class GameManager{
                     //     playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     // }
 
-                    this.moveAction(28);
+                    setTimeout(()=>{
+                        this.moveAction(28);
+                    }, 2000);
                 }
 
                 if(locationID === 22){
@@ -748,7 +760,9 @@ class GameManager{
                     //     playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     // }
 
-                    this.moveAction(28);
+                    setTimeout(()=>{
+                        this.moveAction(28);
+                    }, 2000);
                 }
 
                 if(locationID === 7){
@@ -761,7 +775,9 @@ class GameManager{
                     //     playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     // }
 
-                    this.moveAction(5);
+                    setTimeout(()=>{
+                        this.moveAction(5);
+                    }, 2000);
                 }
             }
             else if(card.id === 4){
@@ -781,7 +797,9 @@ class GameManager{
                         playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     }
 
-                    this.moveAction(35);
+                    setTimeout(()=>{
+                        this.moveAction(35);
+                    }, 2000);
                 }
 
                 if(locationID === 22){
@@ -794,7 +812,9 @@ class GameManager{
                         playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     }
 
-                    this.moveAction(25);
+                    setTimeout(()=>{
+                        this.moveAction(25);
+                    }, 2000);
                 }
 
                 if(locationID === 7){
@@ -807,7 +827,9 @@ class GameManager{
                         playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     }
 
-                    this.moveAction(5);
+                    setTimeout(()=>{
+                        this.moveAction(5);
+                    }, 2000);
                 }
 
             }
@@ -821,14 +843,18 @@ class GameManager{
                 //,"Go Back 3 Spaces"
                 mainWindow.send("show_notification", {message: "Go Back 3 Spaces", intent: "primary"});
 
-                this.moveAction((locationID - 3));
+                setTimeout(()=>{
+                    this.moveAction(locationID - 3);
+                }, 2000);
             }
             else if(card.id === 8){
                 //,"Go to Jail–Go directly to Jail–Do not pass Go, do not collect $200"
                 mainWindow.send("show_notification", {message: "Go to Jail–Go directly to Jail–Do not pass Go, do not collect $200", intent: "danger"});
 
                 playerManager.sendJail(playerID);
-                this.moveAction(10);
+                setTimeout(()=>{
+                    this.moveAction(10);
+                }, 2000);
             }
             else if(card.id === 9){
                 //,"Make general repairs on all your property–For each house pay $25–For each hotel $100"
@@ -852,13 +878,17 @@ class GameManager{
 
                 }
 
-                this.moveAction(5);
+                setTimeout(()=>{
+                    this.moveAction(5);
+                }, 2000);
             }
             else if(card.id === 12){
                 //,"Take a walk on the Boardwalk–Advance token to Boardwalk"
                 mainWindow.send("show_notification", {message: "Take a walk on the Boardwalk–Advance token to Boardwalk", intent: "primary"});
 
-                this.moveAction(39);
+                setTimeout(()=>{
+                    this.moveAction(39);
+                }, 2000);
             }
             else if(card.id === 13){
                 //,"You have been elected Chairman of the Board–Pay each player $50"
