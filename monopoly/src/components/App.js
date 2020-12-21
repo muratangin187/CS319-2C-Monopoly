@@ -11,9 +11,10 @@ import CharacterList from "./pages/room_lobby_page/components/CharacterList";
 import Chat from "./pages/room_lobby_page/components/Chat";
 import BoardManager from "./boardManager";
 import { AppToaster } from "./toaster";
+import HowToPlay from "./pages/how_to_page/HowToPlay";
 
 function App() {
-  const [page, setPage] = useState("gameScreen");
+  const [page, setPage] = useState("mainPage");
   const [rooms, setRooms] = useState([]);
   const [gameRoom, setGameRoom] = useState({});
   const [selectedRoom, setSelectedRoom] = useState({});
@@ -104,9 +105,16 @@ function App() {
               </div>
           );
 
+      case "howToPage":
+          return(
+              <div className="App">
+                  <HowToPlay setPage={setPage}/>
+              </div>
+          );
+
 
     default:
-      return (<div className="App">Default Empty Page</div>);
+      return (<div className="App"></div>);
   }
 }
 
