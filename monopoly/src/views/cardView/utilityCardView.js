@@ -18,15 +18,6 @@ class UtilityCardView extends CardView{
     initializeDrawings() {
         super.initializeDrawings();
 
-        let titleBackground = new PIXI.Graphics();
-        titleBackground.name = "titleBackground";
-        titleBackground.beginFill(0xf0f7f1);
-        titleBackground.lineStyle(2, 0x333333);
-        console.log(this.border);
-        titleBackground.drawRect(this.border.x, this.border.y, this.border.width-2, this.border.height/5);
-        titleBackground.alpha = 0.9;
-        this.title.addChild(titleBackground);
-
         let icon = new PIXI.Sprite(this.utility.image);
         icon.width = 70;
         icon.height = 70;

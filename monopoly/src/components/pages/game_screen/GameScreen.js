@@ -37,6 +37,7 @@ import BoardManager from "../../boardManager";
 import BuyPropertyState from "./components/BuyPropertyState";
 import BidYourTurn from "./components/BidYourTurn";
 import BidOtherPlayerTurn from "./components/BidOtherPlayerTurn";
+import JailTurn from "./components/JailTurn";
 
 function initPixi(){
     PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
@@ -419,9 +420,11 @@ function GameScreen(props) {
                         <Button intent="primary" active={false} icon="dollar" style={{float:"right"}}>{money}</Button>
                         {currentState.stateName === "determineStartOrder"
                             ? (<DetermineStartOrder/>) : currentState.stateName === "playNormalTurn"
-                                ? (<YourTurnState/>) : currentState.stateName === "inJailTurn" ? (<JailTurn/>) :
+                                ? (<YourTurnState/>) : currentState.stateName === "waitInJail" ? (<JailTurn arg={currentState.payload}/>) :
                                     currentState.stateName === "buyNewProperty" ? (<BuyPropertyState propertyModel={currentState.payload}/>) :
-                                        currentState.stateName === "BidYourTurn" ? (<BidYourTurn arg={currentState.payload} money={money}/>) : currentState.stateName === "BidOtherPlayerTurn" ? (<BidOtherPlayerTurn arg={currentState.payload} money={money}/>) : (<OtherPlayersTurn/>)}
+                                        currentState.stateName === "BidYourTurn" ? (<BidYourTurn arg={currentState.payload} money={money}/>) :
+                                            currentState.stateName === "BidOtherPlayerTurn" ? (<BidOtherPlayerTurn arg={currentState.payload} money={money}/>) :
+                                                currentState.stateName === "aa" ? (<JailTurn arg={currentState.payload}/>) : (<OtherPlayersTurn/>)}
                     </Card>
                     <Widget
                         handleNewUserMessage={handleNewUserMessage}
