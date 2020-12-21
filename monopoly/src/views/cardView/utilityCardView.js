@@ -1,5 +1,6 @@
 import CardView from "./cardView";
 import * as PIXI from 'pixi.js';
+import Globals from "../../globals";
 
 
 class UtilityCardView extends CardView{
@@ -27,23 +28,24 @@ class UtilityCardView extends CardView{
         titleBackground.alpha = 0.9;
         this.title.addChild(titleBackground);
 
-        let icon = new PIXI.Sprite(this.utility.image);
-        icon.width = 70;
-        icon.height = 70;
-        icon.x = this.border.width / 2 - 35;
-        icon.y = titleBackground.y + 30;
+        let icon = new PIXI.Sprite(Globals.resources[this.utility.image].texture);
+        icon.width = 35;
+        icon.height = 35;
+        icon.x = this.border.width / 2 - icon.width/2;
+        icon.y = titleBackground.y + 40;
         this.card.addChild(icon);
 
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",
+            fontSize : 14,
         });
-        let titleText =new PIXI.Text(this.utility.name, style);
-        titleText.name = "titleText";
-        titleText.anchor.x =0.5;
-        titleText.anchor.y =0.5;
-        titleText.x = titleBackground.getBounds().x + titleBackground.getBounds().width / 2;
-        titleText.y = titleBackground.getBounds().y + titleBackground.getBounds().height / 2;
-        this.title.addChild(titleText);
+        this.titleText =new PIXI.Text(this.utility.name, {...style, align:"center"});
+        this.titleText.name = "titleText";
+        this.titleText.anchor.x =0.5;
+        this.titleText.anchor.y =0.5;
+        this.titleText.x = this.border.x + this.border.width / 2;
+        this.titleText.y = titleBackground.y + titleBackground.height / 2;
+        this.title.addChild(this.titleText);
 
 
         let propText = new PIXI.Text(`If ONE Utility is owned, 
@@ -52,8 +54,8 @@ the dice when the opponent
 rolled, but if BOTH
 Utilities are owned, rent
 is 10x the amount shown
-on the dice`,{...style, fontSize: 16, align: "center"});
-        let costText = new PIXI.Text(`Mortgage Value ${this.utility.mortgagePrice}`,{...style, align: "center", fontSize: 16});
+on the dice`,{...style, fontSize: 10, align: "center"});
+        let costText = new PIXI.Text(`Mortgage Value ${this.utility.mortgagePrice}$`,{...style, align: "center", fontSize: 11});
 
         propText.anchor.x =0.6;
         propText.anchor.y =0.6;
@@ -62,8 +64,8 @@ on the dice`,{...style, fontSize: 16, align: "center"});
         costText.anchor.y =0.5;
         costText.x = this.border.x + this.border.width / 2;
 
-        propText.y = this.border.y + this.border.height/4 + this.border.height/4;
-        costText.y = propText.y + this.border.height/4;
+        propText.y = this.border.y + 140;
+        costText.y = this.border.y + this.border.height + 12;
 
         this.content.addChild(propText);
         this.content.addChild(costText);
