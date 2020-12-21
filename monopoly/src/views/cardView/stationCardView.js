@@ -20,7 +20,7 @@ class StationCardView extends CardView{
 
         let titleBackground = new PIXI.Graphics();
         titleBackground.name = "titleBackground";
-        titleBackground.beginFill(0x000000);
+        titleBackground.beginFill(0xf0f7f1);
         titleBackground.lineStyle(2, 0x333333);
         console.log(this.border);
         titleBackground.drawRect(this.border.x, this.border.y, this.border.width-2, this.border.height/5);
@@ -30,7 +30,7 @@ class StationCardView extends CardView{
         const style = new PIXI.TextStyle({
             fontFamily: "\"Times New Roman\", Times, serif",
         });
-        this.titleText =new PIXI.Text(this.station.name, {...style, fill: "white"});
+        this.titleText =new PIXI.Text(this.station.name, {...style, fontSize: 12});
         this.titleText.name = "titleText";
         this.titleText.anchor.x =0.5;
         this.titleText.anchor.y =0.5;
