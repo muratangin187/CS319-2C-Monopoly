@@ -1,6 +1,7 @@
 import {Button, Card} from "@blueprintjs/core";
 import ReactDice from "react-dice-complete";
 import React from "react";
+import BoardManager from "../../../boardManager";
 const {ipcRenderer} = require('electron');
 
 export default function YourTurnState() {
@@ -9,7 +10,9 @@ export default function YourTurnState() {
     function rollAll() {
         reactDice.rollAll()
     }
-
+    function sell(){
+        ipcRenderer.send("sell_fb", 0);
+    }
     return (
         <>
             <Card style={{margin: "20px",backgroundColor: "#CEE5D1"}} elevation={2}>
@@ -29,6 +32,8 @@ export default function YourTurnState() {
                     disableIndividual="true"
                 />
                 <Button onClick={()=>{rollAll();}} intent={"success"}>Roll</Button>
+                <Button onClick={()=>{sell();}} intent={"warning"}>Sell Property</Button>
+
             </Card>
         </>
     );

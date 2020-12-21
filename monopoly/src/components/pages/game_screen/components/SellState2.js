@@ -29,7 +29,9 @@ export default function SellState(props) {
         else
             ipcRenderer.send("sell_building_hotel_fb", BoardManager.getCardID());
     }
-
+    function back(){
+        ipcRenderer.send("goBack_fb", true);
+    }
     return (
         <>
             <Card style={{margin: "20px"}} elevation={2}>
@@ -38,6 +40,7 @@ export default function SellState(props) {
                     <Button intent="primary" onClick={sell_property}>Sell Property</Button>
                     <Button intent="warning" onClick={sell_building_house}>Sell House</Button>
                     <Button intent="warning" onClick={sell_building_hotel}>Sell Hotel</Button>
+                    <Button intent="warning" onClick={back}>Back</Button>
 
                 </Card>
             </Card>

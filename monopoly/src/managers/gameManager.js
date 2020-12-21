@@ -312,6 +312,7 @@ class GameManager{
     }
 
     createListeners(){
+
         ipcMain.on("create_room_fb", (event, args) => {
             networkManager.createRoom(args);
         });
@@ -326,6 +327,19 @@ class GameManager{
         ipcMain.on("start_game_fb", (event, args)=>{
             networkManager.startGame(args);
         });
+
+        ipcMain.on("sell_fb", args=>{
+            mainWindow.send("next_state_bf", {stateName: "SellState2", payload: {}});
+
+            Globals.isDouble = true;
+        });
+        ipcMain.on("goBack_fb", args=>{
+           Globals.isDouble = true;
+           console.log("FGIRDI");
+           mainWindow.send("next_state_bf", {stateName: "playNormalTurn", payload: {}});
+
+        });
+
         ipcMain.on("buy_property_fb", (event, propertyModel)=>{
             const user = networkManager.getCurrentUser();
             propertyModel = ModelManager.getModels()[propertyModel.id];
@@ -467,6 +481,10 @@ class GameManager{
         ipcMain.on("sell_property_fb", (event, args)=>{//property ID
             let property = ModelManager.getModels()[args];
             networkManager.setAuction(property, 0);
+
+            networkManager.updateProperties([property]);
+            networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
+
         });
 
 
