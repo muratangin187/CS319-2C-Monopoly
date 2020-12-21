@@ -249,7 +249,6 @@ class PlayerManager{
     exitJail(playerID){
         this.players[playerID].inJail = false;
         this.players[playerID].inJailLeft = 0;
-        this.resetDoubleCount(playerID);
     }
 
     mortgage(playerID, property){

@@ -1,6 +1,5 @@
 const socketIOClient = require("socket.io-client");
 const mainWindow = require("../../main").mainWindow;
-const Globals = require("../globals");
 class NetworkManager {
     constructor() {
         this.socket = socketIOClient("http://localhost:3000");
@@ -179,9 +178,7 @@ class NetworkManager {
     }
 
     nextState(){
-        setTimeout(()=>{
-            this.socket.emit("next_state_bs", {lastPlayerId:this.getCurrentUser().id, double: Globals.isDouble});
-        },1000);
+        this.socket.emit("next_state_bs", this.getCurrentUser().id);
     }
 }
 

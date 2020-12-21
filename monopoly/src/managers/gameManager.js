@@ -29,7 +29,7 @@ let diceComb = [];
 class GameManager{
     constructor() {
         this.createListeners();
-        networkManager.setStateListener(this.stateTurn.bind(this));
+        networkManager.setStateListener(this.stateTurn);
         networkManager.setStartGameListener(this.startGameListenerCallback);
         networkManager.setMoveListener(this.moveListener);
         networkManager.setUpdatePlayerListener(this.updatePlayerListener);
@@ -126,25 +126,11 @@ class GameManager{
 
     moveAction(destinationTileId){
         networkManager.movePlayer(destinationTileId);
-        let oldTile = playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile;
         playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile = destinationTileId;
         if(playerManager.isInJail(networkManager.getCurrentUser().id)){
             // set state to jail screen
             Globals.isDouble = false;
-            let turnsLeft = playerManager.getJailLeft(networkManager.getCurrentUser().id);
-            if(turnsLeft === 0){
-                playerManager.exitJail(networkManager.getCurrentUser().id);
-                this.stateTurn({stateName: "playNormalTurn", payload:{}});
-            }else{
-                playerManager.reduceJailLeft(networkManager.getCurrentUser().id);
-                let jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 30);
-                if(!jailCard)
-                    jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 10);
-                if(jailCard)
-                    this.stateTurn({stateName: "playNormalTurn", payload:{turnsLeft: turnsLeft,haveCard: true}});
-                else
-                    this.stateTurn({stateName: "playNormalTurn", payload:{turnsLeft: turnsLeft,haveCard: false}});
-            }
+            this.stateTurn({stateName: "playNormalTurn", payload:{}});
         }else{
             // set state to according to tile
             console.log("WENT TO NEW TILE: " + destinationTileId);
@@ -155,79 +141,12 @@ class GameManager{
                 case "CornerTile":
                     if(destinationTileId === 30){
                         playerManager.sendJail(networkManager.getCurrentUser().id);
-                        mainWindow.send("show_notification", {message: "You entered jail.", intent: "danger"});
-                        networkManager.nextState();
-                    }else{
-                        networkManager.nextState();
                     }
+                    networkManager.nextState();
                     break;
                 case "StationTile":
-                    let stationModel = ModelManager.getModels()[currentTile.tile];
-                    let ownerOfStationId = stationModel.getOwner();
-                    if(ownerOfStationId){
-                        if(ownerOfStationId === networkManager.getCurrentUser().id){
-                            // BU CITY BIZIM
-                            console.log("BU BENIM STATIONU");
-                        }else{
-                            // BU CITY BASKASININ
-                            console.log("BU BASKASININ STATIONU");
-                            let rentPrice = stationModel.getRentPrice();
-                            let counter = 0;
-                            for(let i=0; i<4; i++){
-                                if(ModelManager.getModels()[(5 + (10*i))].ownerId === stationModel.ownerId){
-                                    counter++;
-                                }
-                            }
-                            rentPrice = rentPrice * counter;
-                            playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
-                            playerManager.setMoney(ownerOfStationId, rentPrice);
-                            console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
-                            mainWindow.send("show_notification", {message: "You paid " + rentPrice + "$.", intent: "danger"});
-                            console.log(playerManager.getPlayers()[ownerOfStationId].username + " price: " + playerManager.getMoney(ownerOfStationId));
-                            networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfStationId]]);
-                            networkManager.nextState();
-                        }
-                    }else{
-                        // BU CITY ALINMAMIS
-                        this.stateTurn({stateName: "buyNewProperty", payload: stationModel});
-                    }
                     break;
                 case "UtilityTile":
-                    let utilityModel = ModelManager.getModels()[currentTile.tile];
-                    let ownerOfUtilityId = utilityModel.getOwner();
-                    if(ownerOfUtilityId){
-                        if(ownerOfUtilityId === networkManager.getCurrentUser().id){
-                            // BU CITY BIZIM
-                            console.log("BU BENIM UTILITY");
-                            networkManager.nextState();
-                        }else{
-                            // BU CITY BASKASININ
-                            console.log("BU BASKASININ UTILITYSI");
-                            let counter = 0;
-                            if(ModelManager.getModels()[12].ownerId === utilityModel.ownerId){
-                                counter++;
-                            }
-                            if(ModelManager.getModels()[28].ownerId === utilityModel.ownerId){
-                                counter++;
-                            }
-                            if(counter === 1){
-                                counter = 4;
-                            }else{
-                                counter = 10;
-                            }
-                            let rentPrice = (destinationTileId - oldTile) * counter;
-                            playerManager.setMoney(networkManager.getCurrentUser().id, -rentPrice);
-                            playerManager.setMoney(ownerOfUtilityId, rentPrice);
-                            console.log("Your price: " + playerManager.getMoney(networkManager.getCurrentUser().id));
-                            mainWindow.send("show_notification", {message: "You paid " + rentPrice + "$.", intent: "danger"});
-                            console.log(playerManager.getPlayers()[ownerOfUtilityId].username + " price: " + playerManager.getMoney(ownerOfUtilityId));
-                            networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfUtilityId]]);
-                            networkManager.nextState();
-                        }
-                    }else{
-                        // BU CITY ALINMAMIS
-                        this.stateTurn({stateName: "buyNewProperty", payload: utilityModel});
-                    }
                     break;
                 case "CityTile":
                     let cityModel = ModelManager.getModels()[currentTile.tile];
@@ -338,16 +257,12 @@ class GameManager{
                     // goto jail
                     destinationTileId = Globals.tileNumber-1;
                     playerManager.sendJail(networkManager.getCurrentUser().id);
-                    networkManager.movePlayer(destinationTileId);
-                    Globals.isDouble = false;
-                    mainWindow.send("show_notification", {message: "You entered jail.", intent: "danger"});
-                    networkManager.nextState();
-                    return;
                 }
             }else{
                 playerManager.resetDoubleCount(networkManager.getCurrentUser().id);
             }
             Globals.isDouble = rolledDice[0] === rolledDice[1];
+
 
             if(questComb.forEach(quest => {if(quest.id === destinationTileId) return true;}))
                 if(diceComb.forEach(dice => {
@@ -524,56 +439,41 @@ class GameManager{
             }
         });
 
-        ipcMain.on("exit_from_jail", (event, arg) =>{
-            if(arg.type === 0){
-                //next turn
-                networkManager.nextState();
-            }else if(arg.type === 1){
-                if(playerManager.getJailLeft(networkManager.getCurrentUser().id) === 0){
-                    playerManager.setMoney(networkManager.getCurrentUser().id, -50);
-                    mainWindow.send("update_money_indicator", playerManager.getMoney(networkManager.getCurrentUser().id));
-                    mainWindow.send("show_notification", {message: "You paid 50$ to exit from jail.", intent: "warning"});
-                    networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
-                }
-                // exit with rolling dice
-                setTimeout(()=>{
-                    let currentTile = playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile;
-                    let destinationTileId = (currentTile + arg.rolledDice[0] + arg.rolledDice[1]) % ((Globals.tileNumber-1) * 4);
-                    playerManager.resetDoubleCount(networkManager.getCurrentUser().id);
-                    Globals.isDouble = false;
+        ipcMain.on("useCardToExit_fb", () =>{
+            let currentUser = networkManager.getCurrentUser();
 
-                    if(questComb.forEach(quest => {if(quest.id === destinationTileId) return true;}))
-                        if(diceComb.forEach(dice => {
-                            if(dice.x === arg.rolledDice[0] && dice.y === arg.rolledDice[1] ||
-                                dice.y === arg.rolledDice[0] && dice.x === arg.rolledDice[1])
-                                return true;}))
-                            playerManager.setMoney(networkManager.getCurrentUser().id, 400);
+            let cond = this.useCardToExitJail(currentUser.id);
 
-                    playerManager.exitJail(networkManager.getCurrentUser().id);
-                    this.moveAction(destinationTileId);
-                },1000);
-            }else if(arg.type === 2){
-                // exit with pay
-                if(playerManager.setMoney(networkManager.getCurrentUser().id, -50)){
-                    mainWindow.send("show_notification", {message: "You paid 50$ to exit from jail.", intent: "warning"});
-                    playerManager.exitJail(networkManager.getCurrentUser().id);
-                    mainWindow.send("bm_updateCard", playerManager.getPlayers()[networkManager.getCurrentUser().id]);
-                    networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
-                    mainWindow.send("next_state_bf", {stateName:"playNormalTurn", payload: {}});
-                }else{
-                    mainWindow.send("show_notification", {message: "You dont have enough money to exit from jail.", intent: "danger"});
-                    //TODO
-                }
-            }else if(arg.type === 3){
-                // exit with card
-                mainWindow.send("show_notification", {message: "You used your card to exit from jail.", intent: "warning"});
-                if(!playerManager.useCard(networkManager.getCurrentUser().id, 4)){
-                    playerManager.useCard(networkManager.getCurrentUser().id, 6);
-                }
-                playerManager.exitJail(networkManager.getCurrentUser().id);
-                mainWindow.send("bm_updateCard", playerManager.getPlayers()[networkManager.getCurrentUser().id]);
-                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
-                networkManager.nextState();
+            if(cond){
+                //ToDo for Each rollDice and Move
+                //rollDice();
+                //move();
+            }
+        });
+        ipcMain.on("payToExit_fb", () =>{
+            let currentUser = networkManager.getCurrentUser();
+
+            let cond = this.payToExitJail(currentUser.id);
+
+            if(cond){
+                //rollDice();
+                //move();
+            }
+        });
+        ipcMain.on("rollToExit_fb", () =>{
+            let currentUser = networkManager.getCurrentUser();
+
+            //let {x,y} = rollDice();
+
+            let cond = this.rollToExitJail(currentUser.id);
+
+            if(cond){
+               //move(x, y);
+            }
+            else{
+                //while(!choose(pay, use)){}
+
+                //move(x, y);
             }
         });
 
@@ -612,22 +512,8 @@ class GameManager{
         switch (stateName) {
             case "playNormalTurn":
                 if(playerManager.isInJail(networkManager.getCurrentUser().id)){
-                    let turnsLeft = playerManager.getJailLeft(networkManager.getCurrentUser().id);
-                    if(turnsLeft === 0){
-                        playerManager.exitJail(networkManager.getCurrentUser().id);
-                        mainWindow.send("next_state_bf", {stateName:"playNormalTurn", payload: payload});
-                    }else{
-                        playerManager.reduceJailLeft(networkManager.getCurrentUser().id);
-                        let jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 30);
-                        if(!jailCard)
-                            jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 10);
-                        if(jailCard)
-                            mainWindow.send("next_state_bf", {stateName:"waitInJail", payload:{turnsLeft: turnsLeft,haveCard: true}});
-                        else
-                            mainWindow.send("next_state_bf", {stateName:"waitInJail", payload:{turnsLeft: turnsLeft,haveCard: false}});
-                    }
                 }else{
-                    mainWindow.send("next_state_bf", {stateName:"playNormalTurn", payload: payload});
+                   mainWindow.send("next_state_bf", {stateName:"playNormalTurn", payload: payload});
                 }
                 break;
             case "waitOtherPlayerTurn":

@@ -12,6 +12,7 @@ import OtherPropertyTileView from "../views/tileView/otherPropertyTileView";
 import CityModel from "../models/cityModel";
 import CityTileView from "../views/tileView/cityTileView";
 import SpecialTileView from "../views/tileView/specialTileView";
+
 import UtilityModel from "../models/utilityModel";
 import board_center from "../views/assets/board_center.png";
 import income_tax from "../views/assets/income_tax.png";
@@ -31,6 +32,8 @@ import pion3 from "../views/assets/pion3.png";
 import pion4 from "../views/assets/pion4.png";
 const {ipcRenderer} = require('electron');
 import Character from "../views/tileView/Character";
+import cityTileView from "../views/tileView/cityTileView";
+import cardView from "../views/cardView/cardView";
 class BoardManager{
     constructor() {
         this.views = {};
@@ -218,6 +221,7 @@ class BoardManager{
         let cardCount = player.properties.length + player.cards.length;
         if(cardCount>= 2)
             maxWidth = (cardCount-2)*30 + 205;
+        let lastIndex = 0;
         player.properties.forEach((property, index)=>{
             if (property.type === "CityModel"){
                 this.views[player.id].cards.push(new CityCardView(property));
@@ -226,7 +230,7 @@ class BoardManager{
             }
             else if(property.type === "SpecialModel"){
                 //TODO
-                //this.views[player.id].cards.push(new SpecialCardView(property));
+                this.views[player.id].cards.push(new SpecialCardView(property));
             }
             else if(property.type === "UtilityModel"){
                 this.views[player.id].cards.push(new UtilityCardView(property));
@@ -247,7 +251,7 @@ class BoardManager{
                 lastCard.selectedBorder = new PIXI.Graphics();
                 lastCard.selectedBorder.name = "selectedBorder";
                 lastCard.selectedBorder.lineStyle(5, 0x000);
-                lastCard.selectedBorder.drawRect(0, 0, 150, 242);
+                lastCard.selectedBorder.drawRect(0, 0, 150, 200);
                 lastCard.selectedBorder.position.set(lastCard.border.x,lastCard.border.y);
                 lastCard.card.addChild(lastCard.selectedBorder);
                 offset(player.id, lastCard.id);
@@ -282,7 +286,7 @@ class BoardManager{
                 card.selectedBorder = new PIXI.Graphics();
                 card.selectedBorder.name = "selectedBorder";
                 card.selectedBorder.lineStyle(5, 0x000);
-                card.selectedBorder.drawRect(0, 0, 150, 242);
+                card.selectedBorder.drawRect(0, 0, 150, 200);
                 card.selectedBorder.position.set(card.border.x,card.border.y);
                 card.card.addChild(card.selectedBorder);
                 console.log("SELECTED CARD: " + this.selectedCardId);
@@ -290,10 +294,78 @@ class BoardManager{
             });
 
             console.log("updateCard iteration");
+            lastIndex = index;
         });
-        player.cards.forEach(card=>{
+        //player.cards.forEach(cardJ=>{
+
+        lastIndex = lastIndex + 1;
+        let cardJ = new SpecialCardView(30);
+        this.views[player.id].cards.push(cardJ); //cardJ.id
+        let lastCard = this.views[player.id].cards[this.views[player.id].cards.length - 1];
+        console.log("Girdi: " + lastCard);
+        if(lastIndex >= 10){
+            lastCard.card.x = (720 - maxWidth) / 2;
+            lastCard.card.oldx = lastCard.card.x;
+            lastCard.card.x += (lastIndex-10) * 30;
+            lastCard.card.y += 210;
+        }else{
+            lastCard.card.x = (720 - maxWidth) / 2;
+            lastCard.card.oldx = lastCard.card.x;
+            console.log("lastcardx: " + lastCard.card.x);
+            lastCard.card.x += lastIndex * 30;
+            console.log("lastIndex: " + lastIndex);
+            console.log("lastcardxAfter: " + lastCard.card.x);
+            console.log("lastcardname: " + lastCard.id);
+        }
+
+        if(this.selectedCardId === cardJ.id){
+            lastCard.selectedBorder = new PIXI.Graphics();
+            lastCard.selectedBorder.name = "selectedBorder";
+            lastCard.selectedBorder.lineStyle(5, 0x000);
+            lastCard.selectedBorder.drawRect(0, 0, 150, 200);
+            lastCard.selectedBorder.position.set(lastCard.border.x,lastCard.border.y);
+            lastCard.card.addChild(lastCard.selectedBorder);
+            offset(player.id, lastCard.id);
+        }
+
+                lastCard.setCallBack((selectedId) =>{
+                    offset(player.id, selectedId);
+                },(selectedId)=>{
+                    if(this.selectedCardId !== -1) return;
+                    for (let i = 0; i < cardCount; i++) {
+                        if(i < 10) {
+                            this.views[player.id].cards[i].card.x = this.views[player.id].cards[i].card.oldx + i * 30;
+                        }else {
+                            this.views[player.id].cards[i].card.x = this.views[player.id].cards[i].card.oldx + (i - 10) * 30;
+                        }
+                    }
+                }, (card)=>{
+                    if(this.selectedCardId !== -1){
+                        for (let i = 0; i < cardCount; i++) {
+                            if(i < 10)
+                                this.views[player.id].cards[i].card.x = this.views[player.id].cards[i].card.oldx + i * 30;
+                            else
+                                this.views[player.id].cards[i].card.x = this.views[player.id].cards[i].card.oldx + (i-10) * 30;
+                            if(this.views[player.id].cards[i].id === this.selectedCardId)
+                                this.views[player.id].cards[i].selectedBorder.destroy();
+                            this.views[player.id].cards[i].card.removeChild(this.views[player.id].cards[i].selectedBorder);
+                        }
+                        this.selectedCardId = -1;
+                    }
+                    offset(player.id, card.id);
+                    this.selectedCardId = card.id;
+                    card.selectedBorder = new PIXI.Graphics();
+                    card.selectedBorder.name = "selectedBorder";
+                    card.selectedBorder.lineStyle(5, 0x000);
+                    card.selectedBorder.drawRect(0, 0, 150, 200);
+                    card.selectedBorder.position.set(card.border.x,card.border.y);
+                    card.card.addChild(card.selectedBorder);
+                    console.log("SELECTED CARD: " + this.selectedCardId);
+                    this.isClickedCard = true;
+                });
             console.log("updateCard iteration");
-        });
+
+        //});
         console.log("updateCard finished");
     }
 
