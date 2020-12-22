@@ -37,7 +37,11 @@ export default function YourTurnState() {
                 <ReactDice
                     numDice={2}
                     rollDone={(sum, rolledDice)=>{
-                        ipcRenderer.send("move_player_fb", [rolledDice[0], rolledDice[1]]);
+                        setTimeout(()=>{
+                            rolledDice[0] = 10;
+                            rolledDice[1] = 0;
+                            ipcRenderer.send("move_player_fb", [rolledDice[0], rolledDice[1]]);
+                        }, 1000);
                     }}
                     ref={dice => setReactDice(dice)}
                     dotColor="#000000"

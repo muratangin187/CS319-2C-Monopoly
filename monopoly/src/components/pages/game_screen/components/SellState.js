@@ -6,10 +6,6 @@ import { AppToaster } from "../../../toaster";
 
 export default function SellState(props) {
     function sell_property(){
-        if(BoardManager.getCardID() === -1){
-            AppToaster.show({message: "Please select a property", intent:"danger"});
-        }
-        else
             ipcRenderer.send("sell_property_fb", BoardManager.getCardID());
     }
 

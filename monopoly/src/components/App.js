@@ -26,9 +26,13 @@ function App() {
       };
       function change_page_listener(event, args){
           console.log(JSON.stringify(args, null, 2));
-          setSelectedRoom({roomName: args.result.room, roomUsers: args.result.users});
-          setCurrentUser(args.currentUser);
-          setPage(args.result.page);
+          if(args.done){
+              //setPage("mainPage");
+          }else{
+              setSelectedRoom({roomName: args.result.room, roomUsers: args.result.users});
+              setCurrentUser(args.currentUser);
+              setPage(args.result.page);
+          }
       };
 
       function start_game_listener(event, roomObject){

@@ -92,8 +92,10 @@ class GameManager{
         players.forEach(newPlayerModel=>{
             let oldPlayerModel = playerManager.getPlayers()[newPlayerModel.id];
             if(newPlayerModel.money > oldPlayerModel.money){
-                let diff = newPlayerModel.money - oldPlayerModel.money;
-                mainWindow.send("show_notification", {message: "You earn " + diff + "$.", intent: "success"});
+                if(newPlayerModel.id === networkManager.getCurrentUser().id){
+                    let diff = newPlayerModel.money - oldPlayerModel.money;
+                    mainWindow.send("show_notification", {message: "You earn " + diff + "$.", intent: "success"});
+                }
             }else if(newPlayerModel.money < oldPlayerModel.money){
                 let diff = oldPlayerModel.money - newPlayerModel.money;
                 if(newPlayerModel.id === networkManager.getCurrentUser().id) {
@@ -411,6 +413,15 @@ class GameManager{
             console.log(playerManager.getPlayers());
             let currentTile = playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile;
             let destinationTileId = (currentTile + rolledDice[0] + rolledDice[1]) % ((Globals.tileNumber-1) * 4);
+            if(destinationTileId !== (currentTile + rolledDice[0] + rolledDice[1])){
+                if(playerManager.isInJail(networkManager.getCurrentUser().id)){
+
+                }else{
+                    playerManager.setMoney(networkManager.getCurrentUser().id, 200);
+                    mainWindow.send("update_money_indicator", playerManager.getMoney(networkManager.getCurrentUser().id).money);
+                    mainWindow.send("show_notification", {message: "You gain 200$ from passing starting tile.", intent: "primary"});
+                }
+            }
             if(rolledDice[0] === rolledDice[1]){
                 // double rolled
                 if(playerManager.increaseDoubleCount(networkManager.getCurrentUser().id)){
@@ -433,7 +444,7 @@ class GameManager{
                     if(dice.x === rolledDice[0] && dice.y === rolledDice[1] ||
                         dice.y === rolledDice[0] && dice.x === rolledDice[1])
                         return true;}))
-                    playerManager.setMoney(networkManager.getCurrentUser().id, 400);
+                    playerManager.setMoney(networkManager.getCurrentUser().id, 600);
 
             this.moveAction(destinationTileId);
         });
@@ -589,12 +600,28 @@ class GameManager{
         });
 
         ipcMain.on("sell_property_fb", (event, args)=>{//property ID
-            let property = ModelManager.getModels()[args];
-            networkManager.setAuction(property, 0);
+            if(args === -1){
+                let properties = playerManager.getPlayers()[networkManager.getCurrentUser().id].properties;
+                if(Object.keys(properties).length === 0){
+                    console.log("BANKRUPCY");
+                    mainWindow.send("show_notification", {message: "Game over", intent: "danger"});
+                    mainWindow.send("change_page_bf", {done: true});
+                }else{
+                    for(let i in properties){
+                        let property = properties[i];
+                        networkManager.setAuction(property, 0);
+                        networkManager.updateProperties([property]);
+                        networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
+                        return;
+                    }
+                }
+            }else{
+                let property = ModelManager.getModels()[args];
+                networkManager.setAuction(property, 0);
 
-            networkManager.updateProperties([property]);
-            networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
-
+                networkManager.updateProperties([property]);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
+            }
         });
 
 
