@@ -78,7 +78,7 @@ class CardManager {
    drawChestCard(){
       let card = this.chestCards[0];
 
-      this.chanceCards.splice(0,1);
+      this.chestCards.splice(0,1);
 
       return card;
    }

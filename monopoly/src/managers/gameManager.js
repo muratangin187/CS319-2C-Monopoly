@@ -60,6 +60,7 @@ class GameManager{
 
     auctionListener(winnerId, propertyModel, bidAmount, auctionStarter){
         let currentProperty = ModelManager.getModels()[propertyModel.id];
+        let oldOwner = currentProperty.ownerId;
         if(currentProperty.ownerId){
             let x = currentProperty.ownerId;
             console.log(currentProperty.ownerId);
@@ -71,16 +72,22 @@ class GameManager{
         playerManager.setMoney(winnerId, -bidAmount);
         currentProperty.setOwner(winnerId);
         winnerPlayer.properties.push(currentProperty);
+        if(networkManager.getCurrentUser().id === oldOwner){
+            playerManager.setMoney(oldOwner, bidAmount);
+            mainWindow.send("update_money_indicator", playerManager.getMoney(oldOwner));
+            mainWindow.send("bm_updateCard", playerManager.getPlayers()[oldOwner]);
+            networkManager.updatePlayers([playerManager.getPlayers()[oldOwner]]);
+        }
         if(networkManager.getCurrentUser().id === winnerId){
             mainWindow.send("update_money_indicator", winnerPlayer.money);
+            mainWindow.send("bm_updateCard", playerManager.getPlayers()[winnerId]);
             mainWindow.send("show_notification", {message: "You win auction for " + propertyModel.name + ".", intent: "success"});
+            networkManager.updatePlayers([playerManager.getPlayers()[winnerId]]);
         }
         if(networkManager.getCurrentUser().id === auctionStarter) {
             networkManager.nextState();
         }
         console.log(playerManager.getPlayers());
-        mainWindow.send("bm_updateCard2", playerManager.getPlayers());
-
     }
 
     updatePlayerListener(players){
@@ -206,6 +213,7 @@ class GameManager{
                             mainWindow.send("show_notification", {message: "You paid " + rentPrice + "$.", intent: "danger"});
                             console.log(playerManager.getPlayers()[ownerOfStationId].username + " price: " + playerManager.getMoney(ownerOfStationId));
                             networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfStationId]]);
+                            networkManager.nextState();
                         }
                     }else{
                         // BU CITY ALINMAMIS
@@ -249,6 +257,7 @@ class GameManager{
                             mainWindow.send("show_notification", {message: "You paid " + rentPrice + "$.", intent: "danger"});
                             console.log(playerManager.getPlayers()[ownerOfUtilityId].username + " price: " + playerManager.getMoney(ownerOfUtilityId));
                             networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfUtilityId]]);
+                            networkManager.nextState();
                         }
                     }else{
                         // BU CITY ALINMAMIS
@@ -293,6 +302,7 @@ class GameManager{
                             });
                             console.log(playerManager.getPlayers()[ownerOfCityId].username + " price: " + playerManager.getMoney(ownerOfCityId));
                             networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id], playerManager.getPlayers()[ownerOfCityId]]);
+                            networkManager.nextState();
                         }
                     }else{
                         // BU CITY ALINMAMIS
@@ -857,26 +867,30 @@ class GameManager{
 
                 setTimeout(()=>{
                     playerManager.setMoney(networkManager.getCurrentUser().id, 200);
-                    mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                    mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                    networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
                     this.moveAction(0);
                 }, 2000);
             }
             else if(card.id === 1){
                 mainWindow.send("show_notification", {message: "Bank error in your favor—Collect $200", intent: "success"});
                 playerManager.setMoney(playerID, 200);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
             }
             else if(card.id === 2){
                 mainWindow.send("show_notification", {message: "Doctor's fee—Pay $50", intent: "danger"});
                 playerManager.setMoney(playerID, -50);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
             }
             else if(card.id === 3){
                 mainWindow.send("show_notification", {message: "From sale of stock you get $50", intent: "success"});
                 playerManager.setMoney(playerID, 50);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
 
             }
@@ -895,54 +909,62 @@ class GameManager{
                 for(let i in players){
                     let player = players[i];
                     if(playerID === player.id) {
-                        playerManager.setMoney(playerID, (50 * (players.length - 1)));
+                        playerManager.setMoney(playerID, (50 * (Object.keys(players).length - 1)));
                     }else {
                         playerManager.setMoney(player.id, -50);
                     }
                     mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
+                    networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
                 }
             }
             else if(card.id === 7){
                 mainWindow.send("show_notification", {message: "Holiday Fund matures—Receive $100", intent: "success"});
                 playerManager.setMoney(playerID, 100);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
             }
             else if(card.id === 8){
                 mainWindow.send("show_notification", {message: "Income tax refund–Collect $20", intent: "success"});
                 playerManager.setMoney(playerID, 20);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
 
             }
             else if(card.id === 9){
                 playerManager.setMoney(playerID, 10);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
                 mainWindow.send("show_notification", {message: "It is your birthday—Collect $10!", intent: "success"});
 
             }
             else if(card.id === 10){
                 playerManager.setMoney(playerID, 100);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
                 mainWindow.send("show_notification", {message: "Life insurance matures–Collect $100", intent: "success"});
             }
             else if(card.id === 11){
                 mainWindow.send("show_notification", {message: "Pay hospital fees of $100", intent: "danger"});
                 playerManager.setMoney(playerID, -100);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
             }
             else if(card.id === 12){
                 mainWindow.send("show_notification", {message: "Pay school fees of $150", intent: "danger"});
                 playerManager.setMoney(playerID, -150);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
             }
             else if(card.id === 13){
                 playerManager.setMoney(playerID, 25);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
                 mainWindow.send("show_notification", {message: "Receive $25 consultancy fee!", intent: "success"});
 
@@ -950,24 +972,28 @@ class GameManager{
             else if(card.id === 14){
                 mainWindow.send("show_notification", {message: "You are assessed for street repairs–$40 per house–$115 per hotel!", intent: "primary"});
                 playerManager.payRepair(playerID, 40, 115);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
             }
             else if(card.id === 15){
                 mainWindow.send("show_notification", {message: "You have won second prize in a beauty contest–Collect $10!", intent: "success"});
                 playerManager.setMoney(playerID, 10);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
             }
             else if(card.id === 16){
                 mainWindow.send("show_notification", {message: "You inherit $100!", intent: "success"});
                 playerManager.setMoney(playerID, 100);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
 
             }
         }
         else {
             playerManager.addCard(playerID, card);
+            mainWindow.send("addJailCard", true);
             mainWindow.send("show_notification", {message: "You get a Jail Free Card!", intent: "success"});
         }
     }
@@ -982,7 +1008,7 @@ class GameManager{
                 mainWindow.send("show_notification", {message: "Advance to GO", intent: "success"});
 
                 playerManager.setMoney(networkManager.getCurrentUser().id, 200);
-                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
 
                 setTimeout(()=>{
                     this.moveAction(0);
@@ -995,7 +1021,7 @@ class GameManager{
 
                 if(locationID > 24){
                     playerManager.setMoney(networkManager.getCurrentUser().id, 200);
-                    mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                    mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
 
                     mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
 
@@ -1010,7 +1036,7 @@ class GameManager{
 
                 if(locationID > 11){
                     playerManager.setMoney(networkManager.getCurrentUser().id, 200);
-                    mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+                    mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
 
                     mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
 
@@ -1088,6 +1114,7 @@ class GameManager{
                         playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     }
 
+                    mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
                     setTimeout(()=>{
                         this.moveAction(35);
                     }, 2000);
@@ -1102,6 +1129,7 @@ class GameManager{
                         playerManager.setMoney(ownerOfCityId, cityModel.getRentPrice());
                         playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     }
+                    mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
 
                     setTimeout(()=>{
                         this.moveAction(25);
@@ -1117,6 +1145,7 @@ class GameManager{
                         playerManager.setMoney(ownerOfCityId, cityModel.getRentPrice());
                         playerManager.setMoney(playerID, -cityModel.getRentPrice());
                     }
+                    mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
 
                     setTimeout(()=>{
                         this.moveAction(5);
@@ -1127,6 +1156,7 @@ class GameManager{
             else if(card.id === 5){
                 //,"Bank pays you dividend of $50"
                 playerManager.setMoney(playerID, 50);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
                 mainWindow.send("show_notification", {message: "You earned 50$ from bank!", intent: "success"});
             }
 
@@ -1156,6 +1186,7 @@ class GameManager{
             else if(card.id === 10){
                 //,"Pay poor tax of $15"
                 playerManager.setMoney(playerID, -15);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
                 mainWindow.send("show_notification", {message: "You lost 15$ for paying tax!", intent: "danger"});
 
             }
@@ -1165,6 +1196,7 @@ class GameManager{
 
                 if(locationID > 5){
                     playerManager.setMoney(playerID, 200);
+                    mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
                     mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
 
                 }
@@ -1189,7 +1221,7 @@ class GameManager{
                 for(let i in players){
                     let player = players[i];
                     if(playerID === player.id)
-                        playerManager.setMoney(playerID, -(50 * (players.length - 1)));
+                        playerManager.setMoney(playerID, -(50 * (Object.keys(players).length - 1)));
                     else
                         playerManager.setMoney(player.id, 50);
                     mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
@@ -1198,11 +1230,13 @@ class GameManager{
             else if(card.id === 14){
                 //,"Your building and loan matures—Collect $150"
                 playerManager.setMoney(playerID, 150);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
                 mainWindow.send("show_notification", {message: "Your building and loan matures—Collect $150!", intent: "primary"});
             }
             else if(card.id === 15) {
                 //,"You have won a crossword competition—Collect $100"
                 playerManager.setMoney(playerID, 100);
+                mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
                 mainWindow.send("show_notification", {
                     message: "You have won a crossword competition—Collect $100!",
                     intent: "primary"
@@ -1220,6 +1254,7 @@ class GameManager{
                 mainWindow.send("addJailCard", true);
             }
         }
+        networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
     }
 
 
