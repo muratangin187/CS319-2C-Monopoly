@@ -72,7 +72,6 @@ class PlayerModel{
         this.state = newState;
     }
 
-
 }
 
 module.exports = PlayerModel;
