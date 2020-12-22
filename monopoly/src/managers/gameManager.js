@@ -61,12 +61,11 @@ class GameManager{
     auctionListener(winnerId, propertyModel, bidAmount, auctionStarter){
         let currentProperty = ModelManager.getModels()[propertyModel.id];
         let oldOwner = currentProperty.ownerId;
+        console.log("OLD OWNER:" + playerManager.getPlayers()[currentProperty.ownerId].username);
         if(currentProperty.ownerId){
             let x = currentProperty.ownerId;
             console.log(currentProperty.ownerId);
             playerManager.removeProperty(currentProperty.ownerId, currentProperty);
-
-
         }
         let winnerPlayer = playerManager.getPlayers()[winnerId];
         playerManager.setMoney(winnerId, -bidAmount);
@@ -103,6 +102,7 @@ class GameManager{
                 }
             }
             if(newPlayerModel.id === networkManager.getCurrentUser().id){
+                mainWindow.send("updatePlayerList", playerManager.getPlayers());
                 mainWindow.send("update_money_indicator", newPlayerModel.money);
             }
             console.log("Player " + newPlayerModel.username + " money(old,new): " + oldPlayerModel.money + ", " + newPlayerModel.money);
@@ -121,6 +121,7 @@ class GameManager{
                 console.log(newPropertyModel.buildings.hotel + " - " + newPropertyModel.buildings.house);
                 ModelManager.getModels()[newPropertyModel.id].buildings.house = newPropertyModel.buildings.house;
                 ModelManager.getModels()[newPropertyModel.id].buildings.hotel = newPropertyModel.buildings.hotel;
+                mainWindow.send("updatePlayerList", playerManager.getPlayers());
                 mainWindow.send("bm_updateCity", {id: newPropertyModel.id, house: newPropertyModel.buildings.house, hotel: newPropertyModel.buildings.hotel});
             }
             // TODO CHECK ALL THE PROPERTIES AND REFLECT THEM TO VIEW
@@ -140,6 +141,7 @@ class GameManager{
             new PropertyModel(0, "Ankara", 10, 1, 100, 2, 0),
             new PropertyModel(1, "Konya", 10, 1, 3, 2, 0)
         ]);
+        mainWindow.send("updatePlayerList", playerManager.getPlayers());
         //for(let model in ModelManager.getModels()){
         //    ModelManager.getModels()[model].setOwner(room.users[0].id);
         //}
@@ -321,8 +323,14 @@ class GameManager{
                         this.drawChestCard(networkManager.getCurrentUser().id, destinationTileId);
                     }
 
-                    else if(destinationTileId === 4 || destinationTileId === 38){
+                    else if(destinationTileId === 4){
                         playerManager.setMoney(networkManager.getCurrentUser().id, -200);
+                        mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                        networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
+                    }else if(destinationTileId === 38){
+                        playerManager.setMoney(networkManager.getCurrentUser().id, -100);
+                        mainWindow.send("update_money_indicator", playerManager.getPlayers()[networkManager.getCurrentUser().id].money);
+                        networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
                     }
 
                     networkManager.nextState();

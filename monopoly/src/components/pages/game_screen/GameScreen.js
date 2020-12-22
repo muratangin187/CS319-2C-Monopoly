@@ -42,9 +42,6 @@ import SellStateNormal from "./components/SellStateNormal";
 import JailTurn from "./components/JailTurn";
 
 import PlayerModel from "../../../models/playerModel";
-import CityModel from "../../../models/cityModel";
-import StationModel from "../../../models/stationModel";
-import UtilityModel from "../../../models/utilityModel";
 import BuildingModel from "../../../models/buildingModel";
 
 function initPixi(){
@@ -387,40 +384,13 @@ function initPixiForHand(){
     }
 }
 
-let house1 = new BuildingModel("house", 10);
-let house2 = new BuildingModel("house", 10);
-let house3 = new BuildingModel("house", 10);
-let hostel1 = new BuildingModel("hostel", 10);
-
-let city1 = new CityModel(1, "city1", 10, 10, 10, 1, 10, 10, [house1, house2, house3], "purple");
-let city2 = new CityModel(2, "city2", 10, 10, 10, 2, 10, 10, [hostel1], "red");
-let city3 = new CityModel(3, "city3", 10, 10, 10, 2, 10, 10, [house1, house2], "blue");
-let city4 = new CityModel(4, "city4", 10, 10, 10, 2, 10, 10, [house1, house2], "aquamarine");
-let city5 = new CityModel(5, "city5", 10, 10, 10, 2, 10, 10, [house1, house2], "green");
-let city6 = new CityModel(6, "city6", 10, 10, 10, 2, 10, 10, [house1, house2], "pink");
-let city7 = new CityModel(7, "city7", 10, 10, 10, 2, 10, 10, [house1, house2], "orange");
-let city8 = new CityModel(8, "city8", 10, 10, 10, 2, 10, 10, [house1, house2], "yellow");
-
-let station1 = new StationModel(1, "station1", 10, 10, 10, 3, false, "");
-let station2 = new StationModel(2, "station2", 10, 10, 10, 4, false, "");
-
-let utility1 = new UtilityModel(1, "utility1", 10, 10, 10, 5, false, "");
-let utility2 = new UtilityModel(2, "utility2", 10, 10, 10, 6, false, "");
-
-let player1 = new PlayerModel(1, "umityigitbsrn", null, null, 1);
-player1.properties = [city1, station1, utility1, city2, station2, utility2, city3];
-
-let player2 = new PlayerModel(2, "murata42", null, null, 1);
-player2.properties = [city1, station1, utility1, city2, station2, utility2, city3, city4, city5, city6, city7, city8];
-
-let users = [player1, player2];
-
 function GameScreen(props) {
     const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
     const [currentState, setCurrentState] = React.useState({stateName:"determineStartOrder", payload:{}});
     const [currentView, setCurrentView] = React.useState(null);
     const [money, setMoney] = React.useState(1500);
     const [jailCard, setJailCard] = React.useState(false);
+    const [users, setUsers] = React.useState([]);
 
     const [collapseOpen, setCollapseOpen] = useState([]);
     const [cityExpand, setCityExpand] = useState([]);
@@ -471,7 +441,17 @@ function GameScreen(props) {
         ipcRenderer.on("addJailCard", (event, args)=>{
             setJailCard(args);
         });
-        http://tabu-clone.herokuapp.com/socket.io/?EIO=4&transport=polling&t=NQ7P6KX&b64=1
+        ipcRenderer.on("updatePlayerList", (event, args)=>{
+            let temp = [];
+            setTimeout(()=>{
+                console.log("AAAAA");
+                console.log(args);
+                for(let index in args){
+                    temp.push(args[index]);
+                }
+                setUsers(temp);
+            }, 500);
+        });
         ipcRenderer.on("update_money_indicator", (event, money)=>{
             setMoney(money);
         });
@@ -599,7 +579,7 @@ function GameScreen(props) {
                                 let numberOfHouses = 0;
                                 let numberOfHostels = 0;
                                 let colors = {
-                                    purple: 0,
+                                    brown: 0,
                                     aquamarine: 0,
                                     pink: 0,
                                     orange: 0,
@@ -612,12 +592,8 @@ function GameScreen(props) {
                                 for (let i = 0; i < user.properties.length; i++){
                                     if (user.properties[i].type === "CityModel") {
                                         cities.push(user.properties[i]);
-                                        for (let j = 0; j < user.properties[i].buildings.length; j++){
-                                            if (user.properties[i].buildings[j].type === "house")
-                                                numberOfHouses++;
-                                            else if (user.properties[i].buildings[j].type === "hostel")
-                                                numberOfHostels++;
-                                        }
+                                        numberOfHostels = user.properties[i].buildings.hotel;
+                                        numberOfHouses = user.properties[i].buildings.house;
                                     }
                                     else if (user.properties[i].type === "StationModel")
                                         stations.push(user.properties[i]);
@@ -690,10 +666,6 @@ function GameScreen(props) {
                                                         <H6>City</H6>
                                                         <div style={styles.before_card}>
                                                             <div style={styles.stat1}>Total # of cities: {statisticObj.cities.length}</div>
-                                                            <div style={styles.stat2}>
-                                                                <div style={styles.icon}><Icon icon="home" color="red"/> : {statisticObj.numberOfHouses}</div>
-                                                                <div style={styles.icon}><Icon icon="office" color="orange  "/> : {statisticObj.numberOfHostels}</div>
-                                                            </div>
                                                         </div>
                                                         <Collapse isOpen={cityExpand[index]}>
                                                             <Card interactive={true} elevation={Elevation.ONE} style={styles.card_collapse}>
@@ -718,8 +690,6 @@ function GameScreen(props) {
                                                                             <div style={styles.stat1}>City: {city.name}</div>
                                                                             <div style={styles.stat2}>
                                                                                 <div style={styles.icon}><Icon icon="tag" color={city.color}/></div>
-                                                                                <div style={styles.icon}><Icon icon="home" color="red"/> : {statisticObjCity.numHouse}</div>
-                                                                                <div style={styles.icon}><Icon icon="office" color="orange"/> : {statisticObjCity.numHostel}</div>
                                                                             </div>
                                                                         </div>
                                                                     );

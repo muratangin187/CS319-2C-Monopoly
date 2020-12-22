@@ -219,11 +219,20 @@ class BoardManager{
             }
         }
         if(this.views[player.id].cards)
-            this.views[player.id].cards.forEach(card=>card.card.destroy());
+            this.views[player.id].cards.forEach(card=>{
+                card.card.children.forEach((child)=>{
+                    child.destroy({children:true, texture:true, baseTexture:true});
+                    child = null;
+                });
+                card.card.removeChild(card.card.title);
+                card.card.removeChild(card.card.content);
+                card.card.destroy();
+                card.card = null;
+            });
         this.views[player.id].cards = [];
         console.log("updateCard started");
         let maxWidth = 100;
-        let cardCount = player.properties.length + player.cards.length;
+        let cardCount = player.properties.length;
         if(cardCount>= 2)
             maxWidth = (cardCount-2)*30 + 205;
         player.properties.forEach((property, index)=>{
@@ -255,7 +264,7 @@ class BoardManager{
                 lastCard.selectedBorder = new PIXI.Graphics();
                 lastCard.selectedBorder.name = "selectedBorder";
                 lastCard.selectedBorder.lineStyle(5, 0x000);
-                lastCard.selectedBorder.drawRect(0, 0, 150, 222);
+                lastCard.selectedBorder.drawRect(0, 0, 150, 200);
                 lastCard.selectedBorder.position.set(lastCard.border.x,lastCard.border.y);
                 lastCard.card.addChild(lastCard.selectedBorder);
                 offset(player.id, lastCard.id);
@@ -290,7 +299,7 @@ class BoardManager{
                 card.selectedBorder = new PIXI.Graphics();
                 card.selectedBorder.name = "selectedBorder";
                 card.selectedBorder.lineStyle(5, 0x000);
-                card.selectedBorder.drawRect(0, 0, 150, 242);
+                card.selectedBorder.drawRect(0, 0, 150, 200);
                 card.selectedBorder.position.set(card.border.x,card.border.y);
                 card.card.addChild(card.selectedBorder);
                 console.log("SELECTED CARD: " + this.selectedCardId);
@@ -305,8 +314,19 @@ class BoardManager{
     updateCity(id, house, hotel){
         //this.tiles[id].tile.destroy();
         console.log("House: " + id + " | " + house + " | " + hotel);
-        if(this.tiles[id].buildings)
-            this.tiles[id].buildings.children.forEach(build=>build.destroy());
+        //if(this.tiles[id].buildings) {
+        //    this.tiles[id].buildings.children.forEach(build => {
+        //        build.destroy({children:true});
+        //        this.tiles[id].buildings.removeChild(build);
+        //        build = null;
+        //    });
+        //}
+        //this.tiles[id].buildings.destroy();
+        //this.tiles[id].tile.removeChild(this.tiles[id].buildings);
+        //this.tiles[id].buildings = null;
+        //this.tiles[id].buildings = new PIXI.Container();
+        //this.tiles[id].buildings.name = "buildings";
+        //this.tiles[id].tile.addChild(this.tiles[id].buildings);
         for (let i = 0; i < house; i++) {
             console.log("House building " + i);
             let icon = new PIXI.Sprite(Globals.resources["house"].texture);
@@ -315,6 +335,14 @@ class BoardManager{
             icon.x = this.tiles[id].x + 20*i + 2.5;
             icon.y = this.tiles[id].y;
             this.tiles[id].buildings.addChild(icon);
+        }
+        if(hotel > 0){
+            let titleBackground = new PIXI.Graphics();
+            titleBackground.name = "titleBackground";
+            titleBackground.beginFill(this.tiles[id].city.color);
+            titleBackground.lineStyle(1, 0x333333);
+            titleBackground.drawRect(this.tiles[id].x, this.tiles[id].y, this.tiles[id].size, this.tiles[id].size/4);
+            this.tiles[id].buildings.addChild(titleBackground);
         }
         for (let i = 0; i < hotel; i++) {
             console.log("Hotel building " + i);

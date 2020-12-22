@@ -13,10 +13,10 @@ export default function FormDialog(props) {
     return (
         <div>
             <Dialog open={props.open} onClose={props.handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Password</DialogTitle>
+                <DialogTitle id="form-dialog-title">{props.passwordRequired ? "Password" : "Username"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        To join this room you need to enter the password of the room.
+                        {props.passwordRequired ? "To join this room you need to enter the password of the room." : "To join this room you need to enter your username."}
                     </DialogContentText>
                     {props.passwordRequired ?
                         (<><TextField

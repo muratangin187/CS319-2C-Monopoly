@@ -70,7 +70,7 @@ class PlayerManager{
 
     removeProperty(playerId, removedProperty){
         removedProperty.setOwner(null);
-        this.players[playerId].properties.filter((property)=>property.id !== removedProperty.id);
+        this.players[playerId].properties = this.players[playerId].properties.filter((property)=>property.id !== removedProperty.id);
     }
 
     /**

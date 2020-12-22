@@ -38,6 +38,9 @@ function MainPage(props) {
                         <Button fullWidth variant='contained' onClick={() => props.setPage("optionPage")}>Options</Button>
                     </Grid>
                     <Grid item style={{width: "inherit"}}>
+                        <Button fullWidth variant='contained' onClick={() => props.setPage("howToPage")}>How To Play</Button>
+                    </Grid>
+                    <Grid item style={{width: "inherit"}}>
                         <Button fullWidth variant='contained' onClick={handleExit}>Exit</Button>
                     </Grid>
                 </Grid>
