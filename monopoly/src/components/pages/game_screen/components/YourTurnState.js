@@ -38,8 +38,6 @@ export default function YourTurnState() {
                     numDice={2}
                     rollDone={(sum, rolledDice)=>{
                         setTimeout(()=>{
-                            rolledDice[0] = 10;
-                            rolledDice[1] = 0;
                             ipcRenderer.send("move_player_fb", [rolledDice[0], rolledDice[1]]);
                         }, 1000);
                     }}
