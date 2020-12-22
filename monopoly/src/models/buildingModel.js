@@ -5,3 +5,5 @@ class BuildingModel {
         this.cost = cost;
     }
 }
+
+module.exports = BuildingModel;

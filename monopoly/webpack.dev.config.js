@@ -12,7 +12,12 @@ module.exports = {
       {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
-        include: defaultInclude
+        include: [
+            defaultInclude,
+            path.resolve(__dirname,"node_modules/@blueprintjs/core/lib/css/"),
+            path.resolve(__dirname,"node_modules/react-chat-widget/lib/styles.css"),
+            path.resolve(__dirname,"node_modules/react-dice-complete/dist/react-dice-complete.css")
+        ]
       },
       {
         test: /\.jsx?$/,

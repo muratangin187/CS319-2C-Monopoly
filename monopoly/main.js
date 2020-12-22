@@ -4,7 +4,7 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 
-let mainWindow
+let mainWindow;
 
 let dev = false
 if (process.env.NODE_ENV !== undefined && process.env.NODE_ENV === 'development') {
@@ -18,14 +18,17 @@ if (process.platform === 'win32') {
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
+  exports.mainWindow = mainWindow = new BrowserWindow({
+    width: 1600,
+    height: 905,
     show: false,
+    resizable: false,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   })
+  mainWindow.setMenuBarVisibility(false);
 
   let indexPath
 
@@ -48,6 +51,8 @@ function createWindow() {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
+
+    require("./src/managers/gameManager");
 
     if (dev) {
       const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')

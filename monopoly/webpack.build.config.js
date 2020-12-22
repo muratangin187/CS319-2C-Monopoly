@@ -16,7 +16,12 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           'css-loader',
         ],
-        include: defaultInclude
+        include: [
+          defaultInclude,
+          path.resolve(__dirname,"node_modules/@blueprintjs/core/lib/css/"),
+          path.resolve(__dirname,"node_modules/react-chat-widget/lib/styles.css"),
+          path.resolve(__dirname,"node_modules/react-dice-complete/dist/react-dice-complete.css")
+        ]
       },
       {
         test: /\.jsx?$/,
@@ -28,6 +33,10 @@ module.exports = {
         use: [{ loader: 'file-loader?name=img/[name]__[hash:base64:5].[ext]' }],
         include: defaultInclude
       },
+      //{
+      //  test: /\.png$/,
+      //  loader: "url-loader?mimetype=image/png"
+      //},
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }],

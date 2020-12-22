@@ -3,7 +3,7 @@ import MainPage from "./pages/main_page/MainPage";
 import OptionPage from "./pages/option_page/OptionPage";
 import CreateRoomPage from "./pages/create_room_page/CreateRoomPage";
 
-function App() {
+function AppDemo() {
   const [page, setPage] = useState("mainPage");
 
   switch (page){
