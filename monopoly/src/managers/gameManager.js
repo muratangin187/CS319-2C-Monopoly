@@ -60,6 +60,13 @@ class GameManager{
 
     auctionListener(winnerId, propertyModel, bidAmount, auctionStarter){
         let currentProperty = ModelManager.getModels()[propertyModel.id];
+        if(currentProperty.ownerId){
+            let x = currentProperty.ownerId;
+            console.log(currentProperty.ownerId);
+            playerManager.removeProperty(currentProperty.ownerId, currentProperty);
+
+
+        }
         let winnerPlayer = playerManager.getPlayers()[winnerId];
         playerManager.setMoney(winnerId, -bidAmount);
         currentProperty.setOwner(winnerId);
@@ -67,11 +74,13 @@ class GameManager{
         if(networkManager.getCurrentUser().id === winnerId){
             mainWindow.send("update_money_indicator", winnerPlayer.money);
             mainWindow.send("show_notification", {message: "You win auction for " + propertyModel.name + ".", intent: "success"});
-            mainWindow.send("bm_updateCard", playerManager.getPlayers()[networkManager.getCurrentUser().id]);
         }
-        if(networkManager.getCurrentUser().id === auctionStarter){
+        if(networkManager.getCurrentUser().id === auctionStarter) {
             networkManager.nextState();
         }
+        console.log(playerManager.getPlayers());
+        mainWindow.send("bm_updateCard2", playerManager.getPlayers());
+
     }
 
     updatePlayerListener(players){
@@ -329,7 +338,7 @@ class GameManager{
         });
 
         ipcMain.on("sell_fb", args=>{
-            mainWindow.send("next_state_bf", {stateName: "SellState2", payload: {}});
+            mainWindow.send("next_state_bf", {stateName: "SellStateNormal", payload: {}});
 
             Globals.isDouble = true;
         });
@@ -518,6 +527,7 @@ class GameManager{
             //if tile is income, player spends $200 or 10% of his/her money
             else if (newTile === incomeTax) {
                 playerManager.setMoney(playerId, -200);
+                mainWindow.send("update_money_indicator", playerId.money);
             }
 
             //traverse the arrays in order to find the tile type
@@ -774,20 +784,28 @@ class GameManager{
                 mainWindow.send("show_notification", {message: "Advance to GO", intent: "success"});
 
                 setTimeout(()=>{
+                    playerManager.setMoney(networkManager.getCurrentUser().id, 200);
+                    mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
                     this.moveAction(0);
                 }, 2000);
             }
             else if(card.id === 1){
                 mainWindow.send("show_notification", {message: "Bank error in your favor—Collect $200", intent: "success"});
                 playerManager.setMoney(playerID, 200);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
             }
             else if(card.id === 2){
                 mainWindow.send("show_notification", {message: "Doctor's fee—Pay $50", intent: "danger"});
                 playerManager.setMoney(playerID, -50);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
             }
             else if(card.id === 3){
                 mainWindow.send("show_notification", {message: "From sale of stock you get $50", intent: "success"});
                 playerManager.setMoney(playerID, 50);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
 
             }
 
@@ -803,54 +821,80 @@ class GameManager{
                 mainWindow.send("show_notification", {message: "Grand Opera Night—Collect $50 from every player for opening night seats", intent: "primary"});
                 let players = playerManager.getPlayers();
                 players.forEach(player =>{
-                    if(playerID === player.id)
+                    if(playerID === player.id) {
                         playerManager.setMoney(playerID, (50 * (players.length - 1)));
-                    else
+                        mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
+
+                    }
+                    else {
                         playerManager.setMoney(player.id, -50);
+                        mainWindow.send("update_money_indicator", playerManager.getPlayers()[playerID].money);
+
+                    }
                 });
             }
             else if(card.id === 7){
                 mainWindow.send("show_notification", {message: "Holiday Fund matures—Receive $100", intent: "success"});
                 playerManager.setMoney(playerID, 100);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
             }
             else if(card.id === 8){
                 mainWindow.send("show_notification", {message: "Income tax refund–Collect $20", intent: "success"});
                 playerManager.setMoney(playerID, 20);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
 
             }
             else if(card.id === 9){
                 playerManager.setMoney(playerID, 10);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
                 mainWindow.send("show_notification", {message: "It is your birthday—Collect $10!", intent: "success"});
 
             }
             else if(card.id === 10){
                 playerManager.setMoney(playerID, 100);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
                 mainWindow.send("show_notification", {message: "Life insurance matures–Collect $100", intent: "success"});
             }
             else if(card.id === 11){
                 mainWindow.send("show_notification", {message: "Pay hospital fees of $100", intent: "danger"});
                 playerManager.setMoney(playerID, -100);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
             }
             else if(card.id === 12){
                 mainWindow.send("show_notification", {message: "Pay school fees of $150", intent: "danger"});
                 playerManager.setMoney(playerID, -150);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
             }
             else if(card.id === 13){
                 playerManager.setMoney(playerID, 25);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
                 mainWindow.send("show_notification", {message: "Receive $25 consultancy fee!", intent: "success"});
 
             }
             else if(card.id === 14){
                 mainWindow.send("show_notification", {message: "You are assessed for street repairs–$40 per house–$115 per hotel!", intent: "primary"});
                 playerManager.payRepair(playerID, 40, 115);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
             }
             else if(card.id === 15){
                 mainWindow.send("show_notification", {message: "You have won second prize in a beauty contest–Collect $10!", intent: "success"});
                 playerManager.setMoney(playerID, 10);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
             }
             else if(card.id === 16){
                 mainWindow.send("show_notification", {message: "You inherit $100!", intent: "success"});
                 playerManager.setMoney(playerID, 100);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
             }
         }
         else {
@@ -868,8 +912,12 @@ class GameManager{
             if(card.id === 0){
                 mainWindow.send("show_notification", {message: "Advance to GO", intent: "success"});
 
+                playerManager.setMoney(networkManager.getCurrentUser().id, 200);
+                mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
                 setTimeout(()=>{
                     this.moveAction(0);
+
                 }, 2000);
             }
             else if(card.id === 1){
@@ -878,6 +926,8 @@ class GameManager{
 
                 if(locationID > 24){
                     playerManager.setMoney(networkManager.getCurrentUser().id, 200);
+                    mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
                     mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
 
                 }
@@ -891,6 +941,8 @@ class GameManager{
 
                 if(locationID > 11){
                     playerManager.setMoney(networkManager.getCurrentUser().id, 200);
+                    mainWindow.send("update_money_indicator", networkManager.getCurrentUser().money);
+
                     mainWindow.send("show_notification", {message: "You passed Start. Earned a start bonus!", intent: "success"});
 
                 }

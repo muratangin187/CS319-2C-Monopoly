@@ -4,7 +4,7 @@ import {ipcRenderer} from "electron";
 import BoardManager from "../../../boardManager";
 import { AppToaster } from "../../../toaster";
 
-export default function SellState(props) {
+export default function SellStateNormal(props) {
     function sell_property(){
         if(BoardManager.getCardID() === -1){
             AppToaster.show({message: "Please select a property", intent:"danger"});
@@ -29,9 +29,11 @@ export default function SellState(props) {
         else
             ipcRenderer.send("sell_building_hotel_fb", BoardManager.getCardID());
     }
-    function back(){
+
+    function goBack(){
         ipcRenderer.send("goBack_fb", true);
     }
+
     return (
         <>
             <Card style={{margin: "20px"}} elevation={2}>
@@ -40,7 +42,7 @@ export default function SellState(props) {
                     <Button intent="primary" onClick={sell_property}>Sell Property</Button>
                     <Button intent="warning" onClick={sell_building_house}>Sell House</Button>
                     <Button intent="warning" onClick={sell_building_hotel}>Sell Hotel</Button>
-                    <Button intent="warning" onClick={back}>Back</Button>
+                    <Button intent="primary" onClick={goBack}>Back</Button>
 
                 </Card>
             </Card>

@@ -56,6 +56,12 @@ class BoardManager{
         ipcRenderer.on("bm_updateCard", (event, args)=>{
             this.updateCards(args);
         });
+
+        ipcRenderer.on("bm_updateCard2", (event, args)=>{
+            args.forEach(player=>{
+                this.updateCards(player);
+            });
+        });
     }
     getCardID(){
         return this.selectedCardId;
