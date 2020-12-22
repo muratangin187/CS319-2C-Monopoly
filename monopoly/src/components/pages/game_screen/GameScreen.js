@@ -37,6 +37,8 @@ import BoardManager from "../../boardManager";
 import BuyPropertyState from "./components/BuyPropertyState";
 import BidYourTurn from "./components/BidYourTurn";
 import BidOtherPlayerTurn from "./components/BidOtherPlayerTurn";
+import SellState from "./components/SellState";
+import SellStateNormal from "./components/SellStateNormal";
 import JailTurn from "./components/JailTurn";
 
 function initPixi(){
@@ -393,6 +395,7 @@ function GameScreen(props) {
     useEffect(()=>{
         //initPixi();
         ipcRenderer.on("next_state_bf", (event, stateObject)=>{
+            console.log(stateObject + "StateObject");
             setCurrentState(stateObject);
         });
         //BoardManager.initializeGame({});
@@ -430,7 +433,7 @@ function GameScreen(props) {
                                     currentState.stateName === "buyNewProperty" ? (<BuyPropertyState propertyModel={currentState.payload}/>) :
                                         currentState.stateName === "BidYourTurn" ? (<BidYourTurn arg={currentState.payload} money={money}/>) :
                                             currentState.stateName === "BidOtherPlayerTurn" ? (<BidOtherPlayerTurn arg={currentState.payload} money={money}/>) :
-                                                currentState.stateName === "aa" ? (<JailTurn arg={currentState.payload}/>) : (<OtherPlayersTurn/>)}
+                                                currentState.stateName ==="SellState" ? (<SellState arg={currentState.payload} money={money}/>):currentState.stateName === "SellStateNormal" ? (<SellStateNormal arg={currentState.payload} money={money}/>):currentState.stateName === "aa" ? (<JailTurn arg={currentState.payload}/>):(<OtherPlayersTurn/>)}
                     </Card>
                     <Widget
                         handleNewUserMessage={handleNewUserMessage}

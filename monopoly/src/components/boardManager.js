@@ -58,11 +58,19 @@ class BoardManager{
         ipcRenderer.on("bm_updateCard", (event, args)=>{
             this.updateCards(args);
         });
+
+        ipcRenderer.on("bm_updateCard2", (event, args)=>{
+            args.forEach(player=>{
+                this.updateCards(player);
+            });
+        });
         ipcRenderer.on("bm_updateCity", (event, args)=>{
             this.updateCity(args.id, args.house, args.hotel);
         });
     }
-
+    getCardID(){
+        return this.selectedCardId;
+    }
     initializeGame(players){
         //players = {"bJCKvbl28W0N3jPMAAAD":{"id":"bJCKvbl28W0N3jPMAAAD","username":"Murat","avatar":null,"state":null,"money":200,"inJail":false,"inJailLeft":0,"doubleCount":0,"cards":[],"properties":[],"currentTile":0},"nhkOKa0HiLpAp7YeAAAF":{"id":"nhkOKa0HiLpAp7YeAAAF","username":"Emre","avatar":null,"state":null,"money":200,"inJail":false,"inJailLeft":0,"doubleCount":0,"cards":[],"properties":[],"currentTile":0}};
         PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;

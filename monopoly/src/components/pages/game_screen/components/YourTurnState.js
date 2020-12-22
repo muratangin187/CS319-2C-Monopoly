@@ -11,6 +11,9 @@ export default function YourTurnState() {
     function rollAll() {
         reactDice.rollAll()
     }
+    function sell(){
+        ipcRenderer.send("sell_fb", 0);
+    }
 
     function buyBuilding(type){
         if(BoardManager.selectedCardId !==-1)
@@ -38,6 +41,7 @@ export default function YourTurnState() {
                     disableIndividual="true"
                 />
                 <Button onClick={()=>{rollAll();}} intent={"success"}>Roll</Button>
+                <Button onClick={()=>{sell();}} intent={"warning"}>Sell Property</Button>
                 <Button onClick={()=>{buyBuilding("house");}} intent={"success"}>Build House</Button>
                 <Button onClick={()=>{buyBuilding("hotel");}} intent={"success"}>Build Hotel</Button>
             </Card>
