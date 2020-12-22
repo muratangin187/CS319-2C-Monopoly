@@ -10,7 +10,7 @@ const EventManager = require("./eventManager");
 const TradeManager = require("./tradeManager");
 const StateManager = require("./stateManager");
 const Globals = require("../globals");
-const ModelManager = require("./modelManager");
+let ModelManager;
 let house_Count = 32;
 let hotel_Count = 12;
 
@@ -61,7 +61,6 @@ class GameManager{
     auctionListener(winnerId, propertyModel, bidAmount, auctionStarter){
         let currentProperty = ModelManager.getModels()[propertyModel.id];
         let oldOwner = currentProperty.ownerId;
-        console.log("OLD OWNER:" + playerManager.getPlayers()[currentProperty.ownerId].username);
         if(currentProperty.ownerId){
             let x = currentProperty.ownerId;
             console.log(currentProperty.ownerId);
@@ -141,11 +140,18 @@ class GameManager{
             new PropertyModel(0, "Ankara", 10, 1, 100, 2, 0),
             new PropertyModel(1, "Konya", 10, 1, 3, 2, 0)
         ]);
+        ModelManager = require("./modelManager");
         mainWindow.send("updatePlayerList", playerManager.getPlayers());
         //for(let model in ModelManager.getModels()){
         //    ModelManager.getModels()[model].setOwner(room.users[0].id);
         //}
-        mainWindow.send("bm_initializeGame" , playerManager.getPlayers());
+        let names = {};
+        let colors = {};
+        for(let index in ModelManager.getModels()){
+            names[index] = (ModelManager.getModels()[index].name);
+            colors[index] = (ModelManager.getModels()[index].color);
+        }
+        mainWindow.send("bm_initializeGame" , {players:playerManager.getPlayers(),names: names, colors: colors} );
     }
 
     moveAction(destinationTileId){
@@ -174,13 +180,17 @@ class GameManager{
             console.log("WENT TO NEW TILE: " + destinationTileId);
             // TODO call stateTurn according to new tile
             //console.log("THIS.TILES: " + JSON.stringify(Globals.tiles, null, 2));
-            let currentTile = Globals.tiles.find(tile=> tile.tile === destinationTileId);
+            let currentTile = Globals.selectedTileId === 1 ? Globals.tiles.find(tile=> tile.tile === destinationTileId) : Globals.tiles2.find(tile=> tile.tile === destinationTileId);
             switch(currentTile.type){
                 case "CornerTile":
                     if(destinationTileId === 30){
                         playerManager.sendJail(networkManager.getCurrentUser().id);
+                        Globals.isDouble = false;
                         mainWindow.send("show_notification", {message: "You entered jail.", intent: "danger"});
-                        networkManager.nextState();
+                        setTimeout(()=>{
+                            networkManager.movePlayer(10);
+                            networkManager.nextState();
+                        },2000);
                     }else{
                         networkManager.nextState();
                     }
@@ -192,6 +202,7 @@ class GameManager{
                         if(ownerOfStationId === networkManager.getCurrentUser().id){
                             // BU CITY BIZIM
                             console.log("BU BENIM STATIONU");
+                            networkManager.nextState();
                         }else{
                             // BU CITY BASKASININ
                             console.log("BU BASKASININ STATIONU");
@@ -273,6 +284,7 @@ class GameManager{
                         if(ownerOfCityId === networkManager.getCurrentUser().id){
                             // BU CITY BIZIM
                             console.log("BU BENIM CITYM");
+                            networkManager.nextState();
                         }else{
                             // BU CITY BASKASININ
                             console.log("BU BASKASININ CITYSI");
@@ -1061,7 +1073,7 @@ class GameManager{
 
 
                 if(locationID === 36){
-                    let currentTile = Globals.tiles[28];
+                    let currentTile = Globals.selectedTileId === 1 ? Globals.tiles[28] : Globals.tiles2[28];
                     let cityModel = ModelManager.getModels()[currentTile.tile];
                     let ownerOfCityId = cityModel.getOwner();
 
@@ -1076,7 +1088,7 @@ class GameManager{
                 }
 
                 if(locationID === 22){
-                    let currentTile = Globals.tiles[28];
+                    let currentTile = Globals.selectedTileId === 1 ? Globals.tiles[28] : Globals.tiles2[28];
                     let cityModel = ModelManager.getModels()[currentTile.tile];
                     let ownerOfCityId = cityModel.getOwner();
 
@@ -1091,7 +1103,7 @@ class GameManager{
                 }
 
                 if(locationID === 7){
-                    let currentTile = Globals.tiles[12];
+                    let currentTile = Globals.selectedTileId === 1 ? Globals.tiles[12] : Globals.tiles2[12];
                     let cityModel = ModelManager.getModels()[currentTile.tile];
                     let ownerOfCityId = cityModel.getOwner();
 
@@ -1113,7 +1125,7 @@ class GameManager{
 
 
                 if(locationID === 36){
-                    let currentTile = Globals.tiles[35];
+                    let currentTile = Globals.selectedTileId === 1 ? Globals.tiles[35] : Globals.tiles2[35];
                     let cityModel = ModelManager.getModels()[currentTile.tile];
                     let ownerOfCityId = cityModel.getOwner();
 
@@ -1129,7 +1141,7 @@ class GameManager{
                 }
 
                 if(locationID === 22){
-                    let currentTile = Globals.tiles[25];
+                    let currentTile = Globals.selectedTileId === 1 ? Globals.tiles[25] : Globals.tiles2[25];
                     let cityModel = ModelManager.getModels()[currentTile.tile];
                     let ownerOfCityId = cityModel.getOwner();
 
@@ -1145,7 +1157,7 @@ class GameManager{
                 }
 
                 if(locationID === 7){
-                    let currentTile = Globals.tiles[5];
+                    let currentTile = Globals.selectedTileId === 1 ? Globals.tiles[5] : Globals.tiles2[5];
                     let cityModel = ModelManager.getModels()[currentTile.tile];
                     let ownerOfCityId = cityModel.getOwner();
 

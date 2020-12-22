@@ -79,7 +79,7 @@ const RoomList = (props) => {
             console.log("Real:" + room.password + " User:" + JSON.stringify(password));
             if(room.password === password){
                 console.log("GIRDIN");
-                ipcRenderer.send("join_room_fb", {roomName: room.room_name, username: username});
+                ipcRenderer.send("join_room_fb", {roomName: room.room_name, username: username, board: room.board});
             }else {
                 console.log("SIFRE YANLIS");
             }

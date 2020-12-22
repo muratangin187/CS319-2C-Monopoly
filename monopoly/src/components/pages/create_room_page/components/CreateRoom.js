@@ -47,11 +47,19 @@ export default function CreateRoom() {
 
     const setSelectedBoard = (selectedBoard) => {
         formik.values.selectedBoard = selectedBoard;
+        if(selectedBoard=== "Original Monopoly"){
+            setSelectedBoardId(1);
+            console.log("SELECTED ORIGINAL VERSION");
+        }else{
+            setSelectedBoardId(2);
+            console.log("SELECTED TURKEY VERSION");
+        }
     };
 
     const handleClose = (room, type, password, username) => {
         if(type==="join"){
             console.log("GIRDIN");
+            room.board = selectedBoardId;
             ipcRenderer.send('create_room_fb', {roomModel:room, username: username});
         }
         setOpen(false);
@@ -59,7 +67,8 @@ export default function CreateRoom() {
 
     const classes = useStyles();
 
-    const [boards, setBoards] = useState(["Template-1", "Template-2"]);
+    const [boards, setBoards] = useState(["Original Monopoly", "Monopoly Turkiye"]);
+    const [selectedBoardId, setSelectedBoardId] = useState(1);
     const [open, setOpen] = React.useState(false);
     const [selectedRoom, setSelectedRoom] = React.useState(null);
     return (

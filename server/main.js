@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
         args.roomModel.users = [{id: socket.id, username: args.username, characterId: -1}];
         rooms.push(args.roomModel);
         socket.join(args.roomModel.room_name);
-        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args.roomModel.room_name, users:args.roomModel.users});
+        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args.roomModel.room_name, users:args.roomModel.users, board: args.roomModel.board});
         io.emit("get_rooms_sb", rooms);
     });
 
@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
         socket.join(args.roomName);
         let joinedRoom = rooms.find((room)=>room.room_name === args.roomName);
         joinedRoom.users.push({id: socket.id, username: args.username, characterId: -1});
-        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args.roomName, users:joinedRoom.users});
+        socket.emit("change_page_sb", {page: "roomLobbyPage", room: args.roomName, users:joinedRoom.users, board: args.board});
         socket.to(args.roomName).emit("update_room_users_sb", {roomName: args.roomName, users:joinedRoom.users} );
     });
 

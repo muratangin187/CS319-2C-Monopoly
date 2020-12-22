@@ -18,6 +18,11 @@ class NetworkManager {
                 this.rooms.find((room)=>room.room_name === args[0].room).users = args[0].users;
             console.log("ROOMS: " + JSON.stringify(this.rooms,null,2));
             console.log("CURRENT USER: " + JSON.stringify(this.currentUser));
+            console.log("BEFORE GLOBALS.SELECTEDTILEID:" + Globals.selectedTileId);
+            console.log(JSON.stringify(args[0]));
+            if(args[0].board)
+                Globals.selectedTileId = args[0].board;
+            console.log("AFTER GLOBALS.SELECTEDTILEID:" + Globals.selectedTileId);
             mainWindow.send("change_page_bf", {result:args[0], currentUser: this.currentUser});
         });
 
@@ -138,7 +143,7 @@ class NetworkManager {
     }
 
     joinRoom(args){
-        console.log("EMIT ON NETWORK:" + args.roomName + " - " + args.username);
+        console.log("EMIT ON NETWORK:" + args.roomName + " - " + args.username + " - " + args.board);
         this.socket.emit("join_room_bs", args);
     }
 

@@ -6,8 +6,8 @@ const UtilityModel = require("../models/utilityModel");
 
 class ModelManager{
     constructor(){
-        console.log("YARATTIM");
-        let tiles = Globals.tiles;
+        console.log("YARATTIM " + Globals.selectedTileId);
+        let tiles = Globals.selectedTileId === 1 ? Globals.tiles : Globals.tiles2;
         let browns = new CityGroupModel([], "0x382B1C");
         let lightBlues = new CityGroupModel([], "0x3CB8DE");
         let pinks = new CityGroupModel([], "0xDE3CD3");
@@ -71,6 +71,7 @@ class ModelManager{
                     cityGroup = blues;
                 }
                 let city = new CityModel(id, name, rentPrice, mortgagePrice, price, tile, houseCost, hotelCost, {"house":0, "hotel":0}, color);
+                console.log(city.name);
                 cityGroup.cities.push(city);
                 this.models[id] = city;
             } else if (type === "UtilityTile") {

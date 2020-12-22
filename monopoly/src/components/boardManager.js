@@ -39,10 +39,11 @@ class BoardManager{
         this.tiles = {};
         this.models = {};
         this.selectedCardId = -1;
+        this.selectedTileId = -1;
         this.isClickedCard = false;
         ipcRenderer.on("bm_initializeGame", (event, args)=>{
             setTimeout(()=>{
-                this.initializeGame(args);
+                this.initializeGame(args.players, args.names, args.colors);
             }, 1000);
         });
         ipcRenderer.on("bm_findTile", (event, args)=>{
@@ -65,7 +66,7 @@ class BoardManager{
     getCardID(){
         return this.selectedCardId;
     }
-    initializeGame(players){
+    initializeGame(players, names, colors){
         //players = {"bJCKvbl28W0N3jPMAAAD":{"id":"bJCKvbl28W0N3jPMAAAD","username":"Murat","avatar":null,"state":null,"money":200,"inJail":false,"inJailLeft":0,"doubleCount":0,"cards":[],"properties":[],"currentTile":0},"nhkOKa0HiLpAp7YeAAAF":{"id":"nhkOKa0HiLpAp7YeAAAF","username":"Emre","avatar":null,"state":null,"money":200,"inJail":false,"inJailLeft":0,"doubleCount":0,"cards":[],"properties":[],"currentTile":0}};
         PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
         Globals.app = new PIXI.Application({resolution: 2});
@@ -89,7 +90,7 @@ class BoardManager{
             //let greens = new CityGroupModel([], "0x24733B");
             //let blues = new CityGroupModel([], "0x0541CA");
 
-            let tiles = Globals.tiles;
+            let tiles = Globals.selectedTileId === 1 ? Globals.tiles : Globals.tiles2;
             let image = Globals.resources["board_center"].texture;
             let board_center = new PIXI.Sprite(image);
             board_center.x = Globals.sizeOfBoard / Globals.tileNumber;
@@ -115,17 +116,22 @@ class BoardManager{
                     //image = Globals.resources[imageType].texture;
                     //let station = new StationModel(id, name,  rentPrice, mortgagePrice, price, tile, null, false, image);
                     //this.models[id] = station;
-                    this.tiles[tile] = (new OtherPropertyTileView(ModelManager.getModels()[id]));
+                    let model = ModelManager.getModels()[id];
+                    model.name = names[id];
+                    model.color = colors[id];
+                    this.tiles[tile] = (new OtherPropertyTileView(model));
                 }
                 else if (type === "CityTile") {
                     let id = tiles[i]["id"]
                     let model = ModelManager.getModels()[id];
-                    this.tiles[tile] = (new CityTileView(model));
+                    model.name = names[id];
+                    model.color = colors[id];
+                    this.tiles[tile] = (new CityTileView(model, (id)=>{this.selectedTileId = id;console.log(this.selectedTileId);}));
                 }
                 else if (type === "SpecialTile") {
                     let imageType = tiles[i]["image"];
                     image = Globals.resources[imageType].texture;
-                    this.tiles[tile] = (new SpecialTileView(name ,image, tile));
+                    this.tiles[tile] = (new SpecialTileView(name,image, tile));
                 }
                 else if (type === "UtilityTile") {
                     //let rentPrice = tiles[i]["rentPrice"];
@@ -135,7 +141,10 @@ class BoardManager{
                     //image = Globals.resources[imageType].texture;
                     //let utility = new UtilityModel(tile, name,  rentPrice, mortgagePrice, price, tile,false, Globals.resources[image].texture);
                     //this.models[tile] = utility;
-                    this.tiles[tile] = (new OtherPropertyTileView(ModelManager.getModels()[tile]));
+                    let model = ModelManager.getModels()[tile];
+                    model.name = names[tile];
+                    model.color = colors[tile];
+                    this.tiles[tile] = (new OtherPropertyTileView(model));
                 }
             }
 

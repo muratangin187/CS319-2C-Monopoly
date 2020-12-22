@@ -3,7 +3,7 @@ import tileView from "./tileView";
 import Globals from "../../globals";
 
 class cityTileView extends tileView{
-    constructor(city) {
+    constructor(city, callback) {
         super(city.tile);
         this.city = city;
         this.content = new PIXI.Container();
@@ -15,6 +15,7 @@ class cityTileView extends tileView{
         this.tile.addChild(this.title);
         this.tile.addChild(this.content);
         this.tile.addChild(this.buildings);
+        this.callback = callback;
 
         this.initializeDrawings()
     }
@@ -51,6 +52,7 @@ class cityTileView extends tileView{
         this.title.addChild(rentText);
 
         this.tile.on('mousedown', () => {
+            this.callback(this.id);
             this.popUP = new PIXI.Graphics();
             this.tile.addChild(this.popUP);
             let offset = 50;
