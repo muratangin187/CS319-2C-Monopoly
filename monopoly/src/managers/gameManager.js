@@ -100,7 +100,13 @@ class GameManager{
         properties.forEach(newPropertyModel=>{
             ModelManager.getModels()[newPropertyModel.id].ownerId = newPropertyModel.ownerId;
             ModelManager.getModels()[newPropertyModel.id].isMortgaged= newPropertyModel.isMortgaged;
-            console.log("Property name: " + newPropertyModel.name + " was bought by " + newPropertyModel.ownerId);
+            console.log("Property name: " + newPropertyModel.name + " was bought by " + newPropertyModel.ownerId + " - " + ModelManager.getModels()[newPropertyModel.id].type);
+            if(ModelManager.getModels()[newPropertyModel.id].type === "CityModel"){
+                console.log(newPropertyModel.buildings.hotel + " - " + newPropertyModel.buildings.house);
+                ModelManager.getModels()[newPropertyModel.id].buildings.house = newPropertyModel.buildings.house;
+                ModelManager.getModels()[newPropertyModel.id].buildings.hotel = newPropertyModel.buildings.hotel;
+                mainWindow.send("bm_updateCity", {id: newPropertyModel.id, house: newPropertyModel.buildings.house, hotel: newPropertyModel.buildings.hotel});
+            }
             // TODO CHECK ALL THE PROPERTIES AND REFLECT THEM TO VIEW
         });
     }
@@ -137,9 +143,9 @@ class GameManager{
                 this.stateTurn({stateName: "playNormalTurn", payload:{}});
             }else{
                 playerManager.reduceJailLeft(networkManager.getCurrentUser().id);
-                let jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 30);
+                let jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 6);
                 if(!jailCard)
-                    jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 10);
+                    jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 4);
                 if(jailCard)
                     this.stateTurn({stateName: "playNormalTurn", payload:{turnsLeft: turnsLeft,haveCard: true}});
                 else
@@ -365,31 +371,94 @@ class GameManager{
          */
         ipcMain.on("set_building_fb", (event, args)=>{
             const user = networkManager.getCurrentUser();
-            let property = cardManager.getCardById(args[0]);
-
-            let type = args[1].type;
-
-            if(type === 'hotel' && hotel_Count === 0)
-                    console.log("No hotel left to build");
-
-            else if(type === 'house' && house_Count === 0)
-                    console.log("No house left to build");
-
+            let property = ModelManager.getModels()[args.id];
+            if(property.type !== "CityModel"){
+                mainWindow.send("show_notification", {message: "You cannot set a building to a non-city property.", intent: "danger"});
+                return;
+            }
+            let type = args.type;
+            console.log("SET BUILD ARG");
+            console.log(args);
+            if(type === 'hotel' && Globals.hotelCount === 0)
+                mainWindow.send("show_notification", {message: "There is no hotel left in game.", intent: "danger"});
+            else if(type === 'house' && Globals.houseCount === 0)
+                mainWindow.send("show_notification", {message: "There is no house left in game.", intent: "danger"});
             else{
-                let cond = playerManager.setBuildings(user.id, property, args[1]);
-
-                if(!cond){
-                    console.log("Cannot buy. Conditions not meet");
-                }
-                else{
-                    console.log("Success");
-                    if(type === 'hotel') {
-                        hotel_Count -= 1;
-                        house_Count += 4;
+                if(type==="house"){
+                    if(property.buildings.hotel === 1){
+                        mainWindow.send("show_notification", {message: "You cannot build house after a hotel.", intent: "danger"});
+                        return;
                     }
-
-                    else
-                        house_Count -= 1;
+                    if(property.buildings.house === 4){
+                        mainWindow.send("show_notification", {message: "You cannot build more than 4 house.", intent: "danger"});
+                        return;
+                    }
+                    let canBuild = true;
+                    let allModels = ModelManager.getModels();
+                    for(let index in allModels){
+                        let currentModel = allModels[index];
+                        if(currentModel.type === "CityModel" && currentModel.color === property.color){
+                            if(currentModel.ownerId !== user.id){
+                                mainWindow.send("show_notification", {message: "You cannot build before collect all the cities in a color.", intent: "danger"});
+                                return;
+                            }
+                            if(currentModel.buildings.house < property.buildings.house){
+                                canBuild = false;
+                            }
+                        }
+                    }
+                    if(canBuild){
+                        if(playerManager.setMoney(networkManager.getCurrentUser().id, -property.houseCost)){
+                            property.buildings.house = property.buildings.house + 1;
+                            Globals.houseCount = Globals.houseCount - 1;
+                            mainWindow.send("show_notification", {message: "The new house built.", intent: "success"});
+                            ModelManager.getModels()[args.id].buildings = property.buildings;
+                            mainWindow.send("bm_updateCity", {id: args.id, house: property.buildings.house, hotel: property.buildings.hotel});
+                            networkManager.updateProperties([property]);
+                        }else{
+                            mainWindow.send("show_notification", {message: "There is not enough money for building.", intent: "danger"});
+                        }
+                    }else{
+                        mainWindow.send("show_notification", {message: "You cannot build more house here.", intent: "danger"});
+                    }
+                }else{
+                    let canBuild = true;
+                    let allModels = ModelManager.getModels();
+                    for(let index in allModels){
+                        let currentModel = allModels[index];
+                        if(currentModel.type === "CityModel" && currentModel.color === property.color){
+                            if(currentModel.ownerId !== user.id){
+                                mainWindow.send("show_notification", {message: "You cannot build before collect all the cities in a color.", intent: "danger"});
+                                return;
+                            }
+                            if(currentModel.buildings.house < property.buildings.house){
+                                canBuild = false;
+                            }
+                        }
+                    }
+                    if(canBuild){
+                        if(property.buildings.house !== 4){
+                            mainWindow.send("show_notification", {message: "You cannot build a hotel before got 4 houses.", intent: "danger"});
+                            return;
+                        }
+                        if(property.buildings.hotel === 1){
+                            mainWindow.send("show_notification", {message: "You cannot build more than one hotel.", intent: "danger"});
+                            return;
+                        }
+                        if(playerManager.setMoney(networkManager.getCurrentUser().id, -property.hotelCost)){
+                            property.buildings.hotel = property.buildings.hotel + 1;
+                            Globals.hotelCount = Globals.hotelCount - 1;
+                            Globals.houseCount = Globals.houseCount + 4;
+                            mainWindow.send("show_notification", {message: "The new hotel built.", intent: "success"});
+                            ModelManager.getModels()[args.id].buildings = property.buildings;
+                            mainWindow.send("bm_updateCity", {id: args.id, house: property.buildings.house, hotel: property.buildings.hotel});
+                            networkManager.updateProperties([property]);
+                        }else{
+                            mainWindow.send("show_notification", {message: "There is not enough money for building.", intent: "danger"});
+                        }
+                    }else{
+                        mainWindow.send("show_notification", {message: "You cannot build a hotel before got 4 houses in each city.", intent: "danger"});
+                    }
                 }
             }
         });
@@ -572,6 +641,7 @@ class GameManager{
                 }
                 playerManager.exitJail(networkManager.getCurrentUser().id);
                 mainWindow.send("bm_updateCard", playerManager.getPlayers()[networkManager.getCurrentUser().id]);
+                mainWindow.send("addJailCard", true);
                 networkManager.updatePlayers([playerManager.getPlayers()[networkManager.getCurrentUser().id]]);
                 networkManager.nextState();
             }
@@ -618,9 +688,9 @@ class GameManager{
                         mainWindow.send("next_state_bf", {stateName:"playNormalTurn", payload: payload});
                     }else{
                         playerManager.reduceJailLeft(networkManager.getCurrentUser().id);
-                        let jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 30);
+                        let jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 6);
                         if(!jailCard)
-                            jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 10);
+                            jailCard = playerManager.searchCard(networkManager.getCurrentUser().id, 4);
                         if(jailCard)
                             mainWindow.send("next_state_bf", {stateName:"waitInJail", payload:{turnsLeft: turnsLeft,haveCard: true}});
                         else
@@ -746,12 +816,13 @@ class GameManager{
             else if(card.id === 6){
                 mainWindow.send("show_notification", {message: "Grand Opera Night—Collect $50 from every player for opening night seats", intent: "primary"});
                 let players = playerManager.getPlayers();
-                players.forEach(player =>{
+                for(let i in players){
+                    let player = players[i];
                     if(playerID === player.id)
                         playerManager.setMoney(playerID, (50 * (players.length - 1)));
                     else
                         playerManager.setMoney(player.id, -50);
-                });
+                }
             }
             else if(card.id === 7){
                 mainWindow.send("show_notification", {message: "Holiday Fund matures—Receive $100", intent: "success"});
@@ -1009,35 +1080,38 @@ class GameManager{
                 mainWindow.send("show_notification", {message: "You have been elected Chairman of the Board–Pay each player $50", intent: "primary"});
 
                 let players = playerManager.getPlayers();
-                players.forEach(player =>{
+                for(let i in players){
+                    let player = players[i];
                     if(playerID === player.id)
                         playerManager.setMoney(playerID, -(50 * (players.length - 1)));
                     else
                         playerManager.setMoney(player.id, 50);
-                });
+                }
             }
             else if(card.id === 14){
                 //,"Your building and loan matures—Collect $150"
                 playerManager.setMoney(playerID, 150);
                 mainWindow.send("show_notification", {message: "Your building and loan matures—Collect $150!", intent: "primary"});
             }
-            else if(card.id === 15){
+            else if(card.id === 15) {
                 //,"You have won a crossword competition—Collect $100"
                 playerManager.setMoney(playerID, 100);
-                mainWindow.send("show_notification", {message: "You have won a crossword competition—Collect $100!", intent: "primary"});
+                mainWindow.send("show_notification", {
+                    message: "You have won a crossword competition—Collect $100!",
+                    intent: "primary"
+                });
 
-            }
+            }else if(card.id === 16)
+                    mainWindow.send("show_notification", {message: "You get a Natural Disaster Card!", intent: "success"});
+            else if(card.id === 17)
+                mainWindow.send("show_notification", {message: "You get a Profit Card!", intent: "success"});
         }
         else { //6-16-17
             playerManager.addCard(playerID, card);
-            if(card.id === 6)
+            if(card.id === 6) {
                 mainWindow.send("show_notification", {message: "You get a Jail Free Card!", intent: "success"});
-            else if(card.id === 16)
-                mainWindow.send("show_notification", {message: "You get a Natural Disaster Card!", intent: "success"});
-
-            else if(card.id === 17)
-                mainWindow.send("show_notification", {message: "You get a Profit Card!", intent: "success"});
-
+                mainWindow.send("addJailCard", true);
+            }
         }
     }
 

@@ -13,6 +13,8 @@ class Globals{
         this.isDouble = false;
         this.tileNumber = 11;
         this.sizeOfBoard = this.tileNumber*80;
+        this.houseCount = 32;
+        this.hotelCount = 12;
         this.tiles = [
             {
                 "type": "CornerTile",

@@ -10,8 +10,11 @@ class cityTileView extends tileView{
         this.content.name = "content";
         this.title = new PIXI.Container();
         this.title.name = "title";
+        this.buildings = new PIXI.Container();
+        this.buildings.name = "buildings";
         this.tile.addChild(this.title);
         this.tile.addChild(this.content);
+        this.tile.addChild(this.buildings);
 
         this.initializeDrawings()
     }
@@ -148,7 +151,30 @@ With Hotel .................... ${this.city.rentPrice[5]}$`,{...style, fontSize:
         });
 
 
-    }
+        let houseCount = this.city.buildings.house;
+        let hotelCount = this.city.buildings.hotel;
 
+        this.buildings.children.forEach(child=>child.destroy());
+        for (let i = 0; i < houseCount; i++) {
+            console.log("House building " + i);
+            let icon = new PIXI.Sprite(Globals.resources["house"].texture);
+            icon.width = 20;
+            icon.height = 20;
+            icon.x = this.x + 20*i + 2.5;
+            icon.y = this.y;
+            this.buildings.addChild(icon);
+        }
+        for (let i = 0; i < hotelCount; i++) {
+            console.log("Hotel building " + i);
+            let icon = new PIXI.Sprite(Globals.resources["hotel"].texture);
+            icon.width = 20;
+            icon.height = 20;
+            icon.x = this.x + this.size/2 - 10;
+            icon.y = this.y;
+            this.buildings.addChild(icon);
+        }
+
+
+    }
 }
 export default cityTileView;

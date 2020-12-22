@@ -70,7 +70,7 @@ class ModelManager{
                 if (color === blues.color) {
                     cityGroup = blues;
                 }
-                let city = new CityModel(id, name, rentPrice, mortgagePrice, price, tile, houseCost, hotelCost, null, color);
+                let city = new CityModel(id, name, rentPrice, mortgagePrice, price, tile, houseCost, hotelCost, {"house":0, "hotel":0}, color);
                 cityGroup.cities.push(city);
                 this.models[id] = city;
             } else if (type === "UtilityTile") {
