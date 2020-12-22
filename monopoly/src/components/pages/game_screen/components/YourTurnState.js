@@ -21,17 +21,23 @@ export default function YourTurnState() {
         else
             AppToaster.show({message: "You need to select a card", intent:"danger"});
     }
+    function characterSkill(){
+        // if(BoardManager.selectedTileId !==-1)
+        ipcRenderer.send("use_skill_fb", BoardManager.selectedTileId);
+        // else
+        //     AppToaster.show({message: "You need to select a tile", intent:"danger"});
 
+    }
     return (
         <>
-            <Card style={{margin: "20px",backgroundColor: "#CEE5D1"}} elevation={2}>
+            <Card style={{margin: "20px",backgroundColor: "#cee5d1"}} elevation={2}>
                 <h3 style={{textAlign: "center"}}>Your turn, roll dice</h3>
             </Card>
             <Card style={{margin: "20px", textAlign: "center", backgroundColor: "#CEE5D1"}} elevation={2}>
                 <ReactDice
                     numDice={2}
                     rollDone={(sum, rolledDice)=>{
-                        ipcRenderer.send("move_player_fb", [4,6]);
+                        ipcRenderer.send("move_player_fb", [rolledDice[0], rolledDice[1]]);
                     }}
                     ref={dice => setReactDice(dice)}
                     dotColor="#000000"
@@ -40,6 +46,7 @@ export default function YourTurnState() {
                     outlineColor="#575757"
                     disableIndividual="true"
                 />
+                <Button onClick={()=>{characterSkill();}} intent={"success"}>Use Character Skill</Button>
                 <Button onClick={()=>{rollAll();}} intent={"success"}>Roll</Button>
                 <Button onClick={()=>{sell();}} intent={"warning"}>Sell Property</Button>
                 <Button onClick={()=>{buyBuilding("house");}} intent={"success"}>Build House</Button>

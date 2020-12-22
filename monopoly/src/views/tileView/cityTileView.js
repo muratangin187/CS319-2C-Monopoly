@@ -5,6 +5,7 @@ import Globals from "../../globals";
 class cityTileView extends tileView{
     constructor(city, callback) {
         super(city.tile);
+        this.callback = callback;
         this.city = city;
         this.content = new PIXI.Container();
         this.content.name = "content";

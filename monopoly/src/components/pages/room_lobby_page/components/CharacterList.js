@@ -66,7 +66,7 @@ export default function CharacterList(props){
     return  (<Grid container spacing={2} style={{justifyContent: "center", alignItems: "center"}}>
         {characters.map((char, index) => {
                 return (
-                    <Card key={char.id} interactive={true} elevation={charSelected === index ? 4 : 1} style={cardStyle} onClick={()=>{setCharSelected(index);props.setSelectedCharId(char.id);props.setSelectedCharName(char.charName);}}>
+                    <Card key={char.id} interactive={index < 2} elevation={charSelected === index ? 4 : 1} style={cardStyle} onClick={()=>{if(index >= 2) return; setCharSelected(index);props.setSelectedCharId(char.id);props.setSelectedCharName(char.charName);}}>
                         <Avatar style={avatarStyle[index]}>{char.charName.charAt(0)}</Avatar>
                         <h5><a href="#">{char.charName}</a></h5>
                         <Button onClick={() => setOpenIndex(index)}>Description</Button>

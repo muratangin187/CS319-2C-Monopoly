@@ -691,6 +691,43 @@ class GameManager{
             }
         });
 
+        ipcMain.on("use_skill_fb", args =>{
+            let character = playerManager.getPlayers()[networkManager.getCurrentUser().id].character;
+            let tile = playerManager.getPlayers()[networkManager.getCurrentUser().id].currentTile;
+
+            if(character === 1){
+                //Driver
+                let x;
+                do {
+                    x = this.getRandomInt(4,24);
+
+                }while(x % 2 !== 0);
+                mainWindow.send("show_notification", {message: "You used character skill! Moving " + x, intent: "success"});
+
+                this.moveAction((tile + x) % ((Globals.tileNumber-1) * 4));
+            }
+            else if(character === 2){
+                //child
+                let x = this.getRandomInt(1,6);
+
+                mainWindow.send("show_notification", {message: "You used character skill! Moving " + x, intent: "success"});
+
+                this.moveAction((tile + x) % ((Globals.tileNumber-1) * 4));
+            }
+            else if(character === 3){
+                //traveler
+                if(tile !== 5 && tile !== 15 && tile !== 25 && tile !== 35){
+                    mainWindow.send("show_notification", {message: "You are not in the Station", intent: "danger"});
+                    Globals.isDouble = true;
+                    mainWindow.send("next_state_bf", {stateName:"playNormalTurn", payload: {}});
+                }
+                else{
+                    mainWindow.send("show_notification", {message: "You are going to the selected tile", intent: "success"});
+                    this.moveAction(args);
+                }
+            }
+        });
+
         ipcMain.on("exit_from_jail", (event, arg) =>{
             if(arg.type === 0){
                 //next turn

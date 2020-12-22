@@ -10,10 +10,10 @@ const rooms = [{room_name: "Test", password: "123", selectedBoard: "Template - 1
 
 const characters = [
     //TODO fill the placeholders with char description
-    {id: 1, charName: "Character - 1", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "},
-    {id: 2, charName: "Character - 2", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "},
-    {id: 3, charName: "Character - 3", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "},
-    {id: 4, charName: "Character - 4", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "}
+    {id: 1, charName: "Driver", description: "Driver can move double the amount of the total dice"},
+    {id: 2, charName: "Child", description: "Child can move half the amount of the total dice"},
+    {id: 3, charName: "Traveler", description: "Traveler can go anywhere if the traveler stops at the Station."},
+    {id: 4, charName: "Coming soon", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum placerat eros, at condimentum odio pretium et. Quisque pellentesque gravida tellus, eget sagittis est vulputate eu. Proin interdum vulputate eleifend. Donec laoreet id erat ac posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis hendrerit augue. In feugiat congue felis, eget luctus erat ultrices euismod. "}
 ];
 
 const messages = [];
