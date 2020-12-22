@@ -37,7 +37,7 @@ class PlayerModel{
         this.avatar = avatar;
         this.state = state;
         this.character = character;
-        this.money = 2000;
+        this.money = 1500;
         this.inJail = false;
         this.inJailLeft = 0;
         this.doubleCount = 0;

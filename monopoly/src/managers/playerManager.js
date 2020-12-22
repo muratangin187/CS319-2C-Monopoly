@@ -94,11 +94,19 @@ class PlayerManager{
      * @param {BuildingModel} newBuilding: Building
      * @returns {boolean}
      */
-    setBuildings(playerID, property, newBuilding) {
-
+    setBuildings(playerID, property, type) {
         let player = this.players[playerID];
 
-        let cost = newBuilding.cost;
+        if(type === "hotel"){
+            let cost = property.hotelCost;
+        }else{
+            let cost = property.houseCost;
+        }
+
+
+
+
+        return;
 
         let playerProperty = player.properties.find(myp => myp.id === property.getID());
 

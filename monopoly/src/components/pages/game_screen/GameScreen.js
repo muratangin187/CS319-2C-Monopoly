@@ -27,7 +27,7 @@ import SpecialTileView from "../../../views/tileView/specialTileView";
 import UtilityModel from "../../../models/utilityModel";
 import Character from "../../../views/tileView/Character";
 import UtilityCardView from "../../../views/cardView/utilityCardView";
-import {Button, Card, Drawer, Position, Tag} from "@blueprintjs/core";
+import {Button, Card, Drawer, Icon, Position, Tag} from "@blueprintjs/core";
 import ReactDice from 'react-dice-complete'
 import YourTurnState from "./components/YourTurnState";
 import OtherPlayersTurn from "./components/OtherPlayersTurn";
@@ -383,7 +383,8 @@ function GameScreen(props) {
     const [isScoreboardOpen, setIsScoreboardOpen] = React.useState(false);
     const [currentState, setCurrentState] = React.useState({stateName:"determineStartOrder", payload:{}});
     const [currentView, setCurrentView] = React.useState(null);
-    const [money, setMoney] = React.useState(2000);
+    const [money, setMoney] = React.useState(1500);
+    const [jailCard, setJailCard] = React.useState(false);
 
     const handleNewUserMessage = (newMessage) => {
         ipcRenderer.send('send_message_widget_fb', {sendBy: props.currentUser.username, message: newMessage});
@@ -401,6 +402,10 @@ function GameScreen(props) {
             console.log("USER: " + playerId + " MOVED TO " + destinationTileId);
         });
 
+        ipcRenderer.on("addJailCard", (event, args)=>{
+            setJailCard(args);
+        });
+        http://tabu-clone.herokuapp.com/socket.io/?EIO=4&transport=polling&t=NQ7P6KX&b64=1
         ipcRenderer.on("update_money_indicator", (event, money)=>{
             setMoney(money);
         });
@@ -417,6 +422,7 @@ function GameScreen(props) {
                 <div style={{backgroundColor: "#CEE5D1"}}>
                     <Card style={{margin: "20px", padding: "20px", backgroundColor: "#a9dbb0"}} elevation={2}>
                         <Button intent={"warning"} onClick={()=>setIsScoreboardOpen(!isScoreboardOpen)}>Scoreboard</Button>
+                        <Button icon={jailCard ? "tick" : "cross"} intent={jailCard ? "success" : "danger"} style={{marginLeft: 10}}>Jail Card</Button>
                         <Button intent="primary" active={false} icon="dollar" style={{float:"right"}}>{money}</Button>
                         {currentState.stateName === "determineStartOrder"
                             ? (<DetermineStartOrder/>) : currentState.stateName === "playNormalTurn"

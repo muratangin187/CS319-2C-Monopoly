@@ -29,6 +29,8 @@ import pion1 from "../views/assets/pion1.png";
 import pion2 from "../views/assets/pion2.png";
 import pion3 from "../views/assets/pion3.png";
 import pion4 from "../views/assets/pion4.png";
+import house from "../views/assets/house.png";
+import hotel from "../views/assets/hotel.png";
 const {ipcRenderer} = require('electron');
 import Character from "../views/tileView/Character";
 class BoardManager{
@@ -56,6 +58,9 @@ class BoardManager{
         ipcRenderer.on("bm_updateCard", (event, args)=>{
             this.updateCards(args);
         });
+        ipcRenderer.on("bm_updateCity", (event, args)=>{
+            this.updateCity(args.id, args.house, args.hotel);
+        });
     }
 
     initializeGame(players){
@@ -65,7 +70,7 @@ class BoardManager{
         Globals.app.renderer.roundPixels = true;
         Globals.app.renderer.resize(880, 880);
         document.getElementById("canvas").appendChild(Globals.app.view);
-        const loader = Globals.app.loader.add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("pion1", pion1).add("pion2", pion2).add("pion3", pion3).add("pion4", pion4).add("railroad", railroad).load(async (loader, resources)=> {
+        const loader = Globals.app.loader.add("hotel", hotel).add("house", house).add("board_center", board_center).add("income_tax", income_tax).add("community", community).add("chance", chance).add("luxury", luxury).add("free_parking", free_parking).add("visit_jail", visit_jail).add("goto_jail", goto_jail).add("start_tile", start_tile).add("electric", electric).add("water", water).add("pion1", pion1).add("pion2", pion2).add("pion3", pion3).add("pion4", pion4).add("railroad", railroad).load(async (loader, resources)=> {
             Globals.resources = resources;
             Globals.appHand = new PIXI.Application({resolution: 2});
             Globals.appHand.renderer.roundPixels = true;
@@ -112,7 +117,8 @@ class BoardManager{
                 }
                 else if (type === "CityTile") {
                     let id = tiles[i]["id"]
-                    this.tiles[tile] = (new CityTileView(ModelManager.getModels()[id]));
+                    let model = ModelManager.getModels()[id];
+                    this.tiles[tile] = (new CityTileView(model));
                 }
                 else if (type === "SpecialTile") {
                     let imageType = tiles[i]["image"];
@@ -247,7 +253,7 @@ class BoardManager{
                 lastCard.selectedBorder = new PIXI.Graphics();
                 lastCard.selectedBorder.name = "selectedBorder";
                 lastCard.selectedBorder.lineStyle(5, 0x000);
-                lastCard.selectedBorder.drawRect(0, 0, 150, 242);
+                lastCard.selectedBorder.drawRect(0, 0, 150, 222);
                 lastCard.selectedBorder.position.set(lastCard.border.x,lastCard.border.y);
                 lastCard.card.addChild(lastCard.selectedBorder);
                 offset(player.id, lastCard.id);
@@ -291,14 +297,33 @@ class BoardManager{
 
             console.log("updateCard iteration");
         });
-        player.cards.forEach(card=>{
-            console.log("updateCard iteration");
-        });
         console.log("updateCard finished");
     }
 
-    setBuilding(tileId, buildingTypesAndNumbers){
-
+    updateCity(id, house, hotel){
+        //this.tiles[id].tile.destroy();
+        console.log("House: " + id + " | " + house + " | " + hotel);
+        if(this.tiles[id].buildings)
+            this.tiles[id].buildings.children.forEach(build=>build.destroy());
+        for (let i = 0; i < house; i++) {
+            console.log("House building " + i);
+            let icon = new PIXI.Sprite(Globals.resources["house"].texture);
+            icon.width = 20;
+            icon.height = 20;
+            icon.x = this.tiles[id].x + 20*i + 2.5;
+            icon.y = this.tiles[id].y;
+            this.tiles[id].buildings.addChild(icon);
+        }
+        for (let i = 0; i < hotel; i++) {
+            console.log("Hotel building " + i);
+            let icon = new PIXI.Sprite(Globals.resources["hotel"].texture);
+            icon.width = 20;
+            icon.height = 20;
+            icon.x = this.tiles[id].x + this.tiles[id].size/2 - 10;
+            icon.y = this.tiles[id].y;
+            this.tiles[id].buildings.addChild(icon);
+        }
+        //this.tiles[id] = new CityTileView(ModelManager.getModels()[id]);
     }
 }
 
