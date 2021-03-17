@@ -16,10 +16,11 @@
 
 ## Implementation Details
 
-We are planning to use;
-- Java JDK 14.0.2 as programming kit
-- IntelliJ IDEA Ultimate 2020.2.2 as integrated development environment
-- JavaFX for user interface manipulation and accessing different window component API's
+Some of the frameworks used in this project.
+  - socket.io 
+  - electronjs
+  - React.js
+  - PixiJS
 
 ## Additional features
 
